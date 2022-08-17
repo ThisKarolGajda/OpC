@@ -1,0 +1,23 @@
+language:
+  enabled: true
+  # Available types for file saving: "flat" and "mysql"
+  type: "flat"
+
+
+holder:
+  title: ""
+  rows: 6
+  closeable: true
+  items:
+    item-display-name:
+      amount: 1
+      material: STONE
+      slot: 1
+      lore:
+        - "LORE"
+      enchantments:
+        - "ENCH:LEVEL"
+      flags:
+        - "FLAG"
+      specialData:
+        - "PAGED_INVENTORY_NEXT_PAGE"

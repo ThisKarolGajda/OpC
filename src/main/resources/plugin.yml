@@ -1,0 +1,8 @@
+name: opc
+version: '${project.version}'
+main: me.opkarol.opc.OpC
+api-version: 1.19
+authors: [ ThisOpKarol ]
+description: OpC is a modern and blazingly fast spigot api extenstion which allows developers to do tasks quicker and replace boring tasks with new things.
+softdepend:
+  - PlaceholderAPI
