@@ -331,8 +331,8 @@ public class OpCommand extends BukkitCommand {
         return seeTabComplete;
     }
 
-    public OpCommand setSeeTabComplete(String permission, String noPermissionMessage) {
-        this.seeTabComplete = new OpCommandPermission(permission, noPermissionMessage, OpCommandPermission.PERMISSION_TYPE.SEE_TAB_COMPLETE);
+    public OpCommand setSeeTabComplete(String permission) {
+        this.seeTabComplete = new OpCommandPermission(permission, "", OpCommandPermission.PERMISSION_TYPE.SEE_TAB_COMPLETE);
         return this;
     }
 

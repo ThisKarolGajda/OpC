@@ -6,10 +6,6 @@ import org.jetbrains.annotations.Nullable;
 
 public record OpCommandSender(CommandSender sender) {
 
-    public CommandSender getSender() {
-        return sender;
-    }
-
     public Player getPlayer() {
         return (Player) sender;
     }
