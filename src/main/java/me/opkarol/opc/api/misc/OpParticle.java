@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpParticleBuilder {
+public class OpParticle {
     private float offsetX, offsetY, offsetZ;
     private int amount;
     private Particle particle;
@@ -21,11 +21,11 @@ public class OpParticleBuilder {
     private List<Player> receivers;
     private OpRunnable animatedTask;
 
-    public OpParticleBuilder(Particle particle) {
+    public OpParticle(Particle particle) {
         this.particle = particle;
     }
 
-    public OpParticleBuilder(@NotNull FileConfiguration config, String path) {
+    public OpParticle(@NotNull FileConfiguration config, String path) {
         path = path.endsWith(".") ? path : path.concat(".");
         StringUtil.getEnumValue(config.getString(path + "particle"), Particle.class).ifPresent(particle1 -> this.particle = particle1);
         this.amount = StringUtil.getInt(config.getString(path + "amount"));
@@ -62,7 +62,7 @@ public class OpParticleBuilder {
         configuration.save();
     }
 
-    public OpParticleBuilder setOffset(float offsetX, float offsetY, float offsetZ) {
+    public OpParticle setOffset(float offsetX, float offsetY, float offsetZ) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.offsetZ = offsetZ;
@@ -73,7 +73,7 @@ public class OpParticleBuilder {
         return String.format("%s;%s;%s", String.valueOf(offsetX), String.valueOf(offsetY), String.valueOf(offsetZ));
     }
 
-    public OpParticleBuilder setOffset(String offset) {
+    public OpParticle setOffset(String offset) {
         if (offset != null) {
             String[] offsets = offset.split(";");
             if (offsets.length == 3) {
@@ -85,7 +85,7 @@ public class OpParticleBuilder {
         return this;
     }
 
-    public OpParticleBuilder setOffset(@NotNull Vector offset) {
+    public OpParticle setOffset(@NotNull Vector offset) {
         this.offsetX = (float) offset.getX();
         this.offsetY = (float) offset.getY();
         this.offsetZ = (float) offset.getZ();
@@ -96,7 +96,7 @@ public class OpParticleBuilder {
         return particle;
     }
 
-    public OpParticleBuilder setParticle(Particle particle) {
+    public OpParticle setParticle(Particle particle) {
         this.particle = particle;
         return this;
     }
@@ -105,7 +105,7 @@ public class OpParticleBuilder {
         return amount;
     }
 
-    public OpParticleBuilder setAmount(int amount) {
+    public OpParticle setAmount(int amount) {
         this.amount = amount;
         return this;
     }
@@ -114,7 +114,7 @@ public class OpParticleBuilder {
         return offsetX;
     }
 
-    public OpParticleBuilder setOffsetX(float offsetX) {
+    public OpParticle setOffsetX(float offsetX) {
         this.offsetX = offsetX;
         return this;
     }
@@ -123,7 +123,7 @@ public class OpParticleBuilder {
         return offsetY;
     }
 
-    public OpParticleBuilder setOffsetY(float offsetY) {
+    public OpParticle setOffsetY(float offsetY) {
         this.offsetY = offsetY;
         return this;
     }
@@ -132,7 +132,7 @@ public class OpParticleBuilder {
         return offsetZ;
     }
 
-    public OpParticleBuilder setOffsetZ(float offsetZ) {
+    public OpParticle setOffsetZ(float offsetZ) {
         this.offsetZ = offsetZ;
         return this;
     }
@@ -141,12 +141,12 @@ public class OpParticleBuilder {
         return location;
     }
 
-    public OpParticleBuilder setLocation(OpLocation opLocation) {
+    public OpParticle setLocation(OpLocation opLocation) {
         this.location = opLocation;
         return this;
     }
 
-    public OpParticleBuilder setLocation(Location location) {
+    public OpParticle setLocation(Location location) {
         this.location = new OpLocation(location);
         return this;
     }
@@ -155,26 +155,26 @@ public class OpParticleBuilder {
         return receivers;
     }
 
-    public OpParticleBuilder setReceivers(List<Player> receivers) {
+    public OpParticle setReceivers(List<Player> receivers) {
         this.receivers = receivers;
         return this;
     }
 
-    public OpParticleBuilder addReceiver(Player player) {
+    public OpParticle addReceiver(Player player) {
         List<Player> list = receivers == null ? new ArrayList<>() : receivers;
         list.add(player);
         return setReceivers(list);
     }
 
-    public OpParticleBuilder display() {
+    public OpParticle display() {
         return display(getReceivers());
     }
 
-    public <T> OpParticleBuilder display(T specialData) {
+    public <T> OpParticle display(T specialData) {
         return display(getReceivers(), specialData);
     }
 
-    public <T> OpParticleBuilder display(List<Player> players, T specialData) {
+    public <T> OpParticle display(List<Player> players, T specialData) {
         if (players == null) {
             return this;
         }
@@ -183,7 +183,7 @@ public class OpParticleBuilder {
         return this;
     }
 
-    public OpParticleBuilder display(Player player) {
+    public OpParticle display(Player player) {
         if (player == null) {
             return this;
         }
@@ -192,7 +192,7 @@ public class OpParticleBuilder {
         return this;
     }
 
-    public OpParticleBuilder display(List<Player> players) {
+    public OpParticle display(List<Player> players) {
         if (players == null) {
             return this;
         }
@@ -201,7 +201,7 @@ public class OpParticleBuilder {
         return this;
     }
 
-    public OpParticleBuilder animateDisplay(int amount, int delay) {
+    public OpParticle animateDisplay(int amount, int delay) {
         final int[] i = {0};
         animatedTask = new OpRunnable(r -> {
             if (i[0] >= amount) {
@@ -214,7 +214,7 @@ public class OpParticleBuilder {
         return this;
     }
 
-    public OpParticleBuilder displayByNearPlayers(Player byPlayer, int reach) {
+    public OpParticle displayByNearPlayers(Player byPlayer, int reach) {
         if (byPlayer == null) {
             return this;
         }

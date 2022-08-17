@@ -1,12 +1,12 @@
 package me.opkarol.opc.api.commands;
 
+import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.commands.arguments.OpCommandArg;
 import me.opkarol.opc.api.commands.arguments.OpCommandArgument;
 import me.opkarol.opc.api.commands.suggestions.OpCommandSuggestion;
 import me.opkarol.opc.api.commands.suggestions.OpSimpleSuggestion;
 import me.opkarol.opc.api.commands.suggestions.StaticSuggestions;
 import me.opkarol.opc.api.map.OpLinkedMap;
-import me.opkarol.opc.api.utils.CommandUtil;
 import me.opkarol.opc.api.utils.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -202,7 +202,7 @@ public class OpCommand extends BukkitCommand {
             Command command = commandMap.getCommand(this.getName());
             if (command == null || !command.isRegistered()) {
                 commandMap.register(name, this);
-                CommandUtil.addCommand(this);
+                OpAPI.addCommand(this);
             } else {
                 throw new IllegalStateException("This command is already registered.");
             }

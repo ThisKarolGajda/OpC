@@ -5,7 +5,6 @@ import me.opkarol.opc.api.gui.pattern.OpInventoryPattern;
 import me.opkarol.opc.api.gui.type.OpInventoryBuilder;
 import me.opkarol.opc.api.language.LanguageDatabase;
 import me.opkarol.opc.api.plugin.OpPlugin;
-import me.opkarol.opc.api.utils.CommandUtil;
 import org.bukkit.Material;
 
 public final class OpC extends OpPlugin {
@@ -29,7 +28,7 @@ public final class OpC extends OpPlugin {
 
     @Override
     public void onDisable() {
-        CommandUtil.onDisable();
+        OpAPI.unregisterCommands();
         langDb.getLanguageTool().onDisable();
         langDb = null;
         super.onDisable();
