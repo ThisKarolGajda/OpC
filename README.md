@@ -34,32 +34,32 @@ You can learn everything that this core have in the [wiki](https://github.com/Th
 ## Version
 Jitppack version: ![](https://jitpack.io/v/ThisKarolGajda/OpC.svg)
 ## Maven
-```
-	<repositories>
-		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository>
-	</repositories>
-  
-  	<dependency>
-	    <groupId>com.github.ThisKarolGajda</groupId>
-	    <artifactId>OpC</artifactId>
-	    <version>master-SNAPSHOT</version>
-	</dependency>
+```maven
+<repositories>
+	<repository>
+	    <id>jitpack.io</id>
+	    <url>https://jitpack.io</url>
+	</repository>
+</repositories>
+
+<dependency>
+    <groupId>com.github.ThisKarolGajda</groupId>
+    <artifactId>OpC</artifactId>
+    <version>master-SNAPSHOT</version>
+</dependency>
 ```
 ## Gradle
-```
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+```gradle
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
 	}
-  
-  	dependencies {
-	        implementation 'com.github.ThisKarolGajda:OpC:master-SNAPSHOT'
-	}
+}
+
+dependencies {
+        implementation 'com.github.ThisKarolGajda:OpC:master-SNAPSHOT'
+}
 ``` 
 
 ## Jitpack
