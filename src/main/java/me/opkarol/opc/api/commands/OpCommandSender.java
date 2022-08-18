@@ -16,11 +16,7 @@ public record OpCommandSender(CommandSender sender) {
     }
 
     public @Nullable Player getFixedPlayer() {
-        if (!isPlayer()) {
-            return null;
-        }
-
-        return getPlayer();
+        return this.isPlayer() ? this.getPlayer() : null;
     }
 
     public void sendMessage(String message) {
