@@ -91,9 +91,9 @@ public class MySqlDatabase implements IMySqlDatabase {
     }
 
     @Override
-    public ResultSet get(String table) {
+    public ResultSet get(MySqlTable table) {
         try (Connection conn = source.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM `%s`", table))) {
+             PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM `%s`", table.getTableName()))) {
             return stmt.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();

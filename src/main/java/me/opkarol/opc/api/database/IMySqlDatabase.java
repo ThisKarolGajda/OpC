@@ -18,5 +18,5 @@ public interface IMySqlDatabase {
 
     void delete(@NotNull MySqlDeleteTable table);
 
-    ResultSet get(String getValue);
+    ResultSet get(MySqlTable getValue);
 }
