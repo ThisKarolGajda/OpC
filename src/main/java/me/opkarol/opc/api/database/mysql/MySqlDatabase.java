@@ -30,6 +30,26 @@ public class MySqlDatabase implements IMySqlDatabase {
         ds.addDataSourceProperty("cacheServerConfiguration", "true");
         ds.addDataSourceProperty("elideSetAutoCommits", "true");
         ds.addDataSourceProperty("maintainTimeStats", "false");
+        source = ds;
+        hikariDataSource = new HikariDataSource(ds);
+    }
+
+    public void setup(String jdbcUrl, String username, String password) {
+        HikariDataSource ds = new HikariDataSource();
+        ds.setJdbcUrl(jdbcUrl);
+        ds.setUsername(username);
+        ds.setPassword(password);
+        ds.addDataSourceProperty("cachePrepStmts", "true");
+        ds.addDataSourceProperty("prepStmtCacheSize", "250");
+        ds.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        ds.addDataSourceProperty("useServerPrepStmts", "true");
+        ds.addDataSourceProperty("useLocalSessionState", "true");
+        ds.addDataSourceProperty("rewriteBatchedStatements", "true");
+        ds.addDataSourceProperty("cacheResultSetMetadata", "true");
+        ds.addDataSourceProperty("cacheServerConfiguration", "true");
+        ds.addDataSourceProperty("elideSetAutoCommits", "true");
+        ds.addDataSourceProperty("maintainTimeStats", "false");
+        source = ds;
         hikariDataSource = new HikariDataSource(ds);
     }
 
