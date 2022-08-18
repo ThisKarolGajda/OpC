@@ -14,7 +14,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
-public class OpLocation {
+import java.io.Serializable;
+
+public class OpLocation implements Serializable {
     private final double x, y, z;
     private final float pitch, yaw;
     private final World world;

@@ -5,9 +5,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.function.Consumer;
 
-public class OpRunnable extends BukkitRunnable {
+public class OpRunnable extends BukkitRunnable implements Serializable {
     private Consumer<OpRunnable> consumer;
     private BukkitTask task;
 

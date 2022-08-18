@@ -4,10 +4,11 @@ import me.opkarol.opc.api.utils.FormatUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpTitle {
+public class OpTitle implements Serializable {
     private String title;
     private String subTitle;
     private int fadeIn, fadeOut, stay;

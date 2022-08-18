@@ -8,9 +8,10 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class OpBossBar {
+public class OpBossBar implements Serializable {
     private final BossBar bossBar;
     private OpRunnable task;
     private final String originalTitle;

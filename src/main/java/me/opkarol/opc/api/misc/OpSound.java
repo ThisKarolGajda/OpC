@@ -10,9 +10,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class OpSound {
+public class OpSound implements Serializable {
     private float volume = 1, pitch = 1;
     private Sound sound;
     private SoundCategory category;

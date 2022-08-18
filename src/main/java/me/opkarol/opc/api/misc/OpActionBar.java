@@ -5,10 +5,11 @@ import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpActionBar {
+public class OpActionBar implements Serializable {
     private String text;
     private OpComponent actionBar;
     private List<Player> receivers;

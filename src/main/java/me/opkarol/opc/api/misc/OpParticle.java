@@ -10,10 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpParticle {
+public class OpParticle implements Serializable {
     private float offsetX, offsetY, offsetZ;
     private int amount;
     private Particle particle;
