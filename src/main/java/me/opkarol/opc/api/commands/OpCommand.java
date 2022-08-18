@@ -58,6 +58,10 @@ public class OpCommand extends BukkitCommand {
         return addArg(arg).addSuggestion(suggestion);
     }
 
+    public OpCommand addArgSuggestion(OpCommandArg arg, OpCommandSuggestion suggestion) {
+        return addArg(arg).addSuggestion(suggestion);
+    }
+
     public OpCommand addArgSuggestion(OpCommandArg arg, StaticSuggestions.SUGGESTION_TYPE suggestion) {
         return addArg(arg).addSuggestion(suggestion);
     }
@@ -154,7 +158,7 @@ public class OpCommand extends BukkitCommand {
             if (simpleSuggestions.size() != 0) {
                 completions.addAll(simpleSuggestions.get(args.length - 1).getSuggestions());
             } else if (suggestions.size() != 0) {
-                completions.add(suggestions.get(args.length - 1).apply(sender, args));
+                completions.add(suggestions.get(args.length - 1).apply(new OpCommandSender(sender), args));
             }
 
             if (completions.size() == 0) {
@@ -169,7 +173,7 @@ public class OpCommand extends BukkitCommand {
                     completions.addAll(simpleSuggestions.get(args.length - 2).getSuggestions());
                 }
                 if (suggestions.size() + 1 >= args.length) {
-                    completions.add(suggestions.get(args.length - 2).apply(sender, args));
+                    completions.add(suggestions.get(args.length - 2).apply(new OpCommandSender(sender), args));
                 }
             }
         }

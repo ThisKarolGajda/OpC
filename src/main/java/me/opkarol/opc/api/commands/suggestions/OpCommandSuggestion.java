@@ -1,17 +1,13 @@
 package me.opkarol.opc.api.commands.suggestions;
 
-import org.bukkit.command.CommandSender;
+import me.opkarol.opc.api.commands.OpCommandSender;
 
 import java.util.function.BiFunction;
 
-public class OpCommandSuggestion {
-    private final BiFunction<CommandSender, String[], String> biFunction;
+public record OpCommandSuggestion(
+        BiFunction<OpCommandSender, String[], String> biFunction) {
 
-    public OpCommandSuggestion(BiFunction<CommandSender, String[], String> biFunction) {
-        this.biFunction = biFunction;
-    }
-
-    public String apply(CommandSender commandSender, String[] args) {
+    public String apply(OpCommandSender commandSender, String[] args) {
         return biFunction.apply(commandSender, args);
     }
 }
