@@ -2,6 +2,8 @@ package me.opkarol.opc.api.database.mysql;
 
 import me.opkarol.opc.api.map.OpLinkedMap;
 
+import static me.opkarol.opc.api.utils.Util.getOrDefault;
+
 public class MySqlTable {
     private final OpLinkedMap<MySqlVariable, MySqlAttribute[]> map = new OpLinkedMap<>();
     private String tableName;
@@ -27,7 +29,7 @@ public class MySqlTable {
     }
 
     public String toCreateTableString() {
-        return finalString == null ? String.format("CREATE TABLE IF NOT EXISTS %s (%s);", getTableName(), getTableValues()) : finalString;
+        return getOrDefault(finalString, String.format("CREATE TABLE IF NOT EXISTS %s (%s);", getTableName(), getTableValues()));
     }
 
     public String getTableValues() {
@@ -60,7 +62,7 @@ public class MySqlTable {
     }
 
     public String getTableName() {
-        return tableName == null ? "DEFAULT_NULL_TABLE" : String.format("`%s`", tableName);
+        return getOrDefault(String.format("`%s`", tableName), "DEFAULT_NULL_TABLE");
     }
 
     public void setTableName(String tableName) {

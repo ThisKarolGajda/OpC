@@ -28,7 +28,7 @@ public class OpSound implements Serializable {
         StringUtil.getEnumValue(sound, Sound.class).ifPresent(sound1 -> this.sound = sound1);
     }
 
-    public OpSound(FileConfiguration config, String path) {
+    public OpSound(@NotNull FileConfiguration config, String path) {
         path = path.endsWith(".") ? path : path.concat(".");
         this.volume = StringUtil.getFloat(config.getString(path + "volume"));
         this.pitch = StringUtil.getFloat(config.getString(path + "pitch"));

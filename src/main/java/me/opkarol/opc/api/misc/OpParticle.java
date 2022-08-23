@@ -14,6 +14,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static me.opkarol.opc.api.utils.Util.getOrDefault;
+
 public class OpParticle implements Serializable {
     private float offsetX, offsetY, offsetZ;
     private int amount;
@@ -162,7 +164,7 @@ public class OpParticle implements Serializable {
     }
 
     public OpParticle addReceiver(Player player) {
-        List<Player> list = receivers == null ? new ArrayList<>() : receivers;
+        List<Player> list = getOrDefault(receivers, new ArrayList<>());
         list.add(player);
         return setReceivers(list);
     }
@@ -180,7 +182,9 @@ public class OpParticle implements Serializable {
             return this;
         }
 
-        players.forEach(player -> player.spawnParticle(particle, location.getX(), location.getY(), location.getZ(), amount, offsetX, offsetY, offsetZ, specialData));
+        if (location != null) {
+            players.forEach(player -> player.spawnParticle(particle, location.getX(), location.getY(), location.getZ(), amount, offsetX, offsetY, offsetZ, specialData));
+        }
         return this;
     }
 
@@ -188,8 +192,9 @@ public class OpParticle implements Serializable {
         if (player == null) {
             return this;
         }
-
-        player.spawnParticle(particle, location.getX(), location.getY(), location.getZ(), amount, offsetX, offsetY, offsetZ);
+        if (location != null) {
+            player.spawnParticle(particle, location.getX(), location.getY(), location.getZ(), amount, offsetX, offsetY, offsetZ);
+        }
         return this;
     }
 
@@ -198,7 +203,7 @@ public class OpParticle implements Serializable {
             return this;
         }
 
-        players.forEach(player -> player.spawnParticle(particle, location.getX(), location.getY(), location.getZ(), amount, offsetX, offsetY, offsetZ));
+        players.forEach(this::display);
         return this;
     }
 

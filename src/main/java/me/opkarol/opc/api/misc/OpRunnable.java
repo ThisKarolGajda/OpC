@@ -3,6 +3,7 @@ package me.opkarol.opc.api.misc;
 import me.opkarol.opc.OpAPI;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -26,14 +27,17 @@ public class OpRunnable extends BukkitRunnable implements Serializable {
         return this;
     }
 
-    public static OpRunnable get(Consumer<OpRunnable> consumer) {
+    @Contract("_ -> new")
+    public static @NotNull OpRunnable get(Consumer<OpRunnable> consumer) {
         return new OpRunnable(consumer);
     }
 
-    public void cancel() {
+    public boolean cancelTask() {
         if (task != null && !task.isCancelled()) {
             task.cancel();
+            return true;
         }
+        return false;
     }
 
     @NotNull

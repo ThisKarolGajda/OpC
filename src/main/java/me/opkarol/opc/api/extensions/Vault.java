@@ -5,6 +5,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import static me.opkarol.opc.api.utils.Util.getOrDefault;
+
 public class Vault {
     private static Vault vault;
     private boolean enabled;
@@ -19,7 +21,7 @@ public class Vault {
     }
 
     public static Vault getInstance() {
-        return vault == null ? new Vault() : vault;
+        return getOrDefault(vault, new Vault());
     }
 
     public boolean isEnabled() {

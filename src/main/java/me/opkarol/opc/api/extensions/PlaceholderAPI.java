@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
 
+import static me.opkarol.opc.api.utils.Util.getOrDefault;
+
 public class PlaceholderAPI {
     private static PlaceholderAPI placeholderAPI;
     private final boolean enabled;
@@ -18,7 +20,7 @@ public class PlaceholderAPI {
     }
 
     public static PlaceholderAPI getInstance() {
-        return placeholderAPI == null ? new PlaceholderAPI() : placeholderAPI;
+        return getOrDefault(placeholderAPI, new PlaceholderAPI());
     }
 
     public boolean isEnabled() {

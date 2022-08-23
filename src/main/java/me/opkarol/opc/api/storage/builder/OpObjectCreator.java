@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 
+import static me.opkarol.opc.api.utils.Util.getOrDefault;
+
 public class OpObjectCreator extends OpObject {
     private final String name;
     private final OpObjectTypes type;
@@ -34,7 +36,7 @@ public class OpObjectCreator extends OpObject {
     }
 
     public OpObject getObject() {
-        return classType == null ? this : classType;
+        return getOrDefault(classType, this);
     }
 
     public String getOpName() {

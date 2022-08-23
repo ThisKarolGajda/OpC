@@ -26,6 +26,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static me.opkarol.opc.api.utils.Util.getOrDefault;
+
 public class OpInventoryBuilder {
     private String inventoryName;
     private OpInventoryRows rows;
@@ -134,7 +136,7 @@ public class OpInventoryBuilder {
     }
 
     public Inventory getLastInventory() {
-        return lastInventory == null ? build() : lastInventory;
+        return getOrDefault(lastInventory, build());
     }
 
     public OpInventoryBuilder setLastInventory(Inventory lastInventory) {

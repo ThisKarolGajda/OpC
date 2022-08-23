@@ -8,7 +8,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class HeadDatabase {
+import static me.opkarol.opc.api.utils.Util.getOrDefault;
+
+public class HeadDatabase{
     private static HeadDatabase headDatabase;
     private final OpMap<String, ItemStack> map = new OpMap<>();
 
@@ -17,7 +19,7 @@ public class HeadDatabase {
     }
 
     public static HeadDatabase getInstance() {
-        return headDatabase == null ? new HeadDatabase() : headDatabase;
+        return getOrDefault(headDatabase, new HeadDatabase());
     }
 
     public ItemStack getHead(String owner) {

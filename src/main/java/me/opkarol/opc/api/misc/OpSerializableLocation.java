@@ -1,46 +1,47 @@
 package me.opkarol.opc.api.misc;
 
-/*
- * Copyright (c) 2021-2022.
- * [OpPets] ThisKarolGajda
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
- */
-
 import me.opkarol.opc.api.utils.StringUtil;
+import me.opkarol.opc.api.utils.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.UUID;
 
-public class OpLocation implements Serializable {
+public class OpSerializableLocation implements Serializable {
     private final double x, y, z;
     private final float pitch, yaw;
-    private final World world;
-    private OpLocation lastLocation;
+    private String world;
+    private UUID worldUUID;
+    private OpSerializableLocation lastLocation;
 
-    public OpLocation(double x, double y, double z, float pitch, float yaw, World world) {
+    public OpSerializableLocation(double x, double y, double z, float pitch, float yaw, @NotNull World world) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.pitch = pitch;
         this.yaw = yaw;
-        this.world = world;
+        this.world = world.getName();
+        this.worldUUID = world.getUID();
     }
 
-    public OpLocation(@NotNull Location location) {
+    public OpSerializableLocation(@NotNull Location location) {
         this.x = location.getX();
         this.y = location.getY();
         this.z = location.getZ();
         this.pitch = location.getPitch();
         this.yaw = location.getYaw();
-        this.world = location.getWorld();
+        World world1 = location.getWorld();
+        if (world1 == null) {
+            return;
+        }
+        this.world = world1.getName();
+        this.worldUUID = world1.getUID();
     }
 
-    public OpLocation(String string) {
+    public OpSerializableLocation(String string) {
         if (string != null && string.length() != 0) {
             String[] params = string.split(";");
             if (params.length == 6) {
@@ -49,7 +50,7 @@ public class OpLocation implements Serializable {
                 z = StringUtil.getDouble(params[2]);
                 pitch = StringUtil.getFloat(params[3]);
                 yaw = StringUtil.getFloat(params[4]);
-                world = Bukkit.getWorld(params[5]);
+                world = params[5];
                 return;
             }
         }
@@ -62,8 +63,8 @@ public class OpLocation implements Serializable {
         world = null;
     }
 
-    public OpLocation(@NotNull OpSerializableLocation location) {
-        this(location.toString());
+    public OpSerializableLocation(@NotNull OpLocation location) {
+         this(location.toString());
     }
 
     public double getX() {
@@ -107,18 +108,22 @@ public class OpLocation implements Serializable {
     }
 
     public World getWorld() {
-        return world;
+        if (worldUUID != null) {
+            return Bukkit.getWorld(worldUUID);
+        }
+        return Bukkit.getWorld(world);
     }
 
     public String getStringWorld() {
-        if (getWorld() == null) {
+        if (world == null) {
             return "null";
         }
-        return getWorld().getName();
+
+        return world;
     }
 
     public Location getLocation() {
-        return new Location(world, x, y, z, yaw, pitch);
+        return new Location(getWorld(), x, y, z, yaw, pitch);
     }
 
     @Override
@@ -126,25 +131,26 @@ public class OpLocation implements Serializable {
         return String.format("%s;%s;%s;%s;%s;%s", getStringX(), getStringY(), getStringZ(), getStringPitch(), getStringYaw(), getStringWorld());
     }
 
-    public String toFamilyString() {
-        return String.format("X: %s Y: %s Z: %s World: %s", getStringX(), getStringY(), getStringZ(), getStringWorld());
+    public OpSerializableLocation getLastLocation() {
+        return Util.getOrDefault(lastLocation, setLastLocation());
     }
 
-    public OpLocation getLastLocation() {
-        return lastLocation;
+    public OpSerializableLocation setLastLocation() {
+        this.lastLocation = new OpSerializableLocation(toString());
+        return this.lastLocation;
     }
 
-    public void setLastLocation() {
-        this.lastLocation = new OpLocation(toString());
-    }
-
-    public OpSerializableLocation toLocation() {
-        return new OpSerializableLocation(toString());
+    public OpLocation toLocation() {
+        return new OpLocation(toString());
     }
 
     public OpSerializableLocation getHighestYLocation() {
         Location location = getLocation();
-        location.setY(getWorld().getHighestBlockYAt((int) getX(), (int) getZ()));
+        location.setY(getWorld().getHighestBlockYAt((int) getX(), (int) getZ()) + 1);
         return new OpSerializableLocation(location);
+    }
+
+    public String toFamilyString() {
+        return String.format("X: %s Y: %s Z: %s World: %s", getStringX(), getStringY(), getStringZ(), getStringWorld());
     }
 }

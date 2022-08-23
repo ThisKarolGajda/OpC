@@ -6,6 +6,8 @@ import me.opkarol.opc.api.map.OpMap;
 import java.util.Optional;
 import java.util.UUID;
 
+import static me.opkarol.opc.api.utils.Util.getOrDefault;
+
 public class OpInventoryCache {
     private static OpInventoryCache cache;
     private final OpMap<UUID, OpInventoryObject> lastInventories = new OpMap<>();
@@ -16,7 +18,7 @@ public class OpInventoryCache {
     }
 
     public static OpInventoryCache getCache() {
-        return cache == null ? new OpInventoryCache() : cache;
+        return getOrDefault(cache, new OpInventoryCache());
     }
 
     public void setLastInventory(UUID uuid, OpInventoryObject builder) {

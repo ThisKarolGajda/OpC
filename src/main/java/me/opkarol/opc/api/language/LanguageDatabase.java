@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static me.opkarol.opc.api.utils.Util.getOrDefault;
+
 public class LanguageDatabase {
     private static LanguageDatabase languageDatabase;
     private static final List<OpPluginLanguage> languages = new ArrayList<>();
@@ -41,7 +43,7 @@ public class LanguageDatabase {
     }
 
     public static LanguageDatabase getInstance() {
-        return languageDatabase == null ? new LanguageDatabase() : languageDatabase;
+        return getOrDefault(languageDatabase, new LanguageDatabase());
     }
 
     public List<OpPluginLanguage> getLanguages() {
