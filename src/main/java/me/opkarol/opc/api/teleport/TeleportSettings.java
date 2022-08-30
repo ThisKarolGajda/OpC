@@ -70,7 +70,7 @@ public class TeleportSettings implements CustomConfigurable {
             }
         }
 
-        if (text != null && text.isEmpty()) {
+        if (text != null && !text.isEmpty()) {
             if (specialData.length > 1) {
                 player.sendMessage(text.getFormattedText().replace(specialData[0], specialData[1]));
             } else {
