@@ -244,9 +244,19 @@ public class OpTeleport implements Serializable, CustomConfigurable {
     }
 
     public void cancel(String message) {
+        cancel(message, players);
+    }
+
+    public void cancel(String message, Player player) {
+        cancel(message, List.of(player));
+    }
+
+    public void cancel(String message, List<Player> players) {
         if (getTask() != null) {
             if (task.cancelTask()) {
-                players.forEach(player -> player.sendMessage(FormatUtils.formatMessage(message)));
+                if (players != null) {
+                    players.forEach(player -> player.sendMessage(FormatUtils.formatMessage(message)));
+                }
             }
         }
     }
