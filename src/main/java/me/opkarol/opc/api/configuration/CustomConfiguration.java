@@ -64,7 +64,10 @@ public class CustomConfiguration {
         return this;
     }
 
-    public CustomConfiguration setEnum(String path, @NotNull Enum<?> anEnum) {
+    public CustomConfiguration setEnum(String path, Enum<?> anEnum) {
+        if (anEnum == null) {
+            return this;
+        }
         return setString(path, anEnum.name());
     }
 

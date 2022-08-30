@@ -34,6 +34,9 @@ public final class OpText implements Serializable, CustomConfigurable {
     }
 
     public @NotNull String getFormattedText() {
+        if (text == null) {
+            return "";
+        }
         return FormatUtils.formatMessage(text);
     }
 
