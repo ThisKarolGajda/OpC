@@ -1,6 +1,7 @@
 package me.opkarol.opc.api.events;
 
 import me.opkarol.opc.OpAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,8 +17,15 @@ public class OpEvent {
     }
 
     public static <E extends Event> void registerEvent(Class<E> clazz, EventPriority priority, Consumer<E> consumer) {
-        opC.getServer().getPluginManager()
-                .registerEvent(clazz, new Listener() {}, priority,
-                        (l, e) -> consumer.accept((E) e), opC, true);
+        if (canRegister()) {
+            opC.getServer().getPluginManager()
+                    .registerEvent(clazz, new Listener() {
+                            }, priority,
+                            (l, e) -> consumer.accept((E) e), opC, true);
+        }
+    }
+
+    public static boolean canRegister() {
+        return Bukkit.getServer().getPluginManager().isPluginEnabled(OpAPI.getInstance());
     }
 }
