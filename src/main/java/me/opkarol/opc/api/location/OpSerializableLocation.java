@@ -80,6 +80,10 @@ public class OpSerializableLocation implements Serializable, CustomConfigurable 
         return String.valueOf(getX());
     }
 
+    public String getShortX() {
+        return String.valueOf((int) getX());
+    }
+
     public double getY() {
         return y;
     }
@@ -88,12 +92,20 @@ public class OpSerializableLocation implements Serializable, CustomConfigurable 
         return String.valueOf(getY());
     }
 
+    public String getShortY() {
+        return String.valueOf((int) getY());
+    }
+
     public double getZ() {
         return z;
     }
 
     public String getStringZ() {
         return String.valueOf(getZ());
+    }
+
+    public String getShortZ() {
+        return String.valueOf((int) getZ());
     }
 
     public float getPitch() {
@@ -156,7 +168,7 @@ public class OpSerializableLocation implements Serializable, CustomConfigurable 
     }
 
     public String toFamilyString() {
-        return String.format("X: %s Y: %s Z: %s World: %s", getStringX(), getStringY(), getStringZ(), getStringWorld());
+        return String.format("X: %s Y: %s Z: %s World: %s", getShortX(), getShortY(), getShortZ(), getStringWorld());
     }
 
     @Override

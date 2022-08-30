@@ -38,7 +38,7 @@ public class TeleportRegistration {
         }
 
         OpTeleport teleport = map.getOrDefault(uuid, null);
-        teleport.cancel(movedMessage);
+        teleport.cancel(movedMessage, player);
     }
 
     public TeleportRegistration addPlayer(UUID uuid, OpTeleport teleport) {

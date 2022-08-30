@@ -72,6 +72,10 @@ public class OpTeleport implements Serializable, CustomConfigurable {
         this.settings = new DefaultTeleportSettings();
     }
 
+    public OpTeleport(String path) {
+        get(path);
+    }
+
     public TeleportSettings getSettings() {
         return settings;
     }
