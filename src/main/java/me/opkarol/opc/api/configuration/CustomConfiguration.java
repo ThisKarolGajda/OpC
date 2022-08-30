@@ -11,7 +11,6 @@ import me.opkarol.opc.api.utils.ReflectionUtil;
 import me.opkarol.opc.api.utils.StringUtil;
 import me.opkarol.opc.api.utils.Util;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -29,6 +28,9 @@ public class CustomConfiguration {
     }
 
     public CustomConfiguration setString(String path, String object) {
+        if (object == null) {
+            return this;
+        }
         getConfig().set(getPath(path), object);
         return this;
     }
@@ -48,7 +50,10 @@ public class CustomConfiguration {
         return this;
     }
 
-    public CustomConfiguration setLocation(String path, @NotNull OpSerializableLocation object) {
+    public CustomConfiguration setLocation(String path, OpSerializableLocation object) {
+        if (object == null) {
+            return this;
+        }
         return setString(path, object.toString());
     }
 
