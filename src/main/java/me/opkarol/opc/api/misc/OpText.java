@@ -56,4 +56,8 @@ public final class OpText implements Serializable, CustomConfigurable {
     public int hashCode() {
         return Objects.hash(text);
     }
+
+    public boolean isEmpty() {
+        return text == null || text.isBlank();
+    }
 }
