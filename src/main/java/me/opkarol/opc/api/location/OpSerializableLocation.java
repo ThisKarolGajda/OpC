@@ -20,14 +20,16 @@ public class OpSerializableLocation implements Serializable, CustomConfigurable 
     private UUID worldUUID;
     private OpSerializableLocation lastLocation;
 
-    public OpSerializableLocation(double x, double y, double z, float pitch, float yaw, @NotNull World world) {
+    public OpSerializableLocation(double x, double y, double z, float pitch, float yaw, World world) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.pitch = pitch;
         this.yaw = yaw;
-        this.world = world.getName();
-        this.worldUUID = world.getUID();
+        if (world != null) {
+            this.world = world.getName();
+            this.worldUUID = world.getUID();
+        }
     }
 
     public OpSerializableLocation(@NotNull Location location) {

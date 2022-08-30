@@ -152,25 +152,25 @@ public class CustomConfiguration {
 
     public OpText getText(String path) {
         OpText obj = new OpText();
-        obj.save(path);
+        obj.get(path);
         return obj;
     }
 
     public OpParticle getParticle(String path) {
         OpParticle obj = new OpParticle();
-        obj.save(path);
+        obj.get(path);
         return obj;
     }
 
     public OpTitle getTitle(String path) {
         OpTitle obj = new OpTitle();
-        obj.save(path);
+        obj.get(path);
         return obj;
     }
 
     public OpSound getSound(String path) {
         OpSound obj = new OpSound();
-        obj.save(path);
+        obj.get(path);
         return obj;
     }
 }
