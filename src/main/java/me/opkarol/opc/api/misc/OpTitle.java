@@ -1,20 +1,21 @@
 package me.opkarol.opc.api.misc;
 
-import me.opkarol.opc.api.files.Configuration;
+import me.opkarol.opc.api.configuration.CustomConfigurable;
+import me.opkarol.opc.api.configuration.CustomConfiguration;
 import me.opkarol.opc.api.utils.FormatUtils;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static me.opkarol.opc.api.utils.Util.getOrDefault;
 
-public class OpTitle implements Serializable {
+public class OpTitle implements Serializable, CustomConfigurable {
     private String title;
-    private String subTitle;
+    private String subtitle;
     private String tempTitle;
     private String tempSubTitle;
     private int fadeIn, fadeOut, stay;
@@ -22,33 +23,13 @@ public class OpTitle implements Serializable {
 
     public OpTitle(String title, String subTitle, int fadeIn, int stay, int fadeOut) {
         this.title = title;
-        this.subTitle = subTitle;
+        this.subtitle = subTitle;
         this.fadeIn = fadeIn;
         this.fadeOut = fadeOut;
         this.stay = stay;
     }
 
     public OpTitle() { }
-
-    public OpTitle(@NotNull FileConfiguration config, String path) {
-        path = path.endsWith(".") ? path : path.concat(".");
-        this.title = config.getString(path + "title");
-        this.subTitle = config.getString(path + "subtitle");
-        this.fadeIn = config.getInt(path + "fadeIn");
-        this.stay = config.getInt(path + "stay");
-        this.fadeOut = config.getInt(path + "fadeOut");
-    }
-
-    public void saveInConfiguration(@NotNull Configuration configuration, String path) {
-        FileConfiguration config = configuration.getConfig();
-        path = path.endsWith(".") ? path : path.concat(".");
-        config.set(path + "title", getOrDefault(title, ""));
-        config.set(path + "subtitle", getOrDefault(subTitle, ""));
-        config.set(path + "fadeIn", getOrDefault(fadeIn, 0));
-        config.set(path + "stay", getOrDefault(stay, 0));
-        config.set(path + "fadeOut", getOrDefault(fadeOut, 0));
-        configuration.save();
-    }
 
     public String getTitle() {
         return getOrDefault(tempTitle, title);
@@ -65,16 +46,16 @@ public class OpTitle implements Serializable {
     }
 
     public String getSubTitle() {
-        return getOrDefault(tempSubTitle, subTitle);
+        return getOrDefault(tempSubTitle, subtitle);
     }
 
     public OpTitle setSubTitle(String change, String changeInto) {
-        this.tempSubTitle = subTitle.replace(change, changeInto);
+        this.tempSubTitle = subtitle.replace(change, changeInto);
         return this;
     }
 
     public OpTitle setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
+        this.subtitle = subTitle;
         return this;
     }
 
@@ -146,5 +127,26 @@ public class OpTitle implements Serializable {
 
     public OpTitle display() {
         return display(receivers);
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> get() {
+        return c -> {
+            this.title = c.getString("title");
+            this.subtitle = c.getString("subtitle");
+            this.fadeIn = c.getInt("fadeIn");
+            this.stay = c.getInt("stay");
+            this.fadeOut = c.getInt("fadeOut");
+        };
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> save() {
+        return c -> c.setString("title", title)
+                .setString("subtitle", subtitle)
+                .setInt("fadeIn", fadeIn)
+                .setInt("stay", stay)
+                .setInt("fadeOut", fadeOut)
+                .save();
     }
 }

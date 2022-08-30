@@ -1,6 +1,8 @@
 package me.opkarol.opc.api.files;
 
 import com.tchristofferson.configupdater.ConfigUpdater;
+import me.opkarol.opc.api.location.OpSerializableLocation;
+import me.opkarol.opc.api.utils.StringUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -111,10 +113,6 @@ public class Configuration {
         return plugin;
     }
 
-    public Object getObject(String path) {
-        return getConfig().get(path);
-    }
-
     public Optional<ConfigurationSection> getSection(String path) {
         if (config == null) {
             return Optional.empty();
@@ -128,7 +126,60 @@ public class Configuration {
         return optional.map(section -> section.getKeys(false));
     }
 
-    public void useSectionKeys(String path, Consumer<Set<String>> consumer) {
+    public void useSectionKey(String path, Consumer<Set<String>> consumer) {
         getSectionKeys(path).ifPresent(consumer);
+    }
+
+    public void useSectionKeys(String path, Consumer<String> consumer) {
+        getSectionKeys(path).ifPresent(strings -> strings.forEach(consumer));
+    }
+
+    public Configuration set(String path, Object object) {
+        if (getConfig() != null) {
+            config.set(path, object);
+        }
+        return this;
+    }
+
+    public String get(String path) {
+        if (getConfig() != null) {
+            return config.getString(path);
+        }
+        return null;
+    }
+
+    public Object getObject(String path) {
+        if (getConfig() != null) {
+            return config.get(path);
+        }
+        return null;
+    }
+
+    public int getInt(String path) {
+        return StringUtil.getInt(get(path));
+    }
+
+    public double getDouble(String path) {
+        return StringUtil.getDouble(get(path));
+    }
+
+    public float getFloat(String path) {
+        return StringUtil.getFloat(get(path));
+    }
+
+    public OpSerializableLocation getLocation(String path) {
+        return new OpSerializableLocation(get(path));
+    }
+
+    public <K extends Enum<K>> Optional<K> getEnum(String path, Class<K> enumType) {
+        return StringUtil.getEnumValue(get(path), enumType);
+    }
+
+    public <K extends Enum<K>> K getUnsafeEnum(String path, Class<K> enumType) {
+        return getEnum(path, enumType).orElse(null);
+    }
+
+    public <K extends Enum<K>> void useEnumValue(String path, Class<K> clazz, Consumer<K> consumer) {
+        StringUtil.getEnumValue(get(path), clazz).ifPresent(consumer);
     }
 }

@@ -1,4 +1,4 @@
-package me.opkarol.opc.api.misc;
+package me.opkarol.opc.api.runnable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;

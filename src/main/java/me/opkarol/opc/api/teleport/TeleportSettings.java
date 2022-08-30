@@ -1,15 +1,17 @@
 package me.opkarol.opc.api.teleport;
 
-import me.opkarol.opc.api.files.Configuration;
+import me.opkarol.opc.api.configuration.CustomConfigurable;
+import me.opkarol.opc.api.configuration.CustomConfiguration;
 import me.opkarol.opc.api.misc.OpParticle;
 import me.opkarol.opc.api.misc.OpSound;
+import me.opkarol.opc.api.misc.OpText;
 import me.opkarol.opc.api.misc.OpTitle;
-import me.opkarol.opc.api.utils.FormatUtils;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class TeleportSettings {
+import java.util.function.Consumer;
+
+public class TeleportSettings implements CustomConfigurable {
     private TeleportSettingsVisual onStart, onEach, onEnd, onInvalid;
 
     public TeleportSettings(TeleportSettingsVisual onStart, TeleportSettingsVisual onEach, TeleportSettingsVisual onEnd, TeleportSettingsVisual onInvalid) {
@@ -19,12 +21,8 @@ public class TeleportSettings {
         this.onInvalid = onInvalid;
     }
 
-    public TeleportSettings(FileConfiguration configuration, String path) {
-        path = path.endsWith(".") ? path : path.concat(".");
-        this.onStart = new TeleportSettingsVisual(configuration, path + "onStart");
-        this.onEach = new TeleportSettingsVisual(configuration, path + "onEach");
-        this.onEnd = new TeleportSettingsVisual(configuration, path + "onEnd");
-        this.onInvalid = new TeleportSettingsVisual(configuration, path + "onInvalid");
+    public TeleportSettings(String path) {
+        get(path);
     }
 
     public TeleportSettingsVisual getOnStart() {
@@ -55,7 +53,7 @@ public class TeleportSettings {
         OpSound sound = settingsVisual.sound();
         OpParticle particle = settingsVisual.particle();
         OpTitle title = settingsVisual.title();
-        String text = settingsVisual.text();
+        OpText text = settingsVisual.text();
         if (sound != null) {
             sound.play(player);
         }
@@ -74,9 +72,9 @@ public class TeleportSettings {
 
         if (text != null) {
             if (specialData.length > 1) {
-                player.sendMessage(FormatUtils.formatMessage(text.replace(specialData[0], specialData[1])));
+                player.sendMessage(text.getFormattedText().replace(specialData[0], specialData[1]));
             } else {
-                player.sendMessage(FormatUtils.formatMessage(text));
+                player.sendMessage(text.getFormattedText());
             }
         }
     }
@@ -89,12 +87,21 @@ public class TeleportSettings {
         this.onInvalid = onInvalid;
     }
 
-    public void saveInConfiguration(Configuration configuration, String path) {
-        path = path.endsWith(".") ? path : path.concat(".");
-        onStart.saveInConfiguration(configuration, path + "onStart");
-        onEach.saveInConfiguration(configuration, path + "onEach");
-        onEnd.saveInConfiguration(configuration, path + "onEnd");
-        onInvalid.saveInConfiguration(configuration, path + "onInvalid");
-        configuration.save();
+    @Override
+    public Consumer<CustomConfiguration> get() {
+        return c -> {
+            this.onStart = new TeleportSettingsVisual(c.getPath("onStart"));
+            this.onEach = new TeleportSettingsVisual(c.getPath("onEach"));
+            this.onEnd = new TeleportSettingsVisual(c.getPath("onEnd"));
+            this.onInvalid = new TeleportSettingsVisual(c.getPath("onInvalid"));
+        };
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> save() {
+        return c -> c.setConfigurable("onStart", onStart)
+                .setConfigurable("onEach", onEach)
+                .setConfigurable("onEnd", onEnd)
+                .setConfigurable("onInvalid", onInvalid);
     }
 }

@@ -1,5 +1,6 @@
 package me.opkarol.opc.api.misc;
 
+import me.opkarol.opc.api.runnable.OpRunnable;
 import me.opkarol.opc.api.utils.FormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -58,18 +59,17 @@ public class OpBossBar implements Serializable {
         return bossBar;
     }
 
-    public void call(int time) {
+    public void call(int time, int speed) {
         setVisible(true);
-        int speed = 1;
         task = new OpRunnable(r -> {
-            double d = time;
-            d = d - 1d / speed;
-            if (d < 1) {
+            double t = time;
+            t = t - 1d / speed;
+            if (t < 1) {
                 removePlayers();
                 r.cancel();
             }
-            bossBar.setProgress(d / time);
-            setTitle(originalTitle.replace("%time%", String.valueOf((int) d)));
+            bossBar.setProgress(t / time);
+            setTitle(originalTitle.replace("%time%", String.valueOf((int) t)));
         }).runTaskTimerAsynchronously(20L / speed);
     }
 

@@ -19,7 +19,7 @@ public record OpStringComponent(String string) {
     /**
      * Gets hovered message in format using the <HOVER: / start annotation
      * and > / as the end.
-     *
+     * <p>
      * General format is `<HOVER:DISPLAY_MESSAGE:HOVER_MESSAGE>`
      * where DISPLAY_MESSAGE is a text under which is located component
      * and HOVER_MESSAGE is a text which is shown when a user hovers their mouse on component.
@@ -69,7 +69,7 @@ public record OpStringComponent(String string) {
     /**
      * Gets clicked message in format using the <CLICK: / start annotation
      * and > / as the end.
-     *
+     * <p>
      * General format is <CLICK:DISPLAY_MESSAGE:ACTION:CLICK_STRING>
      * where DISPLAY_MESSAGE is a text under which is located component
      * ACTION is a default Bukkit enum action,
@@ -124,7 +124,7 @@ public record OpStringComponent(String string) {
     /**
      * Gets clicked and hovered message in format using the <CLICK-HOVER: / start annotation
      * and > / as the end.
-     *
+     * <p>
      * General format is <CLICK-HOVER:DISPLAY_MESSAGE:HOVER_MESSAGE:ACTION:CLICK_STRING>
      * where DISPLAY_MESSAGE is a text under which is located component
      * HOVER_MESSAGE is a text which is shown when a user hovers their mouse on component,

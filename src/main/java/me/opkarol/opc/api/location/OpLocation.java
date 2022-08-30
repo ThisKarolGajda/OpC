@@ -1,4 +1,4 @@
-package me.opkarol.opc.api.misc;
+package me.opkarol.opc.api.location;
 
 /*
  * Copyright (c) 2021-2022.
@@ -14,9 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
-
-public class OpLocation implements Serializable {
+public class OpLocation {
     private final double x, y, z;
     private final float pitch, yaw;
     private final World world;

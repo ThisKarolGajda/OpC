@@ -1,4 +1,4 @@
-package me.opkarol.opc.api.misc;
+package me.opkarol.opc.api.permission;
 
 import me.opkarol.opc.api.utils.StringUtil;
 import org.bukkit.configuration.file.FileConfiguration;

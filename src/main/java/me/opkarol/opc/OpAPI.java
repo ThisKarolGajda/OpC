@@ -1,6 +1,7 @@
 package me.opkarol.opc;
 
 import me.opkarol.opc.api.commands.OpCommand;
+import me.opkarol.opc.api.files.Configuration;
 import me.opkarol.opc.api.plugin.OpPlugin;
 
 import java.util.ArrayList;
@@ -24,5 +25,9 @@ public class OpAPI {
 
     public static void unregisterCommands() {
         commands.forEach(OpCommand::unregister);
+    }
+
+    public static Configuration getConfig() {
+        return plugin.getConfiguration();
     }
 }

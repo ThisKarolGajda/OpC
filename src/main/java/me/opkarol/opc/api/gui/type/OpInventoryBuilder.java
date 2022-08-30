@@ -205,53 +205,51 @@ public class OpInventoryBuilder {
         }
         String finalPath = path;
         OpMap<Integer, OpInventoryItem> items = new OpMap<>();
-        configuration.useSectionKeys(path, strings -> {
-            for (String displayName : strings) {
-                String iPath = finalPath.concat(displayName + ".");
-                int amount = StringUtil.getIntFromString(config.getString(iPath + "amount"));
-                Material material = StringUtil.getMaterialFromString(config.getString(iPath + "material"));
-                String slot = config.getString(iPath + "slot");
-                List<Integer> slots = new ArrayList<>();
-                if (slot != null) {
-                    if (slot.contains(";")) {
-                        slots.addAll(Arrays.stream(slot.split(";")).map(StringUtil::getInt).collect(Collectors.toList()));
-                    } else {
-                        slots.add(StringUtil.getIntFromString(slot));
-                    }
+        configuration.useSectionKeys(path, displayName -> {
+            String iPath = finalPath.concat(displayName + ".");
+            int amount = StringUtil.getIntFromString(config.getString(iPath + "amount"));
+            Material material = StringUtil.getMaterialFromString(config.getString(iPath + "material"));
+            String slot = config.getString(iPath + "slot");
+            List<Integer> slots = new ArrayList<>();
+            if (slot != null) {
+                if (slot.contains(";")) {
+                    slots.addAll(Arrays.stream(slot.split(";")).map(StringUtil::getInt).toList());
+                } else {
+                    slots.add(StringUtil.getIntFromString(slot));
                 }
-                List<String> lore = config.getStringList(iPath + "lore");
-                List<String> enchantmentsString = config.getStringList(iPath + "enchantments");
-                List<String> flagsString = config.getStringList(iPath + "flags");
-                List<String> specialDataString = config.getStringList(iPath + "specialData");
-
-                OpMap<Enchantment, Integer> enchantments = new OpMap<>();
-                for (String s : enchantmentsString) {
-                    String[] strings1 = s.split(";");
-                    if (strings1.length == 2) {
-                        Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(strings1[0]));
-                        int level = StringUtil.getIntFromString(strings1[1]);
-                        enchantments.set(enchantment, level);
-                    }
-                }
-
-                HashSet<ItemFlag> flags = flagsString.stream()
-                        .filter(s -> StringUtil.getEnumValue(s, ItemFlag.class).isPresent())
-                        .map(ItemFlag::valueOf)
-                        .collect(Collectors.toCollection(HashSet::new));
-
-                List<OpInventorySpecialData> specialData = specialDataString.stream()
-                        .filter(s -> StringUtil.getEnumValue(s, OpInventorySpecialData.class).isPresent())
-                        .map(OpInventorySpecialData::valueOf)
-                        .collect(Collectors.toList());
-
-                OpInventoryItem item = new OpInventoryItem(new OpItemBuilder(material)
-                        .setDisplayName(displayName)
-                        .setAmount(amount)
-                        .setEnchantments(enchantments)
-                        .setFlags(flags)
-                        .setLore(lore), specialData);
-                slots.forEach(slot1 -> items.set(slot1, item));
             }
+            List<String> lore = config.getStringList(iPath + "lore");
+            List<String> enchantmentsString = config.getStringList(iPath + "enchantments");
+            List<String> flagsString = config.getStringList(iPath + "flags");
+            List<String> specialDataString = config.getStringList(iPath + "specialData");
+
+            OpMap<Enchantment, Integer> enchantments = new OpMap<>();
+            for (String s : enchantmentsString) {
+                String[] strings1 = s.split(";");
+                if (strings1.length == 2) {
+                    Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(strings1[0]));
+                    int level = StringUtil.getIntFromString(strings1[1]);
+                    enchantments.set(enchantment, level);
+                }
+            }
+
+            HashSet<ItemFlag> flags = flagsString.stream()
+                    .filter(s -> StringUtil.getEnumValue(s, ItemFlag.class).isPresent())
+                    .map(ItemFlag::valueOf)
+                    .collect(Collectors.toCollection(HashSet::new));
+
+            List<OpInventorySpecialData> specialData = specialDataString.stream()
+                    .filter(s -> StringUtil.getEnumValue(s, OpInventorySpecialData.class).isPresent())
+                    .map(OpInventorySpecialData::valueOf)
+                    .collect(Collectors.toList());
+
+            OpInventoryItem item = new OpInventoryItem(new OpItemBuilder(material)
+                    .setDisplayName(displayName)
+                    .setAmount(amount)
+                    .setEnchantments(enchantments)
+                    .setFlags(flags)
+                    .setLore(lore), specialData);
+            slots.forEach(slot1 -> items.set(slot1, item));
         });
         return this;
     }

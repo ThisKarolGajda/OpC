@@ -1,5 +1,7 @@
-package me.opkarol.opc.api.misc;
+package me.opkarol.opc.api.location;
 
+import me.opkarol.opc.api.configuration.CustomConfigurable;
+import me.opkarol.opc.api.configuration.CustomConfiguration;
 import me.opkarol.opc.api.utils.StringUtil;
 import me.opkarol.opc.api.utils.Util;
 import org.bukkit.Bukkit;
@@ -9,10 +11,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.UUID;
+import java.util.function.Consumer;
 
-public class OpSerializableLocation implements Serializable {
-    private final double x, y, z;
-    private final float pitch, yaw;
+public class OpSerializableLocation implements Serializable, CustomConfigurable {
+    private double x, y, z;
+    private float pitch, yaw;
     private String world;
     private UUID worldUUID;
     private OpSerializableLocation lastLocation;
@@ -66,6 +69,8 @@ public class OpSerializableLocation implements Serializable {
     public OpSerializableLocation(@NotNull OpLocation location) {
          this(location.toString());
     }
+
+    public OpSerializableLocation() { }
 
     public double getX() {
         return x;
@@ -152,5 +157,27 @@ public class OpSerializableLocation implements Serializable {
 
     public String toFamilyString() {
         return String.format("X: %s Y: %s Z: %s World: %s", getStringX(), getStringY(), getStringZ(), getStringWorld());
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> get() {
+        return c -> {
+            this.x = c.getDouble("x");
+            this.y = c.getDouble("y");
+            this.z = c.getDouble("z");
+            this.yaw = c.getFloat("yaw");
+            this.pitch = c.getFloat("pitch");
+            this.world = c.getString("world");
+        };
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> save() {
+        return c -> c.setDouble("x", x)
+                .setDouble("y", y)
+                .setDouble("z", z)
+                .setFloat("yaw", yaw)
+                .setFloat("pitch", pitch)
+                .setString("world", world);
     }
 }

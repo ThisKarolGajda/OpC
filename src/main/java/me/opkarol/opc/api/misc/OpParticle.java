@@ -1,10 +1,12 @@
 package me.opkarol.opc.api.misc;
 
-import me.opkarol.opc.api.files.Configuration;
+import me.opkarol.opc.api.configuration.CustomConfigurable;
+import me.opkarol.opc.api.configuration.CustomConfiguration;
+import me.opkarol.opc.api.location.OpSerializableLocation;
+import me.opkarol.opc.api.runnable.OpRunnable;
 import me.opkarol.opc.api.utils.StringUtil;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -13,14 +15,15 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static me.opkarol.opc.api.utils.Util.getOrDefault;
 
-public class OpParticle implements Serializable {
+public class OpParticle implements CustomConfigurable, Serializable {
     private float offsetX, offsetY, offsetZ;
     private int amount;
     private Particle particle;
-    private OpLocation location;
+    private OpSerializableLocation location;
     private List<Player> receivers;
     private OpRunnable animatedTask;
 
@@ -28,42 +31,7 @@ public class OpParticle implements Serializable {
         this.particle = particle;
     }
 
-    public OpParticle(@NotNull FileConfiguration config, String path) {
-        path = path.endsWith(".") ? path : path.concat(".");
-        StringUtil.getEnumValue(config.getString(path + "particle"), Particle.class).ifPresent(particle1 -> this.particle = particle1);
-        this.amount = StringUtil.getInt(config.getString(path + "amount"));
-        this.location = new OpLocation(config.getString(path + "location"));
-        setOffset(config.getString(path + "offset"));
-    }
-
-    public void editInConfiguration(@NotNull FileConfiguration config, String path) {
-        path = path.endsWith(".") ? path : path.concat(".");
-        if (particle != null) {
-            config.set(path + "particle", particle.name());
-        }
-        config.set(path + "amount", amount);
-        if (location != null) {
-            config.set(path + "location", location.toString());
-        }
-        config.set(path + "offset", getOffset());
-    }
-
-    public void saveInConfiguration(@NotNull Configuration configuration, String path) {
-        path = path.endsWith(".") ? path : path.concat(".");
-        FileConfiguration config = configuration.getConfig();
-        if (config == null) {
-            return;
-        }
-        if (particle != null) {
-            config.set(path + "particle", particle.name());
-        }
-        config.set(path + "amount", amount);
-        if (location != null) {
-            config.set(path + "location", location.toString());
-        }
-        config.set(path + "offset", getOffset());
-        configuration.save();
-    }
+    public OpParticle() { }
 
     public OpParticle setOffset(float offsetX, float offsetY, float offsetZ) {
         this.offsetX = offsetX;
@@ -73,7 +41,7 @@ public class OpParticle implements Serializable {
     }
 
     public String getOffset() {
-        return String.format("%s;%s;%s", String.valueOf(offsetX), String.valueOf(offsetY), String.valueOf(offsetZ));
+        return String.format("%s;%s;%s", offsetX, offsetY, offsetZ);
     }
 
     public OpParticle setOffset(String offset) {
@@ -140,17 +108,17 @@ public class OpParticle implements Serializable {
         return this;
     }
 
-    public OpLocation getLocation() {
+    public OpSerializableLocation getLocation() {
         return location;
     }
 
-    public OpParticle setLocation(OpLocation opLocation) {
+    public OpParticle setLocation(OpSerializableLocation opLocation) {
         this.location = opLocation;
         return this;
     }
 
     public OpParticle setLocation(Location location) {
-        this.location = new OpLocation(location);
+        this.location = new OpSerializableLocation(location);
         return this;
     }
 
@@ -235,5 +203,23 @@ public class OpParticle implements Serializable {
 
     public void cancelAnimatedTask() {
         animatedTask.cancel();
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> get() {
+        return c -> {
+            this.setOffset(c.getString("offset"));
+            this.location = c.getLocation("location");
+            this.particle = c.getUnsafeEnum("particle", Particle.class);
+            this.amount = c.getInt("amount");
+        };
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> save() {
+        return c -> c.setString("offset", getOffset())
+                .setLocation("location", location)
+                .setEnum("particle", particle)
+                .setInt("amount", amount).save();
     }
 }

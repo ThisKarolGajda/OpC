@@ -41,6 +41,9 @@ public class StringUtil {
 
     public static <K extends Enum<K>> boolean containsEnumFromString(String s, Class<K> e) throws IllegalArgumentException {
         Enum<K> anEnum;
+        if (s == null) {
+            return false;
+        }
         try {
             anEnum = Enum.valueOf(e, s);
         } catch (IllegalArgumentException ignore) {

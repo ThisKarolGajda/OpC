@@ -7,65 +7,27 @@
     <groupId>me.opkarol</groupId>
     <artifactId>opc</artifactId>
     <version>1.1.0</version>
-    <packaging>jar</packaging>
-
-    <name>opc</name>
-
-    <description>opc is a modern and blazingly fast spigot api extenstion which allows developers to do tasks fast.
-    </description>
-    <properties>
-        <java.version>17</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <outputFile>E:/Servers/Test6Plugin - 1.19.2/plugins/opc - ${project.version}.jar</outputFile>
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <includes>
-                                        <include>me/opkarol/opc/**</include>
-                                        <include>plugin.yml</include>
-                                        <include>config.yml</include>
-                                        <include>lang/**</include>
-                                        <include>lang-save.yml</include>
-                                    </includes>
-                                </filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
+    <packaging>jar</packaging>
+
+    <name>opc</name>
+
+    <description>opc is a modern and blazingly fast spigot api extenstion which allows developers to do tasks fast.</description>
+    <properties>
+        <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <repositories>
         <repository>

@@ -1,4 +1,4 @@
-package me.opkarol.opc.api.misc;
+package me.opkarol.opc.api.runnable;
 
 import me.opkarol.opc.OpAPI;
 import org.bukkit.scheduler.BukkitRunnable;

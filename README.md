@@ -23,10 +23,13 @@
   - OpParticle,
   - OpRunnable,
   - OpSound,
-  - OpTitle
+  - OpTitle,
+  - OpText
 - Abstract JavaPlugin implementation which provided added features and Configuration file to plugin,
 - String based storage system with builder built-in supporting multiple java variables (double, int, String, boolean, (custom)) with supportive reflection,
 - Useful util classes
+- Custom Configuration system with easy-to-add own configuration objects,
+- Head database and retrieving from players 
 
 You can learn everything that this core have in the [wiki](https://github.com/ThisKarolGajda/OpC/wiki).
 

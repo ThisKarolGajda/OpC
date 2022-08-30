@@ -1,75 +1,37 @@
 package me.opkarol.opc.api.misc;
 
-import me.opkarol.opc.api.files.Configuration;
+import me.opkarol.opc.api.configuration.CustomConfigurable;
+import me.opkarol.opc.api.configuration.CustomConfiguration;
+import me.opkarol.opc.api.location.OpSerializableLocation;
 import me.opkarol.opc.api.utils.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class OpSound implements Serializable {
+public class OpSound implements Serializable, CustomConfigurable {
     private float volume = 1, pitch = 1;
     private Sound sound;
     private SoundCategory category;
     private List<Player> receivers;
-    private OpLocation location;
+    private OpSerializableLocation location;
 
     public OpSound(Sound sound) {
         this.sound = sound;
     }
 
+    public OpSound() {
+        this.sound = null;
+    }
+
     public OpSound(String sound) {
         StringUtil.getEnumValue(sound, Sound.class).ifPresent(sound1 -> this.sound = sound1);
-    }
-
-    public OpSound(@NotNull FileConfiguration config, String path) {
-        path = path.endsWith(".") ? path : path.concat(".");
-        this.volume = StringUtil.getFloat(config.getString(path + "volume"));
-        this.pitch = StringUtil.getFloat(config.getString(path + "pitch"));
-        StringUtil.getEnumValue(config.getString(path + "category"), SoundCategory.class).ifPresent(soundCategory -> this.category = soundCategory);
-        StringUtil.getEnumValue(config.getString(path + "sound"), Sound.class).ifPresent(sound1 -> this.sound = sound1);
-        this.location = new OpLocation(config.getString(path + "location"));
-    }
-
-    public void editInConfiguration(@NotNull FileConfiguration config, String path) {
-        path = path.endsWith(".") ? path : path.concat(".");
-        config.set(path + "volume", volume);
-        config.set(path + "pitch", pitch);
-        if (category != null) {
-            config.set(path + "category", category.name());
-        }
-        if (location != null) {
-            config.set(path + "location", location.toString());
-        }
-        if (sound != null) {
-            config.set(path + "sound", sound.name());
-        }
-    }
-
-    public void saveInConfiguration(@NotNull Configuration configuration, String path) {
-        path = path.endsWith(".") ? path : path.concat(".");
-        FileConfiguration config = configuration.getConfig();
-        if (config == null) {
-            return;
-        }
-        config.set(path + "volume", volume);
-        config.set(path + "pitch", pitch);
-        if (category != null) {
-            config.set(path + "category", category.name());
-        }
-        if (location != null) {
-            config.set(path + "location", location.toString());
-        }
-        if (sound != null) {
-            config.set(path + "sound", sound.name());
-        }
-        configuration.save();
     }
 
     public Sound getSound() {
@@ -93,10 +55,10 @@ public class OpSound implements Serializable {
     }
 
     public OpSound play(Location location) {
-        return play(new OpLocation(location));
+        return play(new OpSerializableLocation(location));
     }
 
-    public OpSound play(OpLocation location) {
+    public OpSound play(OpSerializableLocation location) {
         if (receivers == null) {
             return this;
         }
@@ -135,17 +97,17 @@ public class OpSound implements Serializable {
         return this;
     }
 
-    public OpLocation getLocation() {
+    public OpSerializableLocation getLocation() {
         return location;
     }
 
-    public OpSound setLocation(OpLocation location) {
+    public OpSound setLocation(OpSerializableLocation location) {
         this.location = location;
         return this;
     }
 
     public OpSound setLocation(Location location) {
-        this.location = new OpLocation(location);
+        this.location = new OpSerializableLocation(location);
         return this;
     }
 
@@ -158,5 +120,24 @@ public class OpSound implements Serializable {
     public OpSound setVolume(float volume) {
         this.volume = volume;
         return this;
+    }
+    @Override
+    public Consumer<CustomConfiguration> get() {
+        return c -> {
+            this.volume = c.getFloat("volume");
+            this.pitch = c.getFloat("pitch");
+            this.sound = c.getUnsafeEnum("sound", Sound.class);
+            this.category = c.getUnsafeEnum("category", SoundCategory.class);
+            this.location = c.getLocation("location");
+        };
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> save() {
+        return c -> c.setFloat("volume", volume)
+                .setFloat("pitch", pitch)
+                .setEnum("sound", sound)
+                .setEnum("category", category)
+                .setLocation("location", location).save();
     }
 }

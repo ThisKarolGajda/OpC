@@ -1,5 +1,6 @@
 package me.opkarol.opc.api.misc;
 
+import me.opkarol.opc.api.runnable.OpRunnable;
 import me.opkarol.opc.api.text.OpComponent;
 import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.entity.Player;
@@ -112,4 +113,5 @@ public class OpActionBar implements Serializable {
     public OpActionBar build() {
         return build(text);
     }
+
 }

@@ -1,60 +1,37 @@
 package me.opkarol.opc.api.teleport;
 
-import me.opkarol.opc.api.files.Configuration;
+import me.opkarol.opc.api.configuration.CustomConfigurable;
+import me.opkarol.opc.api.configuration.CustomConfiguration;
 import me.opkarol.opc.api.misc.OpParticle;
 import me.opkarol.opc.api.misc.OpSound;
+import me.opkarol.opc.api.misc.OpText;
 import me.opkarol.opc.api.misc.OpTitle;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.function.Consumer;
 
-public final class TeleportSettingsVisual implements Serializable {
-    private String text;
+public final class TeleportSettingsVisual implements Serializable, CustomConfigurable {
+    private OpText text;
     private OpParticle particle;
     private OpSound sound;
     private OpTitle title;
 
     public TeleportSettingsVisual(String text, OpParticle particle, OpSound sound, OpTitle title) {
-        this.text = text;
+        this.text = new OpText(text);
         this.particle = particle;
         this.sound = sound;
         this.title = title;
     }
 
-    public void saveInConfiguration(@NotNull Configuration configuration, String path) {
-        FileConfiguration config = configuration.getConfig();
-        path = path.endsWith(".") ? path : path.concat(".");
-        if (text != null) {
-            config.set(path + "text", text);
-        }
-        if (particle != null) {
-            particle.saveInConfiguration(configuration, path + "particle");
-        }
-        if (sound != null) {
-            sound.saveInConfiguration(configuration, path + "sound");
-        }
-        if (title != null) {
-            title.saveInConfiguration(configuration, path + "title");
-        }
-        configuration.save();
+    public TeleportSettingsVisual(String path) {
+        get(path);
     }
 
-    public TeleportSettingsVisual(@NotNull FileConfiguration config, String path) {
-        path = path.endsWith(".") ? path : path.concat(".");
-        this.text = config.getString(path + "text");
-        if (config.get(path + "particle") != null) {
-            this.particle = new OpParticle(config, path + "particle");
-        }
-        if (config.get(path + "sound") != null) {
-            this.sound = new OpSound(config, path + "sound");
-        }
-        if (config.get(path + "title") != null) {
-            this.title = new OpTitle(config, path + "title");
-        }
-    }
 
-    public String text() {
+    public TeleportSettingsVisual() { }
+
+    public OpText text() {
         return text;
     }
 
@@ -68,5 +45,23 @@ public final class TeleportSettingsVisual implements Serializable {
 
     public OpTitle title() {
         return title;
+    }
+
+    @Override
+    public @NotNull Consumer<CustomConfiguration> get() {
+        return c -> {
+            particle = c.getParticle("particle");
+            sound = c.getSound("sound");
+            title = c.getTitle("title");
+            text = c.getText("text");
+        };
+    }
+
+    @Override
+    public @NotNull Consumer<CustomConfiguration> save() {
+        return c -> c.setConfigurable("particle", particle)
+                .setConfigurable("sound", sound)
+                .setConfigurable("title", title)
+                .setConfigurable("text", text);
     }
 }

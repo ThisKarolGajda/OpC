@@ -1,45 +1,34 @@
 package me.opkarol.opc.api.teleport;
 
 import me.opkarol.opc.api.commands.OpCommandSender;
-import me.opkarol.opc.api.files.Configuration;
-import me.opkarol.opc.api.misc.*;
+import me.opkarol.opc.api.configuration.CustomConfigurable;
+import me.opkarol.opc.api.configuration.CustomConfiguration;
+import me.opkarol.opc.api.location.OpLocation;
+import me.opkarol.opc.api.location.OpSerializableLocation;
+import me.opkarol.opc.api.permission.PermissionManager;
+import me.opkarol.opc.api.runnable.OpRunnable;
+import me.opkarol.opc.api.runnable.OpTimerRunnable;
 import me.opkarol.opc.api.utils.FormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static me.opkarol.opc.api.utils.Util.getOrDefault;
 
-public class OpTeleport implements Serializable {
+public class OpTeleport implements Serializable, CustomConfigurable {
     private PermissionManager<Integer> permissionGroup;
     private TeleportSettings settings;
     private List<Player> players;
     private OpSerializableLocation location;
     private OpRunnable task;
     private TeleportRegistration registration;
-
-    public void saveInConfiguration(Configuration configuration, String path) {
-        path = path.endsWith(".") ? path : path.concat(".");
-        permissionGroup.saveInConfiguration(configuration, path + "permissionGroup");
-        settings.saveInConfiguration(configuration, path + "settings");
-        configuration.getConfig().set(path + "location", location.toString());
-        configuration.save();
-    }
-
-    public OpTeleport(@NotNull Configuration configuration, String path) {
-        path = path.endsWith(".") ? path : path.concat(".");
-        FileConfiguration config = configuration.getConfig();
-        permissionGroup = new PermissionManager<>(configuration, path + "permissionGroup");
-        settings = new TeleportSettings(config, path + "settings");
-        location = new OpSerializableLocation(config.getString(path + "location"));
-    }
 
     public OpTeleport(PermissionManager<Integer> permissionGroup, TeleportSettings settings) {
         this.permissionGroup = permissionGroup;
@@ -282,5 +271,22 @@ public class OpTeleport implements Serializable {
         clone.setSettings(settings);
         clone.setPlayers(players);
         return clone;
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> get() {
+        return c -> {
+            permissionGroup = new PermissionManager<>(c.getPath("permission"));
+            settings = new TeleportSettings(c.getPath("settings"));
+            location = c.getLocation("location");
+        };
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> save() {
+        return c -> c.setConfigurable("permission", permissionGroup)
+                .setConfigurable("settings", settings)
+                .setLocation("location", location)
+                .save();
     }
 }
