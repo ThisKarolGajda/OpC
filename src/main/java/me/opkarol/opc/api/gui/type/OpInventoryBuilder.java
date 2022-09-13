@@ -5,6 +5,7 @@ import me.opkarol.opc.api.gui.misc.*;
 import me.opkarol.opc.api.gui.pattern.OpInventoryPattern;
 import me.opkarol.opc.api.item.OpInventoryItem;
 import me.opkarol.opc.api.item.OpItemBuilder;
+import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.utils.FormatUtils;
 import me.opkarol.opc.api.utils.StringUtil;
@@ -26,7 +27,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static me.opkarol.opc.api.utils.Util.getOrDefault;
+import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;
 
 public class OpInventoryBuilder {
     private String inventoryName;
@@ -190,6 +191,8 @@ public class OpInventoryBuilder {
         return this;
     }
 
+    //todo move both builders to new config system
+
     public OpInventoryBuilder getInventory(@NotNull Configuration configuration, String path) {
         path = (path.endsWith(".") ? path : path.concat("."));
         FileConfiguration config = configuration.getConfig();
@@ -210,7 +213,7 @@ public class OpInventoryBuilder {
             int amount = StringUtil.getIntFromString(config.getString(iPath + "amount"));
             Material material = StringUtil.getMaterialFromString(config.getString(iPath + "material"));
             String slot = config.getString(iPath + "slot");
-            List<Integer> slots = new ArrayList<>();
+            OpList<Integer> slots = new OpList<>();
             if (slot != null) {
                 if (slot.contains(";")) {
                     slots.addAll(Arrays.stream(slot.split(";")).map(StringUtil::getInt).toList());

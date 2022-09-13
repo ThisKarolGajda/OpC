@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import static me.opkarol.opc.api.utils.Util.getOrDefault;
+import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;
 
 public class Vault {
     private static Vault vault;

@@ -6,7 +6,7 @@ import me.opkarol.opc.api.map.OpMap;
 import java.util.Optional;
 import java.util.UUID;
 
-import static me.opkarol.opc.api.utils.Util.getOrDefault;
+import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;
 
 public class OpInventoryCache {
     private static OpInventoryCache cache;

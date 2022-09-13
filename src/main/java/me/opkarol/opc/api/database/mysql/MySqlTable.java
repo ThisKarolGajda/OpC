@@ -2,7 +2,7 @@ package me.opkarol.opc.api.database.mysql;
 
 import me.opkarol.opc.api.map.OpLinkedMap;
 
-import static me.opkarol.opc.api.utils.Util.getOrDefault;
+import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;
 
 public class MySqlTable {
     private final OpLinkedMap<MySqlVariable, MySqlAttribute[]> map = new OpLinkedMap<>();

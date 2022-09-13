@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import me.opkarol.opc.api.list.OpList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -27,14 +27,14 @@ public class OpPageInventoryBuilder extends OpInventoryBuilder {
     private final OpMap<Integer, Inventory> lastInventories = new OpMap<>();
     private final OpMap<Integer, OpInventoryItem> finalItems = new OpMap<>();
 
-    private List<OpMap<Integer, OpInventoryItem>> pages = new ArrayList<>();
+    private OpList<OpMap<Integer, OpInventoryItem>> pages = new OpList<>();
 
     public OpPageInventoryBuilder(String title, OpInventoryRows rows) {
         super(title, rows);
     }
 
     public OpPageInventoryBuilder setItems(@NotNull List<OpInventoryItem> items) {
-        List<OpMap<Integer, OpInventoryItem>> pages = new ArrayList<>();
+        OpList<OpMap<Integer, OpInventoryItem>> pages = new OpList<>();
         int iPage = 0;
         int i = 0;
         OpMap<Integer, OpInventoryItem> map = new OpMap<>();
@@ -111,7 +111,7 @@ public class OpPageInventoryBuilder extends OpInventoryBuilder {
         return currentPage - 1 > 0;
     }
 
-    public List<OpMap<Integer, OpInventoryItem>> getPages() {
+    public OpList<OpMap<Integer, OpInventoryItem>> getPages() {
         return pages;
     }
 

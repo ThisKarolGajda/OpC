@@ -1,5 +1,6 @@
 package me.opkarol.opc.api.teleport;
 
+import me.opkarol.opc.OpC;
 import me.opkarol.opc.api.configuration.CustomConfigurable;
 import me.opkarol.opc.api.configuration.CustomConfiguration;
 import me.opkarol.opc.api.misc.OpParticle;
@@ -50,10 +51,11 @@ public final class TeleportSettingsVisual implements Serializable, CustomConfigu
     @Override
     public @NotNull Consumer<CustomConfiguration> get() {
         return c -> {
+            OpC.getLog().info(c.getDefaultPath() + " --- 3 " + c.getParticle("particle"));
             particle = c.getParticle("particle");
             sound = c.getSound("sound");
             title = c.getTitle("title");
-            text = c.getText("text");
+            text = c.getText("");
         };
     }
 
@@ -62,6 +64,16 @@ public final class TeleportSettingsVisual implements Serializable, CustomConfigu
         return c -> c.setConfigurable("particle", particle)
                 .setConfigurable("sound", sound)
                 .setConfigurable("title", title)
-                .setConfigurable("text", text);
+                .setConfigurable("", text);
+    }
+
+    @Override
+    public String toString() {
+        return "TeleportSettingsVisual{" +
+                "text=" + text +
+                ", particle=" + particle +
+                ", sound=" + sound +
+                ", title=" + title +
+                '}';
     }
 }

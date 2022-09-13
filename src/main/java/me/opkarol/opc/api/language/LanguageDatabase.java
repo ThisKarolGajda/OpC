@@ -4,17 +4,16 @@ import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.language.database.ILanguageDatabase;
 import me.opkarol.opc.api.language.database.LanguageFlat;
 import me.opkarol.opc.api.language.database.LanguageMySql;
+import me.opkarol.opc.api.list.OpList;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import static me.opkarol.opc.api.utils.Util.getOrDefault;
+import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;
 
 public class LanguageDatabase {
     private static LanguageDatabase languageDatabase;
-    private static final List<OpPluginLanguage> languages = new ArrayList<>();
+    private static final OpList<OpPluginLanguage> languages = new OpList<>();
     private ILanguageDatabase languageTool;
 
     public LanguageDatabase() {
@@ -46,7 +45,7 @@ public class LanguageDatabase {
         return getOrDefault(languageDatabase, new LanguageDatabase());
     }
 
-    public List<OpPluginLanguage> getLanguages() {
+    public OpList<OpPluginLanguage> getLanguages() {
         return languages;
     }
 

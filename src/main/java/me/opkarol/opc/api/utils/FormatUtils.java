@@ -9,6 +9,7 @@ package me.opkarol.opc.api.utils;
  */
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.opkarol.opc.api.list.OpList;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -46,11 +47,22 @@ public final class FormatUtils {
         return ChatColor.translateAlternateColorCodes('&', s);
     }
 
+    public static @NotNull OpList<String> format(List<String> list) {
+        if (list == null) {
+            return new OpList<>();
+        }
+        return list.stream()
+                .map(FormatUtils::formatMessage)
+                .collect(OpList.getCollector());
+    }
+
     public static @NotNull List<String> formatList(List<String> list) {
         if (list == null) {
             return new ArrayList<>();
         }
-        return list.stream().map(FormatUtils::formatMessage).collect(Collectors.toList());
+        return list.stream()
+                .map(FormatUtils::formatMessage)
+                .collect(Collectors.toList());
     }
 
     public static String scrapMessage(String input) {

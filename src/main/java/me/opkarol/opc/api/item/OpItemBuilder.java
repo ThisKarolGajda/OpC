@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import me.opkarol.opc.api.list.OpList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -78,8 +78,8 @@ public class OpItemBuilder {
         return enchantments;
     }
 
-    public List<String> getConfigEnchantments() {
-        List<String> list = new ArrayList<>();
+    public OpList<String> getConfigEnchantments() {
+        OpList<String> list = new OpList<>();
         for (Enchantment enchantment : getEnchantments().keySet()) {
             list.add(enchantment.toString() + ":" + getEnchantments().getOrDefault(enchantment, 0));
         }

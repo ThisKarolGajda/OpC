@@ -4,13 +4,13 @@ import me.opkarol.opc.api.configuration.object.OpConfigurationObject;
 import me.opkarol.opc.api.configuration.object.OpConfigurationSection;
 import me.opkarol.opc.api.files.Configuration;
 import me.opkarol.opc.api.map.OpMap;
-import me.opkarol.opc.api.utils.Util;
+import me.opkarol.opc.api.utils.VariableUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-import static me.opkarol.opc.api.utils.Util.ifNotEndsWithAdd;
+import static me.opkarol.opc.api.utils.VariableUtil.ifNotEndsWithAdd;
 
 public class OpConfiguration <K> {
     private Configuration configuration;
@@ -62,7 +62,7 @@ public class OpConfiguration <K> {
 
     private @NotNull String getPath(@NotNull String path) {
         if (path.startsWith(".")) {
-            return Util.ifEndsWithRemove(this.path, ".") + path;
+            return VariableUtil.ifEndsWithRemove(this.path, ".") + path;
         }
         return ifNotEndsWithAdd(this.path, ".") + path;
     }
@@ -103,7 +103,7 @@ public class OpConfiguration <K> {
     }
 
     private OpConfiguration<K> getAll(String path) {
-        path = Util.ifEndsWithRemove(path, ".");
+        path = VariableUtil.ifEndsWithRemove(path, ".");
         if (!isConfigurationSection(path)) {
             addObject(new OpConfigurationObject<K>(path, config.get(path)));
             return this;

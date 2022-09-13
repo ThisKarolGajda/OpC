@@ -1,6 +1,7 @@
 package me.opkarol.opc.api.item;
 
 import me.opkarol.opc.api.gui.misc.OpInventorySpecialData;
+import me.opkarol.opc.api.list.OpList;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -8,10 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class OpInventoryItem implements Serializable {
     private OpItemBuilder item;
@@ -109,13 +108,13 @@ public class OpInventoryItem implements Serializable {
         return specialData;
     }
 
-    public List<String> getConfigSpecialData() {
+    public OpList<String> getConfigSpecialData() {
         if (specialData == null) {
-            return new ArrayList<>();
+            return new OpList<>();
         }
         return specialData.stream()
                 .map(OpInventorySpecialData::toString)
-                .collect(Collectors.toList());
+                .collect(OpList.getCollector());
     }
 
     public OpInventoryItem setSpecialData(List<OpInventorySpecialData> specialData) {

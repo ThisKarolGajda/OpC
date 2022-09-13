@@ -50,13 +50,15 @@ public class Configuration {
     public void createConfig() {
         if (!configuration.exists()) {
             if (!pluginDataFolder.exists()) {
-                this.pluginDataFolder.mkdir();
+                this.pluginDataFolder.mkdirs();
             }
             plugin.saveResource(fileName, false);
+            updateConfig();
         }
     }
 
     public void updateConfig() {
+        createConfig();
         try {
             ConfigUpdater.update(plugin, fileName, configuration);
         } catch (IOException e) {

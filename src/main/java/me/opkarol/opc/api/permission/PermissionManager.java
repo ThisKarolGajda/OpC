@@ -5,21 +5,21 @@ import me.opkarol.opc.api.configuration.CustomConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import me.opkarol.opc.api.list.OpList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static me.opkarol.opc.api.utils.Util.getOrDefault;
+import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;
 
 public class PermissionManager<K> implements CustomConfigurable {
-    private List<PermissionGroup<K>> list = new ArrayList<>();
+    private OpList<PermissionGroup<K>> list = new OpList<>();
 
-    public List<PermissionGroup<K>> getList() {
-        return getOrDefault(list, new ArrayList<>());
+    public OpList<PermissionGroup<K>> getList() {
+        return getOrDefault(list, new OpList<>());
     }
 
     public void add(PermissionGroup<K> group) {
-        List<PermissionGroup<K>> list = getList();
+        OpList<PermissionGroup<K>> list = getList();
         list.add(group);
         this.list = list;
     }

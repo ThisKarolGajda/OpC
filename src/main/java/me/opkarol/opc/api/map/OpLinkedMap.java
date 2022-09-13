@@ -8,7 +8,8 @@ package me.opkarol.opc.api.map;
  = Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-import me.opkarol.opc.api.utils.Util;
+import me.opkarol.opc.api.list.OpList;
+import me.opkarol.opc.api.utils.VariableUtil;
 
 import java.io.Serializable;
 import java.util.*;
@@ -83,7 +84,7 @@ public class OpLinkedMap<K, V> implements IMap<K, V>, Serializable {
     @Override
     public Collection<V> getValues() {
         if (this.isEmpty()) {
-            return new ArrayList<>();
+            return new OpList<>();
         }
         return getMap().values();
     }
@@ -94,7 +95,7 @@ public class OpLinkedMap<K, V> implements IMap<K, V>, Serializable {
             return defaultValue;
         }
         V get = getMap().get(key);
-        return Util.getOrDefault(get, defaultValue);
+        return VariableUtil.getOrDefault(get, defaultValue);
     }
 
     @Override

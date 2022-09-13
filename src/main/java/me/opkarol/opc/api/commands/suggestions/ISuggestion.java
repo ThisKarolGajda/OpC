@@ -1,7 +1,7 @@
 package me.opkarol.opc.api.commands.suggestions;
 
-import java.util.List;
+import me.opkarol.opc.api.list.OpList;
 
 public interface ISuggestion {
-    List<String> getSuggestion();
+    OpList<String> getSuggestion();
 }

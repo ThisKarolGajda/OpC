@@ -98,10 +98,22 @@ public class TeleportSettings implements CustomConfigurable {
     }
 
     @Override
+    public String toString() {
+        return "TeleportSettings{" +
+                "onStart=" + onStart +
+                ", onEach=" + onEach +
+                ", onEnd=" + onEnd +
+                ", onInvalid=" + onInvalid +
+                '}';
+    }
+
+    @Override
     public Consumer<CustomConfiguration> save() {
         return c -> c.setConfigurable("onStart", onStart)
                 .setConfigurable("onEach", onEach)
                 .setConfigurable("onEnd", onEnd)
                 .setConfigurable("onInvalid", onInvalid);
     }
+
+
 }

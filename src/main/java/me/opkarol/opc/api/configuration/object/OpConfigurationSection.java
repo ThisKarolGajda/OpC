@@ -3,7 +3,7 @@ package me.opkarol.opc.api.configuration.object;
 import me.opkarol.opc.api.configuration.OpConfiguration;
 import me.opkarol.opc.api.files.Configuration;
 import me.opkarol.opc.api.map.OpMap;
-import me.opkarol.opc.api.utils.Util;
+import me.opkarol.opc.api.utils.VariableUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -30,7 +30,7 @@ public class OpConfigurationSection <K> extends OpConfigurationObject<OpConfigur
     }
 
     public OpConfigurationSection<K> save(@NotNull Configuration configuration, String path) throws NullPointerException {
-        map.keySet().forEach(s -> configuration.set(Util.ifNotEndsWithAdd(path, ".") + s, map.getOrDefault(s, null)));
+        map.keySet().forEach(s -> configuration.set(VariableUtil.ifNotEndsWithAdd(path, ".") + s, map.getOrDefault(s, null)));
         return null;
     }
 

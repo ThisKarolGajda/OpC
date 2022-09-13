@@ -1,18 +1,17 @@
 package me.opkarol.opc.api.commands.suggestions;
 
+import me.opkarol.opc.api.list.OpList;
 import org.bukkit.Material;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class MaterialSuggestion implements ISuggestion {
-    private final List<String> materialSuggestion = Arrays.stream(Material.values())
+    private final OpList<String> materialSuggestion = Arrays.stream(Material.values())
             .map(Material::toString)
-            .collect(Collectors.toList());
+            .collect(OpList.getCollector());
 
     @Override
-    public List<String> getSuggestion() {
+    public OpList<String> getSuggestion() {
         return materialSuggestion;
     }
 }

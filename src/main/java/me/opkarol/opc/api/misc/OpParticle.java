@@ -1,7 +1,8 @@
 package me.opkarol.opc.api.misc;
 
-import me.opkarol.opc.api.configuration.CustomConfigurable;
 import me.opkarol.opc.api.configuration.CustomConfiguration;
+import me.opkarol.opc.api.configuration.IEmptyConfiguration;
+import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.location.OpSerializableLocation;
 import me.opkarol.opc.api.runnable.OpRunnable;
 import me.opkarol.opc.api.utils.StringUtil;
@@ -13,22 +14,26 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static me.opkarol.opc.api.utils.Util.getOrDefault;
+import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;
 
-public class OpParticle implements CustomConfigurable, Serializable {
+public class OpParticle implements IEmptyConfiguration, Serializable {
     private float offsetX, offsetY, offsetZ;
     private int amount;
     private Particle particle;
     private OpSerializableLocation location;
-    private List<Player> receivers;
+    private OpList<Player> receivers;
     private OpRunnable animatedTask;
 
     public OpParticle(Particle particle) {
         this.particle = particle;
+    }
+
+    public OpParticle(String path) {
+        get(path);
+        //OpC.getLog().info(String.valueOf(this.particle));
     }
 
     public OpParticle() { }
@@ -122,17 +127,17 @@ public class OpParticle implements CustomConfigurable, Serializable {
         return this;
     }
 
-    public List<Player> getReceivers() {
+    public OpList<Player> getReceivers() {
         return receivers;
     }
 
-    public OpParticle setReceivers(List<Player> receivers) {
+    public OpParticle setReceivers(OpList<Player> receivers) {
         this.receivers = receivers;
         return this;
     }
 
     public OpParticle addReceiver(Player player) {
-        List<Player> list = getOrDefault(receivers, new ArrayList<>());
+        OpList<Player> list = getOrDefault(receivers, new OpList<>());
         list.add(player);
         return setReceivers(list);
     }
@@ -145,7 +150,7 @@ public class OpParticle implements CustomConfigurable, Serializable {
         return display(getReceivers(), specialData);
     }
 
-    public <T> OpParticle display(List<Player> players, T specialData) {
+    public <T> OpParticle display(OpList<Player> players, T specialData) {
         if (players == null) {
             return this;
         }
@@ -192,7 +197,7 @@ public class OpParticle implements CustomConfigurable, Serializable {
         if (byPlayer == null) {
             return this;
         }
-        List<Player> players = new ArrayList<>(List.of(byPlayer));
+        OpList<Player> players = OpList.asList(byPlayer);
         for (Entity entity : byPlayer.getNearbyEntities(reach, reach, reach)) {
             if (entity instanceof Player) {
                 players.add((Player) entity);
@@ -211,6 +216,7 @@ public class OpParticle implements CustomConfigurable, Serializable {
             this.setOffset(c.getString("offset"));
             this.location = c.getLocation("location");
             this.particle = c.getUnsafeEnum("particle", Particle.class);
+            //OpC.getLog().info(String.valueOf(c.getUnsafeEnum("particle", Particle.class)));
             this.amount = c.getInt("amount");
         };
     }
@@ -221,5 +227,24 @@ public class OpParticle implements CustomConfigurable, Serializable {
                 .setLocation("location", location)
                 .setEnum("particle", particle)
                 .setInt("amount", amount).save();
+    }
+
+    @Override
+    public String toString() {
+        return "OpParticle{" +
+                "offsetX=" + offsetX +
+                ", offsetY=" + offsetY +
+                ", offsetZ=" + offsetZ +
+                ", amount=" + amount +
+                ", particle=" + particle +
+                ", location=" + location +
+                ", receivers=" + receivers +
+                ", animatedTask=" + animatedTask +
+                '}';
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return amount == -1 || particle == null;
     }
 }

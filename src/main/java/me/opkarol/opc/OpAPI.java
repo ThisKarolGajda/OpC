@@ -2,14 +2,12 @@ package me.opkarol.opc;
 
 import me.opkarol.opc.api.commands.OpCommand;
 import me.opkarol.opc.api.files.Configuration;
+import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.plugin.OpPlugin;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class OpAPI {
     private static OpPlugin plugin;
-    private static final List<OpCommand> commands = new ArrayList<>();
+    private static final OpList<OpCommand> commands = new OpList<>();
 
     public static OpPlugin getInstance() {
         return plugin;

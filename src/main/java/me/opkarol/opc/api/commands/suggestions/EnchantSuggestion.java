@@ -1,20 +1,19 @@
 package me.opkarol.opc.api.commands.suggestions;
 
+import me.opkarol.opc.api.list.OpList;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class EnchantSuggestion implements ISuggestion {
-    private final List<String> enchantSuggestion = Arrays.stream(Enchantment.values())
+    private final OpList<String> enchantSuggestion = Arrays.stream(Enchantment.values())
             .map(Enchantment::getKey).map(NamespacedKey::getKey)
             .map(s -> s.replace("minecraft:", ""))
-            .collect(Collectors.toList());
+            .collect(OpList.getCollector());
 
     @Override
-    public List<String> getSuggestion() {
+    public OpList<String> getSuggestion() {
         return enchantSuggestion;
     }
 }

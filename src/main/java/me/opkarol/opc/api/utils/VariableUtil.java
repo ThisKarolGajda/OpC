@@ -2,7 +2,7 @@ package me.opkarol.opc.api.utils;
 
 import org.jetbrains.annotations.NotNull;
 
-public class Util {
+public class VariableUtil {
 
     public static <K> K getOrDefault(K object, K defaultObject) {
         return object == null ? defaultObject : object;

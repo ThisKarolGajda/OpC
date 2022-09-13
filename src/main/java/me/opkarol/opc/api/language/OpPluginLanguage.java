@@ -1,17 +1,16 @@
 package me.opkarol.opc.api.language;
 
+import me.opkarol.opc.api.list.OpList;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class OpPluginLanguage {
     private final Plugin plugin;
     private final LanguageType[] supportedTypes;
-    private final List<OpConfigLanguage> languages = new ArrayList<>();
+    private final OpList<OpConfigLanguage> languages = new OpList<>();
 
     public OpPluginLanguage(Plugin plugin, LanguageType @NotNull ... supportedTypes) {
         this.plugin = plugin;
@@ -33,7 +32,7 @@ public class OpPluginLanguage {
         return plugin;
     }
 
-    public List<OpConfigLanguage> getLanguages() {
+    public OpList<OpConfigLanguage> getLanguages() {
         return languages;
     }
 

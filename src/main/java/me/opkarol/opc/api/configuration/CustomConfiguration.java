@@ -9,7 +9,7 @@ import me.opkarol.opc.api.misc.OpText;
 import me.opkarol.opc.api.misc.OpTitle;
 import me.opkarol.opc.api.utils.ReflectionUtil;
 import me.opkarol.opc.api.utils.StringUtil;
-import me.opkarol.opc.api.utils.Util;
+import me.opkarol.opc.api.utils.VariableUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.Optional;
@@ -17,6 +17,7 @@ import java.util.function.Consumer;
 
 public class CustomConfiguration {
     private final Configuration configuration = OpAPI.getConfig();
+
     private String defaultPath;
 
     public Configuration getConfiguration() {
@@ -51,7 +52,7 @@ public class CustomConfiguration {
     }
 
     public CustomConfiguration setLocation(String path, OpSerializableLocation object) {
-        if (object == null) {
+        if (object == null || object.isNotValid()) {
             return this;
         }
         return setString(path, object.toString());
@@ -69,6 +70,13 @@ public class CustomConfiguration {
         return this;
     }
 
+    public <M extends IEmptyConfiguration> CustomConfiguration setConfigurable(String path, M configurable) {
+        if (configurable != null && !configurable.isEmpty()) {
+            configurable.save(getPath(path));
+        }
+        return this;
+    }
+
     public CustomConfiguration setEnum(String path, Enum<?> anEnum) {
         if (anEnum == null) {
             return this;
@@ -81,6 +89,7 @@ public class CustomConfiguration {
     }
 
     public String getString(String path) {
+        //OpAPI.getInstance().getLogger().info(getPath(path) + " --- " + getConfig().getString(getPath(path)));
         return getConfig().getString(getPath(path));
     }
 
@@ -99,7 +108,7 @@ public class CustomConfiguration {
     @Deprecated
     public <M extends CustomConfigurable> M getConfigurable(String path, Class<M> clazz) {
         M main = ReflectionUtil.getInstance(clazz);
-        main.get(path);
+        main.get(getPath(path));
         return main;
     }
 
@@ -125,8 +134,7 @@ public class CustomConfiguration {
     }
 
     public CustomConfiguration useSectionKeys(Consumer<String> consumer) {
-        configuration.useSectionKeys(defaultPath, consumer);
-        return this;
+        return useSectionKeys(VariableUtil.ifEndsWithRemove(defaultPath, "."), consumer);
     }
 
     public CustomConfiguration useSectionKeys(String path, Consumer<String> consumer) {
@@ -142,35 +150,41 @@ public class CustomConfiguration {
     }
 
     public String getPath(String path) {
-        return Util.getOrDefault(defaultPath + path, path);
+        //OpC.getLog().info(VariableUtil.getOrDefault(defaultPath + path, path));
+        return VariableUtil.getOrDefault(defaultPath + path, path);
     }
 
     public CustomConfiguration setPath(String defaultPath) {
-        this.defaultPath = Util.ifNotEndsWithAdd(defaultPath, ".");
+        this.defaultPath = VariableUtil.ifNotEndsWithAdd(defaultPath, ".");
+        //OpC.getLog().info(this.defaultPath);
         return this;
     }
 
     public OpText getText(String path) {
         OpText obj = new OpText();
-        obj.get(path);
+        obj.get(getPath(path));
         return obj;
     }
 
     public OpParticle getParticle(String path) {
         OpParticle obj = new OpParticle();
-        obj.get(path);
+        obj.get(getPath(path));
         return obj;
     }
 
     public OpTitle getTitle(String path) {
         OpTitle obj = new OpTitle();
-        obj.get(path);
+        obj.get(getPath(path));
         return obj;
     }
 
     public OpSound getSound(String path) {
         OpSound obj = new OpSound();
-        obj.get(path);
+        obj.get(getPath(path));
         return obj;
+    }
+
+    public String getDefaultPath() {
+        return defaultPath;
     }
 }

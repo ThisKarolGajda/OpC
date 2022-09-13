@@ -1,9 +1,12 @@
 package me.opkarol.opc.api.utils;
 
+import me.opkarol.opc.api.list.OpList;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class StringUtil {
@@ -120,6 +123,13 @@ public class StringUtil {
             return getIntFromString(null);
         }
         return getIntFromString(object.toString());
+    }
+
+    @NotNull
+    public static List<String> copyPartialMatches(String token, @NotNull OpList<String> originals){
+        return originals.stream()
+                .filter(s -> startsWithIgnoreCase(s, token))
+                .sorted().collect(Collectors.toList());
     }
 
     @NotNull

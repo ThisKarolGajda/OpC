@@ -1,8 +1,10 @@
 package me.opkarol.opc.api.teleport;
 
+import me.opkarol.opc.OpC;
 import me.opkarol.opc.api.commands.OpCommandSender;
 import me.opkarol.opc.api.configuration.CustomConfigurable;
 import me.opkarol.opc.api.configuration.CustomConfiguration;
+import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.location.OpLocation;
 import me.opkarol.opc.api.location.OpSerializableLocation;
 import me.opkarol.opc.api.permission.PermissionManager;
@@ -16,16 +18,14 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
-import static me.opkarol.opc.api.utils.Util.getOrDefault;
+import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;
 
 public class OpTeleport implements Serializable, CustomConfigurable {
     private PermissionManager<Integer> permissionGroup;
     private TeleportSettings settings;
-    private List<Player> players;
+    private OpList<Player> players;
     private OpSerializableLocation location;
     private OpRunnable task;
     private TeleportRegistration registration;
@@ -76,6 +76,10 @@ public class OpTeleport implements Serializable, CustomConfigurable {
         get(path);
     }
 
+    public OpTeleport() {
+        settings = new DefaultTeleportSettings();
+    }
+
     public TeleportSettings getSettings() {
         return settings;
     }
@@ -94,17 +98,17 @@ public class OpTeleport implements Serializable, CustomConfigurable {
         return this;
     }
 
-    public List<Player> getPlayers() {
-        return getOrDefault(players, new ArrayList<>());
+    public OpList<Player> getPlayers() {
+        return getOrDefault(players, new OpList<>());
     }
 
-    public OpTeleport setPlayers(List<Player> players) {
+    public OpTeleport setPlayers(OpList<Player> players) {
         this.players = players;
         return this;
     }
 
     public OpTeleport addTeleport(Player player) {
-        List<Player> players = getPlayers();
+        OpList<Player> players = getPlayers();
         players.add(player);
         return setPlayers(players);
     }
@@ -242,7 +246,7 @@ public class OpTeleport implements Serializable, CustomConfigurable {
         return this;
     }
 
-    public OpTeleport teleport(@NotNull List<Player> list, OpSerializableLocation location, @NotNull PermissionManager<Integer> group, @NotNull TeleportSettings settings) {
+    public OpTeleport teleport(@NotNull OpList<Player> list, OpSerializableLocation location, @NotNull PermissionManager<Integer> group, @NotNull TeleportSettings settings) {
         list.forEach(player -> teleport(player, location, group, settings));
         return this;
     }
@@ -252,14 +256,15 @@ public class OpTeleport implements Serializable, CustomConfigurable {
     }
 
     public void cancel(String message, Player player) {
-        cancel(message, List.of(player));
+        cancel(message, OpList.asList(player));
     }
 
-    public void cancel(String message, List<Player> players) {
+    public void cancel(String message, OpList<Player> players) {
         if (getTask() != null) {
             if (task.cancelTask()) {
                 if (players != null) {
-                    players.forEach(player -> player.sendMessage(FormatUtils.formatMessage(message)));
+                    final String finalMessage = FormatUtils.formatMessage(message);
+                    players.forEach(player -> player.sendMessage(finalMessage));
                 }
             }
         }
@@ -279,12 +284,11 @@ public class OpTeleport implements Serializable, CustomConfigurable {
     }
 
     public OpTeleport copy() {
-        OpTeleport clone = new OpTeleport(permissionGroup);
-        clone.setRegistration(registration);
-        clone.setLocation(location);
-        clone.setSettings(settings);
-        clone.setPlayers(players);
-        return clone;
+        return new OpTeleport(permissionGroup)
+                .setRegistration(registration)
+                .setLocation(location)
+                .setSettings(settings)
+                .setPlayers(players);
     }
 
     @Override
@@ -292,6 +296,7 @@ public class OpTeleport implements Serializable, CustomConfigurable {
         return c -> {
             permissionGroup = new PermissionManager<>(c.getPath("permission"));
             settings = new TeleportSettings(c.getPath("settings"));
+            OpC.getLog().info(settings.toString());
             location = c.getLocation("location");
         };
     }

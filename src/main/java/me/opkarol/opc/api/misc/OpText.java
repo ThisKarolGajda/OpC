@@ -1,16 +1,15 @@
 package me.opkarol.opc.api.misc;
 
-import me.opkarol.opc.api.configuration.CustomConfigurable;
 import me.opkarol.opc.api.configuration.CustomConfiguration;
+import me.opkarol.opc.api.configuration.IEmptyConfiguration;
 import me.opkarol.opc.api.utils.FormatUtils;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public final class OpText implements Serializable, CustomConfigurable {
+public final class OpText implements Serializable, IEmptyConfiguration {
     private String text;
 
     public OpText(String text) {
@@ -21,13 +20,11 @@ public final class OpText implements Serializable, CustomConfigurable {
         this.text = null;
     }
 
-    @Contract(pure = true)
     @Override
     public @NotNull Consumer<CustomConfiguration> get() {
         return c -> text = c.getString("text");
     }
 
-    @Contract(pure = true)
     @Override
     public @NotNull Consumer<CustomConfiguration> save() {
         return c -> c.setString("text", text).save();
@@ -48,13 +45,20 @@ public final class OpText implements Serializable, CustomConfigurable {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (OpText) obj;
+        OpText that = (OpText) obj;
         return Objects.equals(this.text, that.text);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(text);
+    }
+
+    @Override
+    public String toString() {
+        return "OpText{" +
+                "text='" + text + '\'' +
+                '}';
     }
 
     public boolean isEmpty() {

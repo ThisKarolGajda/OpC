@@ -1,20 +1,19 @@
 package me.opkarol.opc.api.commands.suggestions;
 
+import me.opkarol.opc.api.list.OpList;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class SoundSuggestion implements ISuggestion {
-    private final List<String> soundSuggestion = Arrays.stream(Sound.values())
+    private final OpList<String> soundSuggestion = Arrays.stream(Sound.values())
             .map(Sound::getKey).map(NamespacedKey::getKey)
             .map(s -> s.replace("minecraft:", "").toUpperCase().replace(".", "_"))
-            .collect(Collectors.toList());
+            .collect(OpList.getCollector());
 
     @Override
-    public List<String> getSuggestion() {
+    public OpList<String> getSuggestion() {
         return soundSuggestion;
     }
 

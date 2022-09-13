@@ -3,7 +3,7 @@ package me.opkarol.opc.api.location;
 import me.opkarol.opc.api.configuration.CustomConfigurable;
 import me.opkarol.opc.api.configuration.CustomConfiguration;
 import me.opkarol.opc.api.utils.StringUtil;
-import me.opkarol.opc.api.utils.Util;
+import me.opkarol.opc.api.utils.VariableUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -151,7 +151,7 @@ public class OpSerializableLocation implements Serializable, CustomConfigurable 
     }
 
     public OpSerializableLocation getLastLocation() {
-        return Util.getOrDefault(lastLocation, setLastLocation());
+        return VariableUtil.getOrDefault(lastLocation, setLastLocation());
     }
 
     public OpSerializableLocation setLastLocation() {
@@ -193,5 +193,9 @@ public class OpSerializableLocation implements Serializable, CustomConfigurable 
                 .setFloat("yaw", yaw)
                 .setFloat("pitch", pitch)
                 .setString("world", world);
+    }
+
+    public boolean isNotValid() {
+        return toString().equals("0.0;0.0;0.0;0.0;0.0;null");
     }
 }

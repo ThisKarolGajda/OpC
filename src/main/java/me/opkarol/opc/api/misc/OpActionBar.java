@@ -1,5 +1,6 @@
 package me.opkarol.opc.api.misc;
 
+import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.runnable.OpRunnable;
 import me.opkarol.opc.api.text.OpComponent;
 import net.md_5.bungee.api.ChatMessageType;
@@ -7,13 +8,11 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class OpActionBar implements Serializable {
     private String text;
     private OpComponent actionBar;
-    private List<Player> receivers;
+    private OpList<Player> receivers;
     private OpRunnable runnable;
 
     public OpActionBar(OpComponent actionBar) {
@@ -54,19 +53,19 @@ public class OpActionBar implements Serializable {
         return this;
     }
 
-    public List<Player> getReceivers() {
+    public OpList<Player> getReceivers() {
         return receivers;
     }
 
-    public OpActionBar setReceivers(List<Player> receivers) {
+    public OpActionBar setReceivers(OpList<Player> receivers) {
         this.receivers = receivers;
         return this;
     }
 
     public OpActionBar addReceiver(Player player) {
-        List<Player> list = getReceivers();
+        OpList<Player> list = getReceivers();
         if (getReceivers() == null) {
-            list = new ArrayList<>();
+            list = new OpList<>();
         }
         list.add(player);
         setReceivers(list);

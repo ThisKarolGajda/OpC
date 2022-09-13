@@ -1,20 +1,19 @@
 package me.opkarol.opc.api.commands.suggestions;
 
-import java.util.Arrays;
-import java.util.List;
+import me.opkarol.opc.api.list.OpList;
 
 public class OpSimpleSuggestion {
-    private final List<String> suggestions;
+    private final OpList<String> suggestions;
 
-    public OpSimpleSuggestion(List<String> suggestions) {
+    public OpSimpleSuggestion(OpList<String> suggestions) {
         this.suggestions = suggestions;
     }
 
     public OpSimpleSuggestion(String... suggestion) {
-        this(Arrays.asList(suggestion));
+        this(OpList.asList(suggestion));
     }
 
-    public List<String> getSuggestions() {
+    public OpList<String> getSuggestions() {
         return suggestions;
     }
 }

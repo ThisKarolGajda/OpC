@@ -16,6 +16,7 @@ public abstract class OpPlugin extends JavaPlugin {
     public void onLoad() {
         plugin = this;
         configuration = new Configuration(this, "config.yml");
+        configuration.createConfig();
     }
 
     @Override
@@ -25,13 +26,9 @@ public abstract class OpPlugin extends JavaPlugin {
         registerCommands();
     }
 
-    public void enable() {
+    public abstract void enable();
 
-    }
-
-    public void disable() {
-
-    }
+    public abstract void disable();
 
     @Override
     public void onDisable() {

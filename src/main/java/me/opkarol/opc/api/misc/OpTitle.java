@@ -1,25 +1,24 @@
 package me.opkarol.opc.api.misc;
 
-import me.opkarol.opc.api.configuration.CustomConfigurable;
 import me.opkarol.opc.api.configuration.CustomConfiguration;
+import me.opkarol.opc.api.configuration.IEmptyConfiguration;
+import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.utils.FormatUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
-import static me.opkarol.opc.api.utils.Util.getOrDefault;
+import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;
 
-public class OpTitle implements Serializable, CustomConfigurable {
+public class OpTitle implements Serializable, IEmptyConfiguration {
     private String title;
     private String subtitle;
     private String tempTitle;
     private String tempSubTitle;
     private int fadeIn, fadeOut, stay;
-    private List<Player> receivers;
+    private OpList<Player> receivers;
 
     public OpTitle(String title, String subTitle, int fadeIn, int stay, int fadeOut) {
         this.title = title;
@@ -91,19 +90,19 @@ public class OpTitle implements Serializable, CustomConfigurable {
         return this;
     }
 
-    public List<Player> getReceivers() {
+    public OpList<Player> getReceivers() {
         return receivers;
     }
 
-    public OpTitle setReceivers(List<Player> receivers) {
+    public OpTitle setReceivers(OpList<Player> receivers) {
         this.receivers = receivers;
         return this;
     }
 
     public OpTitle addReceiver(Player player) {
-        List<Player> list = getReceivers();
+        OpList<Player> list = getReceivers();
         if (getReceivers() == null) {
-            list = new ArrayList<>();
+            list = new OpList<>();
         }
         list.add(player);
         setReceivers(list);
@@ -116,7 +115,7 @@ public class OpTitle implements Serializable, CustomConfigurable {
         return this;
     }
 
-    public OpTitle display(List<Player> players) {
+    public OpTitle display(OpList<Player> players) {
         if (players == null) {
             return this;
         }
@@ -148,5 +147,24 @@ public class OpTitle implements Serializable, CustomConfigurable {
                 .setInt("stay", stay)
                 .setInt("fadeOut", fadeOut)
                 .save();
+    }
+
+    @Override
+    public String toString() {
+        return "OpTitle{" +
+                "title='" + title + '\'' +
+                ", subtitle='" + subtitle + '\'' +
+                ", tempTitle='" + tempTitle + '\'' +
+                ", tempSubTitle='" + tempSubTitle + '\'' +
+                ", fadeIn=" + fadeIn +
+                ", fadeOut=" + fadeOut +
+                ", stay=" + stay +
+                ", receivers=" + receivers +
+                '}';
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return fadeIn == -1 || stay == -1 || fadeOut == -1 || title == null;
     }
 }

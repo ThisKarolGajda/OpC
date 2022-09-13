@@ -6,6 +6,7 @@ import me.opkarol.opc.api.commands.arguments.OpCommandArgument;
 import me.opkarol.opc.api.commands.suggestions.OpCommandSuggestion;
 import me.opkarol.opc.api.commands.suggestions.OpSimpleSuggestion;
 import me.opkarol.opc.api.commands.suggestions.StaticSuggestions;
+import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.map.OpLinkedMap;
 import me.opkarol.opc.api.utils.StringUtil;
 import org.bukkit.Bukkit;
@@ -20,22 +21,20 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class OpCommand extends BukkitCommand {
     private boolean isMain;
-    private List<Integer> argsNumber = new ArrayList<>(List.of(-1));
+    private OpList<Integer> argsNumber = new OpList<>(List.of(-1));
     private final String name;
-    private final List<OpCommand> list = new ArrayList<>();
+    private final OpList<OpCommand> list = new OpList<>();
     private final OpLinkedMap<String, OpCommandArg> args = new OpLinkedMap<>();
     private BiConsumer<OpCommandSender, OpCommandArgument> biConsumer;
-    private final List<OpCommandSuggestion> suggestions = new ArrayList<>();
-    private final List<OpSimpleSuggestion> simpleSuggestions = new ArrayList<>();
+    private final OpList<OpCommandSuggestion> suggestions = new OpList<>();
+    private final OpList<OpSimpleSuggestion> simpleSuggestions = new OpList<>();
     private boolean hasToBePlayer, removeDefaultCommandSuggestion;
     private OpCommandPermission seeTabComplete = new OpCommandPermission(null, null, OpCommandPermission.PERMISSION_TYPE.SEE_TAB_COMPLETE), useCommand = new OpCommandPermission(null, null, OpCommandPermission.PERMISSION_TYPE.USE_COMMAND);
 
@@ -70,7 +69,7 @@ public class OpCommand extends BukkitCommand {
         return addArg(arg).addSuggestion(suggestion);
     }
 
-    public OpCommand addArgSuggestion(OpCommandArg arg, List<String> suggestion) {
+    public OpCommand addArgSuggestion(OpCommandArg arg, OpList<String> suggestion) {
         return addArg(arg).addSuggestion(suggestion);
     }
 
@@ -92,11 +91,11 @@ public class OpCommand extends BukkitCommand {
         return addSuggestion(new OpSimpleSuggestion(suggestion));
     }
 
-    public OpCommand addSuggestion(List<String> suggestions) {
+    public OpCommand addSuggestion(OpList<String> suggestions) {
         return addSuggestion(new OpSimpleSuggestion(suggestions));
     }
 
-    public List<OpCommand> getCommands() {
+    public OpList<OpCommand> getCommands() {
         return list;
     }
 
@@ -137,7 +136,7 @@ public class OpCommand extends BukkitCommand {
     @NotNull
     @Override
     public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args) throws IllegalArgumentException {
-        List<String> strings = new ArrayList<>();
+        OpList<String> strings = new OpList<>();
         for (OpCommand command : getCommandsForArg(args.length)) {
             if (command.getSeeTabComplete().hasPermission(sender)) {
                 strings.addAll(command.tabCompleteFunction(sender, args));
@@ -149,8 +148,8 @@ public class OpCommand extends BukkitCommand {
         return StringUtil.copyPartialMatches(args[args.length - 1], strings);
     }
 
-    public List<String> tabCompleteFunction(@NotNull CommandSender sender, @NotNull String @NotNull [] args) {
-        List<String> completions = new ArrayList<>();
+    public OpList<String> tabCompleteFunction(@NotNull CommandSender sender, @NotNull String @NotNull [] args) {
+        OpList<String> completions = new OpList<>();
         if (args.length > getHighestArgNumber()) {
             return completions;
         }
@@ -165,7 +164,7 @@ public class OpCommand extends BukkitCommand {
                 completions.addAll(list.stream()
                         .map(OpCommand::getName)
                         .filter(s -> !(s.equals(name)))
-                        .collect(Collectors.toList()));
+                        .toList());
             }
         } else if (args.length > 1) {
             if (getName().equals(args[0])) {
@@ -188,7 +187,7 @@ public class OpCommand extends BukkitCommand {
 
     public void register() {
         if (!removeDefaultCommandSuggestion) {
-            List<String> names = new ArrayList<>();
+            OpList<String> names = new OpList<>();
             for (OpCommand command : list) {
                 String name = command.name;
                 if (!name.equals(this.name)) {
@@ -271,22 +270,22 @@ public class OpCommand extends BukkitCommand {
         return this;
     }
 
-    public List<Integer> getArgsNumber() {
+    public OpList<Integer> getArgsNumber() {
         return argsNumber;
     }
 
-    public OpCommand setArgsNumber(List<Integer> argsNumber) {
+    public OpCommand setArgsNumber(OpList<Integer> argsNumber) {
         this.argsNumber = argsNumber;
         return this;
     }
 
     public OpCommand setArgsNumber(Integer... argsNumber) {
-        this.argsNumber = List.of(argsNumber);
+        this.argsNumber = OpList.asList(argsNumber);
         return this;
     }
 
     public OpCommand addArgNumber() {
-        List<Integer> list = getArgsNumber();
+        OpList<Integer> list = getArgsNumber();
         int last = -1;
         if (list.size() != 0) {
             last = list.get(list.size() - 1);
