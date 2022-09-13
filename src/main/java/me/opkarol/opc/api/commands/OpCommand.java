@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 public class OpCommand extends BukkitCommand {
     private boolean isMain;
-    private OpList<Integer> argsNumber = new OpList<>(List.of(-1));
+    private OpList<Integer> argsNumber = OpList.asList(1);
     private final String name;
     private final OpList<OpCommand> list = new OpList<>();
     private final OpLinkedMap<String, OpCommandArg> args = new OpLinkedMap<>();
