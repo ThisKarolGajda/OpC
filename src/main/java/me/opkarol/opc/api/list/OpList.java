@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class OpList<K> implements IList<K>, Serializable {
-    private final List<K> list;
+    private List<K> list;
 
     public OpList(List<K> list) {
         this.list = list;
@@ -25,16 +25,19 @@ public class OpList<K> implements IList<K>, Serializable {
     
     @Override
     public int size() {
+        createIfNotExists();
         return list.size();
     }
 
     @Override
     public boolean isEmpty() {
+        createIfNotExists();
         return list.isEmpty();
     }
 
     @Override
     public boolean contains(Object o) {
+        createIfNotExists();
         return list.contains(o);
     }
 
@@ -58,17 +61,19 @@ public class OpList<K> implements IList<K>, Serializable {
 
     @Override
     public boolean add(K k) {
+        createIfNotExists();
         return list.add(k);
     }
 
     @Override
     public boolean remove(Object o) {
+        createIfNotExists();
         return list.remove(o);
     }
 
     @Override
     public boolean containsAll(@NotNull Collection<?> c) {
-        return false;
+        return list.containsAll(c);
     }
 
     @Override
@@ -93,11 +98,13 @@ public class OpList<K> implements IList<K>, Serializable {
 
     @Override
     public K set(int index, K element) {
+        createIfNotExists();
         return list.set(index, element);
     }
 
     @Override
     public void add(int index, K element) {
+        createIfNotExists();
         list.add(index, element);
     }
 
@@ -135,6 +142,7 @@ public class OpList<K> implements IList<K>, Serializable {
 
     @Override
     public void forEach(Consumer<? super K> consumer) {
+        createIfNotExists();
         list.forEach(consumer);
     }
 
@@ -171,5 +179,11 @@ public class OpList<K> implements IList<K>, Serializable {
     @Override
     public int hashCode() {
         return list.hashCode();
+    }
+
+    public void createIfNotExists() {
+        if (list == null) {
+            list = new ArrayList<>();
+        }
     }
 }
