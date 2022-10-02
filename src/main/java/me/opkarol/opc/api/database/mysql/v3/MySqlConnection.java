@@ -18,6 +18,14 @@ public class MySqlConnection implements IMySqlDatabase {
     private HikariDataSource hikariDataSource;
     private DataSource source;
 
+    public MySqlConnection(@NotNull Configuration configuration, String path) {
+        setup(configuration, path);
+    }
+
+    public MySqlConnection() {
+
+    }
+
     @Override
     public void setup() {
         setup("jdbc:mysql://localhost:3306/simpsons", "bart", "51mp50n");

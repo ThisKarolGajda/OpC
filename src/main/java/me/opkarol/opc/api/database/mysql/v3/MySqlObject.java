@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-public record MySqlObject(String name, Function<Object, Object> object, MySqlVariableType type, MySqlAttribute... attributes) {
+public record MySqlObject<O>(String name, Function<O, String> object, MySqlVariableType type, MySqlAttribute... attributes) {
     public String toName() {
         return String.format("`%s`", name);
     }
