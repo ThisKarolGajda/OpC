@@ -22,9 +22,7 @@ public class MySqlConnection implements IMySqlDatabase {
         setup(configuration, path);
     }
 
-    public MySqlConnection() {
-
-    }
+    public MySqlConnection() {}
 
     @Override
     public void setup() {
