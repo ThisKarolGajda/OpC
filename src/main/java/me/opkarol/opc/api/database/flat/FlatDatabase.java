@@ -10,8 +10,8 @@ import java.io.*;
 public class FlatDatabase<K> implements IFlatDatabase<K> {
     private final Configuration configuration;
 
-    public FlatDatabase(Plugin plugin, String configuration) {
-        this.configuration = new Configuration(plugin, configuration, true);
+    public FlatDatabase(Plugin plugin, String fileName) {
+        this.configuration = new Configuration(plugin, fileName, true);
         this.configuration.createConfig();
     }
 

@@ -1,5 +1,7 @@
 package me.opkarol.opc.api.item;
 
+import me.opkarol.opc.api.configuration.CustomConfiguration;
+import me.opkarol.opc.api.configuration.IEmptyConfiguration;
 import me.opkarol.opc.api.gui.misc.OpInventorySpecialData;
 import me.opkarol.opc.api.list.OpList;
 import org.bukkit.Material;
@@ -12,7 +14,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class OpInventoryItem implements Serializable {
+public class OpInventoryItem implements Serializable, IEmptyConfiguration {
     private OpItemBuilder item;
     private Consumer<InventoryClickEvent> clickAction = e -> {};
     private Consumer<InventoryDragEvent> dragAction = e -> {};
@@ -127,5 +129,20 @@ public class OpInventoryItem implements Serializable {
             return false;
         }
         return getSpecialData().contains(data);
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> get() {
+        return c -> item = new OpItemBuilder(c.getDefaultPath());
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> save() {
+        return c -> item.save(c.getDefaultPath());
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return item == null;
     }
 }

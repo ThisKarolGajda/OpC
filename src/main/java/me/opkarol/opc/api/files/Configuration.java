@@ -48,12 +48,21 @@ public class Configuration {
     }
 
     public void createConfig() {
+        createNewFile();
         if (!configuration.exists()) {
             if (!pluginDataFolder.exists()) {
                 this.pluginDataFolder.mkdirs();
             }
             plugin.saveResource(fileName, false);
             updateConfig();
+        }
+    }
+
+    public void createNewFile() {
+        try {
+            configuration.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

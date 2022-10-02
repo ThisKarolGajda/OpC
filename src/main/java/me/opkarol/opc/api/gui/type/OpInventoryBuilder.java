@@ -1,5 +1,7 @@
 package me.opkarol.opc.api.gui.type;
 
+import me.opkarol.opc.api.configuration.CustomConfiguration;
+import me.opkarol.opc.api.configuration.IEmptyConfiguration;
 import me.opkarol.opc.api.files.Configuration;
 import me.opkarol.opc.api.gui.misc.*;
 import me.opkarol.opc.api.gui.pattern.OpInventoryPattern;
@@ -29,7 +31,7 @@ import java.util.stream.Collectors;
 
 import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;
 
-public class OpInventoryBuilder {
+public class OpInventoryBuilder implements IEmptyConfiguration {
     private String inventoryName;
     private OpInventoryRows rows;
     private String title;
@@ -150,6 +152,11 @@ public class OpInventoryBuilder {
         return this;
     }
 
+    public OpInventoryBuilder setCloseable() {
+        closeEventConsumer = e -> {};
+        return this;
+    }
+
     public Optional<OpInventoryItem> getItem(int slot) {
         return items.getByKey(slot);
     }
@@ -162,6 +169,10 @@ public class OpInventoryBuilder {
             items.set(slot, item);
         }
         return this;
+    }
+
+    public OpInventoryBuilder setItem(OpItemBuilder item, int i) {
+        return setItem(new OpInventoryItem(item), i);
     }
 
     public OpInventoryBuilder setItem(Material material, int... slots) {
@@ -301,4 +312,38 @@ public class OpInventoryBuilder {
     public String getInventoryName() {
         return inventoryName;
     }
+
+    @Override
+    public Consumer<CustomConfiguration> get() {
+        return c -> {
+
+        };
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> save() {
+        return c -> {
+            c.setString("title", title);
+            c.setConfigurable("rows", getRows());
+            c.setBoolean("closeable", isCloseable());
+
+            for (int i : items.keySet()) {
+                OpItemBuilder item = items.getOrDefault(i, null).getItem();
+                c.setConfigurable(item.getDisplayName(), item);
+                c.setString(item.getDisplayName() + ".slot", getConfigSlot(c.getString(item.getDisplayName() + ".slot"), i));
+            }
+
+            c.save();
+        };
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return inventoryName == null || rows.getSize() < 8;
+    }
+
+    public boolean isCloseable() {
+        return ((Consumer<InventoryCloseEvent>) e -> addPlayer((Player) e.getPlayer())).equals(getCloseEventConsumer());
+    }
+
 }

@@ -26,9 +26,13 @@ public abstract class OpPlugin extends JavaPlugin {
         registerCommands();
     }
 
-    public abstract void enable();
+    public void enable() {
 
-    public abstract void disable();
+    }
+
+    public void disable() {
+
+    }
 
     @Override
     public void onDisable() {

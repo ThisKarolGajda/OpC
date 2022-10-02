@@ -1,7 +1,10 @@
-package me.opkarol.opc.api.database.mysql;
+package me.opkarol.opc.api.database.mysql.v2;
 
 import com.zaxxer.hikari.HikariDataSource;
 import me.opkarol.opc.api.database.IMySqlDatabase;
+import me.opkarol.opc.api.database.mysql.MySqlDeleteTable;
+import me.opkarol.opc.api.database.mysql.MySqlInsertTable;
+import me.opkarol.opc.api.database.mysql.MySqlTable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.sql.DataSource;
@@ -13,6 +16,7 @@ import java.sql.SQLException;
 public class MySqlDatabase implements IMySqlDatabase {
     private HikariDataSource hikariDataSource;
     private DataSource source;
+    private final MySqlIdentification mySqlIdentifications = new MySqlIdentification();
 
     @Override
     public void setup() {

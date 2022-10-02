@@ -1,8 +1,13 @@
 package me.opkarol.opc.api.item;
 
 import me.opkarol.opc.OpAPI;
+import me.opkarol.opc.api.configuration.CustomConfiguration;
+import me.opkarol.opc.api.configuration.IEmptyConfiguration;
+import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.map.OpMap;
+import me.opkarol.opc.api.misc.HashCreator;
 import me.opkarol.opc.api.utils.PDCUtils;
+import me.opkarol.opc.api.utils.VariableUtil;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -11,16 +16,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import me.opkarol.opc.api.list.OpList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static me.opkarol.opc.api.utils.FormatUtils.formatList;
 import static me.opkarol.opc.api.utils.FormatUtils.formatMessage;
 
-public class OpItemBuilder {
+public class OpItemBuilder implements IEmptyConfiguration {
     private String displayName;
     private int amount = 1;
     private Material material;
@@ -47,8 +52,12 @@ public class OpItemBuilder {
         this(new ItemStack(material));
     }
 
+    public OpItemBuilder(String path) {
+        get(path);
+    }
+
     public String getDisplayName() {
-        return displayName;
+        return VariableUtil.getOrDefault(displayName, getUuid());
     }
 
     public OpItemBuilder setDisplayName(String displayName) {
@@ -164,5 +173,33 @@ public class OpItemBuilder {
         return flags.stream()
                 .map(ItemFlag::toString)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> get() {
+        return c -> {
+
+        };
+    }
+
+    @Override
+    public Consumer<CustomConfiguration> save() {
+        return c -> {
+            if (getDisplayName() == null || getDisplayName().isBlank()) {
+                c.addPath(getUuid());
+            }
+            c.setInt("amount", amount);
+            c.setMaterial("material", material);
+            c.setStringList("lore", lore);
+        };
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return amount < 1 || amount > 64 || material == null;
+    }
+
+    public String getUuid() {
+        return HashCreator.getSha1Uuid(amount * material.hashCode() + getMaterial().toString()).toString();
     }
 }

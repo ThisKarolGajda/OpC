@@ -10,8 +10,10 @@ import me.opkarol.opc.api.misc.OpTitle;
 import me.opkarol.opc.api.utils.ReflectionUtil;
 import me.opkarol.opc.api.utils.StringUtil;
 import me.opkarol.opc.api.utils.VariableUtil;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -58,6 +60,10 @@ public class CustomConfiguration {
         return setString(path, object.toString());
     }
 
+    public CustomConfiguration setBoolean(String path, boolean object) {
+        return set(path, object);
+    }
+
     public CustomConfiguration set(String path, Object object) {
         getConfig().set(getPath(path), object);
         return this;
@@ -77,6 +83,10 @@ public class CustomConfiguration {
         return this;
     }
 
+    public CustomConfiguration setStringList(String path, List<String> list) {
+        return set(path, list);
+    }
+
     public CustomConfiguration setEnum(String path, Enum<?> anEnum) {
         if (anEnum == null) {
             return this;
@@ -84,8 +94,19 @@ public class CustomConfiguration {
         return setString(path, anEnum.name());
     }
 
+    public CustomConfiguration setMaterial(String path, Material material) {
+        if (material == null) {
+            return this;
+        }
+        return setString(path, material.toString());
+    }
+
     public Object get(String path) {
         return getConfig().get(getPath(path));
+    }
+
+    public Material getMaterial(String path) {
+        return StringUtil.getMaterialFromString(getString(path));
     }
 
     public String getString(String path) {
@@ -103,6 +124,14 @@ public class CustomConfiguration {
 
     public double getDouble(String path) {
         return StringUtil.getDoubleFromString(getString(path));
+    }
+
+    public boolean getBoolean(String path) {
+        return getConfig().getBoolean(getPath(path));
+    }
+
+    public List<String> getStringList(String path) {
+        return getConfig().getStringList(getPath(path));
     }
 
     @Deprecated
@@ -150,14 +179,16 @@ public class CustomConfiguration {
     }
 
     public String getPath(String path) {
-        //OpC.getLog().info(VariableUtil.getOrDefault(defaultPath + path, path));
         return VariableUtil.getOrDefault(defaultPath + path, path);
     }
 
     public CustomConfiguration setPath(String defaultPath) {
         this.defaultPath = VariableUtil.ifNotEndsWithAdd(defaultPath, ".");
-        //OpC.getLog().info(this.defaultPath);
         return this;
+    }
+
+    public CustomConfiguration addPath(String path) {
+        return setPath(defaultPath + path);
     }
 
     public OpText getText(String path) {
@@ -186,5 +217,19 @@ public class CustomConfiguration {
 
     public String getDefaultPath() {
         return defaultPath;
+    }
+
+    public String getDefaultPathWithRemovedDot() {
+        return VariableUtil.ifEndsWithRemove(getDefaultPath(), ".");
+    }
+
+    @Deprecated
+    public void setUnsafeObject(Object toSet) {
+        getConfig().set(getDefaultPathWithRemovedDot(), toSet);
+    }
+
+    @Deprecated
+    public Object getUnsafeObject() {
+        return getConfig().get(getDefaultPathWithRemovedDot());
     }
 }
