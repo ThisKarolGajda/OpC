@@ -1,14 +1,14 @@
 package me.opkarol.opc.api.database.mysql.v3;
 
-import me.opkarol.opc.api.database.mysql.MySqlDatabase;
 import me.opkarol.opc.api.database.mysql.MySqlDeleteTable;
 import me.opkarol.opc.api.database.mysql.MySqlInsertTable;
 import me.opkarol.opc.api.database.mysql.MySqlTable;
+import me.opkarol.opc.api.files.Configuration;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
 
-public record OpMySqlDatabase(String tableName, MySqlDatabase database, MySqlObjects objects) {
+public record OpMySqlDatabase(String tableName, MySqlConnection database, MySqlObjects objects) {
 
     public void delete(Object object) {
         MySqlDeleteTable table = new MySqlDeleteTable(getTable());
@@ -46,5 +46,9 @@ public record OpMySqlDatabase(String tableName, MySqlDatabase database, MySqlObj
 
     public void setup(String jdbcUrl, String username, String password) {
         database.setup(jdbcUrl, username, password);
+    }
+
+    public void setup(@NotNull Configuration configuration, String path) {
+        database.setup(configuration, path);
     }
 }
