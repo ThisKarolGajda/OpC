@@ -5,27 +5,28 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class MySqlObjects {
-    private final List<MySqlObject> objectList = new ArrayList<>();
+public class MySqlObjects<O> {
+    private final List<MySqlObject<O>> objectList = new ArrayList<>();
 
-    public List<MySqlObject> getObjectList() {
+    public List<MySqlObject<O>> getObjectList() {
         return objectList;
     }
 
-    public MySqlObjects add(MySqlObject object) {
+    public MySqlObjects<O> add(MySqlObject<O> object) {
         objectList.add(object);
         return this;
     }
 
-    public MySqlObjects(MySqlObject... objects) {
+    @SafeVarargs
+    public MySqlObjects(MySqlObject<O>... objects) {
         objectList.addAll(Arrays.stream(objects).toList());
     }
 
-    public MySqlObjects(List<MySqlObject> objects) {
+    public MySqlObjects(List<MySqlObject<O>> objects) {
         objectList.addAll(objects);
     }
 
-    public Optional<MySqlObject> getPrimary() {
+    public Optional<MySqlObject<O>> getPrimary() {
         return objectList.stream().filter(MySqlObject::isPrimary).findFirst();
     }
 }

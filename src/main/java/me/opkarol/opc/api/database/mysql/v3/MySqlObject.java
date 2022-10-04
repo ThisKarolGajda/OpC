@@ -10,13 +10,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-public record MySqlObject<O>(String name, Function<O, Object> object, MySqlVariableType type, MySqlAttribute... attributes) {
+public record MySqlObject<O>(String name, Function<O, Object> object,
+                             MySqlVariableType type,
+                             MySqlAttribute... attributes) {
+
     public String toName() {
         return String.format("`%s`", name);
     }
 
     @Contract(" -> new")
-    public @NotNull MySqlVariable getVariable() {
+    public @NotNull
+    MySqlVariable getVariable() {
         return new MySqlVariable(name, type);
     }
 
@@ -31,5 +35,4 @@ public record MySqlObject<O>(String name, Function<O, Object> object, MySqlVaria
     public boolean isNotNull() {
         return getTypes().contains(MySqlAttribute.NOTNULL);
     }
-
 }
