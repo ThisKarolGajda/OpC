@@ -298,7 +298,7 @@ public class OpCommand extends BukkitCommand {
                 list.set(0, 1);
             }
         } else {
-            list.add(last + 1);
+            list.set(list.size(), last + 1);
         }
         return setArgsNumber(list);
     }
