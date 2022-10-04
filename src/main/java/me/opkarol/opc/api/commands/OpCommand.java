@@ -298,6 +298,7 @@ public class OpCommand extends BukkitCommand {
                 list.set(0, 1);
             }
         } else {
+            OpAPI.getInstance().getLogger().info(list.size() + " === " + list.size() + 1 + " --- " + last);
             list.set(list.size(), last + 1);
         }
         return setArgsNumber(list);
