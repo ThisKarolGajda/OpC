@@ -48,7 +48,6 @@ public class Configuration {
     }
 
     public void createConfig() {
-        createNewFile();
         if (!configuration.exists()) {
             if (!pluginDataFolder.exists()) {
                 this.pluginDataFolder.mkdirs();
@@ -60,6 +59,7 @@ public class Configuration {
 
     public void createNewFile() {
         try {
+            configuration.mkdirs();
             configuration.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -38,6 +38,7 @@
                                         <include>me/opkarol/opc/**</include>
                                         <include>plugin.yml</include>
                                         <include>com/tchristofferson/configupdater/**</include>
+                                        <include>com/zaxxer/hikari/**</include>
                                     </includes>
                                 </filter>
                             </filters>
@@ -45,6 +46,10 @@
                                 <relocation>
                                     <pattern>com.tchristofferson.configupdater</pattern>
                                     <shadedPattern>me.opkarol.oppets.configupdater</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.zaxxer.hikari</pattern>
+                                    <shadedPattern>me.opkarol.oppets.hikaricp</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
