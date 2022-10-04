@@ -9,6 +9,7 @@ import me.opkarol.opc.api.commands.suggestions.StaticSuggestions;
 import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.map.OpLinkedMap;
 import me.opkarol.opc.api.utils.StringUtil;
+import me.opkarol.opc.api.utils.VariableUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -285,7 +286,7 @@ public class OpCommand extends BukkitCommand {
     }
 
     public OpCommand addArgNumber() {
-        OpList<Integer> list = getArgsNumber();
+        OpList<Integer> list = VariableUtil.getOrDefault(getArgsNumber(), new OpList<>());
         int last = -1;
         if (list.size() != 0) {
             last = list.get(list.size() - 1);
