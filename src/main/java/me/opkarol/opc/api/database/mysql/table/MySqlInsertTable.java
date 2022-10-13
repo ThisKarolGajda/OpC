@@ -1,5 +1,7 @@
-package me.opkarol.opc.api.database.mysql;
+package me.opkarol.opc.api.database.mysql.table;
 
+import me.opkarol.opc.api.database.mysql.types.MySqlAttribute;
+import me.opkarol.opc.api.database.mysql.types.MySqlVariable;
 import me.opkarol.opc.api.map.OpMap;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,6 +53,10 @@ public class MySqlInsertTable {
             }
 
             builder.append("'").append(value).append("', ");
+        }
+
+        if (builder.length() < 2) {
+            return "";
         }
 
         return builder.substring(0, builder.length() - 2);

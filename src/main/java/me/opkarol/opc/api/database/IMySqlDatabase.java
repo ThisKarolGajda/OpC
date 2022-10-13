@@ -1,8 +1,8 @@
 package me.opkarol.opc.api.database;
 
-import me.opkarol.opc.api.database.mysql.MySqlDeleteTable;
-import me.opkarol.opc.api.database.mysql.MySqlInsertTable;
-import me.opkarol.opc.api.database.mysql.MySqlTable;
+import me.opkarol.opc.api.database.mysql.table.MySqlDeleteTable;
+import me.opkarol.opc.api.database.mysql.table.MySqlInsertTable;
+import me.opkarol.opc.api.database.mysql.table.MySqlTable;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
@@ -19,4 +19,8 @@ public interface IMySqlDatabase {
     void delete(@NotNull MySqlDeleteTable table);
 
     ResultSet get(MySqlTable getValue);
+
+    void run(String statement);
+
+    ResultSet query(String statement);
 }

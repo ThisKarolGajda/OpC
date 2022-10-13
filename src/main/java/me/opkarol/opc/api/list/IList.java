@@ -48,4 +48,6 @@ public interface IList<K> extends Collection<K> {
     void forEach(Consumer<? super K> consumer);
 
     Stream<K> stream();
+
+    String toArrayString();
 }

@@ -1,5 +1,8 @@
-package me.opkarol.opc.api.database.mysql;
+package me.opkarol.opc.api.database.mysql.table;
 
+import me.opkarol.opc.api.database.mysql.types.MySqlAttribute;
+import me.opkarol.opc.api.database.mysql.types.MySqlVariable;
+import me.opkarol.opc.api.database.mysql.types.MySqlVariableType;
 import me.opkarol.opc.api.map.OpLinkedMap;
 
 import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;

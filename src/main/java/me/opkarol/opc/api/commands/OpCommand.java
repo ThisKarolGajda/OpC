@@ -51,6 +51,7 @@ public class OpCommand extends BukkitCommand {
         this.list.add(subCommand);
         subCommand.isMain = false;
         subCommand.addArgNumber();
+        OpAPI.getInstance().getLogger().info(subCommand.getName() + " [-] " + subCommand.isMain);
         return this;
     }
 
@@ -154,25 +155,20 @@ public class OpCommand extends BukkitCommand {
         if (args.length > getHighestArgNumber()) {
             return completions;
         }
-        if (isMain) {
-            if (simpleSuggestions.size() != 0) {
-                completions.addAll(simpleSuggestions.get(args.length - 1).getSuggestions());
-            } else if (suggestions.size() != 0) {
-                completions.addAll(suggestions.get(args.length - 1).apply(new OpCommandSender(sender), args));
-            }
 
-            if (completions.size() == 0) {
-                completions.addAll(list.stream()
-                        .map(OpCommand::getName)
-                        .filter(s -> !(s.equals(name)))
-                        .toList());
+        if (isMain && args.length == 1) {
+            if (simpleSuggestions.size() > 0) {
+                completions.addAll(simpleSuggestions.get(0).getSuggestions());
+            } else if (suggestions.size() > 0) {
+                completions.addAll(suggestions.get(0).apply(new OpCommandSender(sender), args));
             }
         } else if (args.length > 1) {
             if (getName().equals(args[0])) {
-                if (simpleSuggestions.size() + 1 >= args.length) {
+                OpAPI.getInstance().getLogger().info(args.length + " - " + getSimpleSuggestionsCount() + " - " + getSuggestionSize() + " - ");
+                if (getSimpleSuggestionsCount() == args.length - 1) {
                     completions.addAll(simpleSuggestions.get(args.length - 2).getSuggestions());
                 }
-                if (suggestions.size() + 1 >= args.length) {
+                if (getSuggestionSize() == args.length - 1) {
                     completions.addAll(suggestions.get(args.length - 2).apply(new OpCommandSender(sender), args));
                 }
             }
@@ -298,8 +294,10 @@ public class OpCommand extends BukkitCommand {
                 list.set(0, 1);
             }
         } else {
-            OpAPI.getInstance().getLogger().info(list.size() + " === " + list.size() + 1 + " --- " + last);
-            list.set(list.size(), last + 1);
+            OpList<Integer> list2 = new OpList<>();
+            list2.addAll(list);
+            list2.add(last + 1);
+            return setArgsNumber(list2);
         }
         return setArgsNumber(list);
     }
@@ -323,11 +321,11 @@ public class OpCommand extends BukkitCommand {
         return this;
     }
 
-    public boolean isRemoveDefaultCommandSuggestion() {
+    public boolean doesRemoveDefaultSuggestions() {
         return removeDefaultCommandSuggestion;
     }
 
-    public OpCommand setRemoveDefaultCommandSuggestion(boolean removeDefaultCommandSuggestion) {
+    public OpCommand removeDefaultSuggestions(boolean removeDefaultCommandSuggestion) {
         this.removeDefaultCommandSuggestion = removeDefaultCommandSuggestion;
         return this;
     }
@@ -348,5 +346,18 @@ public class OpCommand extends BukkitCommand {
     public OpCommand setUseCommand(String permission, String noPermissionMessage) {
         this.useCommand = new OpCommandPermission(permission, noPermissionMessage, OpCommandPermission.PERMISSION_TYPE.USE_COMMAND);
         return this;
+    }
+
+    public int getSimpleSuggestionsCount() {
+        int count = 0;
+        for (OpSimpleSuggestion suggestion : simpleSuggestions) {
+            count+=suggestion.getSuggestions().size();
+            OpAPI.getInstance().getLogger().info(count + " - " + suggestion.getSuggestions().size() + " - " + suggestion.getSuggestions().toArrayString());
+        }
+        return count;
+    }
+
+    public int getSuggestionSize() {
+        return suggestions.size();
     }
 }

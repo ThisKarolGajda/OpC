@@ -1,11 +1,9 @@
-package me.opkarol.opc.api.database.mysql;
+package me.opkarol.opc.api.database.mysql.types;
 
 public enum MySqlAttribute {
     NOTNULL(" NOT NULL"),
     PRIMARY(" PRIMARY KEY (%s)"),
-    LENGTH(" (%s)"),
-    AUTOINCREMENT(" AUTO INCREMENT"),
-    ;
+    LENGTH(" (%s)");
 
     private final String text;
 

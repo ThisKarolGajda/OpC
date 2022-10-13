@@ -22,6 +22,12 @@ public class OpList<K> implements IList<K>, Serializable {
     public OpList() {
         this.list = new ArrayList<>();
     }
+
+    @SafeVarargs
+    public OpList(K... ks) {
+        this.list = new ArrayList<>();
+        addAll(Arrays.asList(ks));
+    }
     
     @Override
     public int size() {
@@ -185,5 +191,9 @@ public class OpList<K> implements IList<K>, Serializable {
         if (list == null) {
             list = new ArrayList<>();
         }
+    }
+
+    public String toArrayString() {
+        return Arrays.toString(list.toArray());
     }
 }

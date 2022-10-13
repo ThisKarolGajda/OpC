@@ -1,21 +1,23 @@
-package me.opkarol.opc.api.database.mysql.v3;
+package me.opkarol.opc.api.database.mysql.base;
 
-import me.opkarol.opc.api.database.mysql.MySqlDeleteTable;
-import me.opkarol.opc.api.database.mysql.MySqlInsertTable;
-import me.opkarol.opc.api.database.mysql.MySqlTable;
+import me.opkarol.opc.api.database.mysql.OpMConnection;
+import me.opkarol.opc.api.database.mysql.objects.OpMObjects;
+import me.opkarol.opc.api.database.mysql.table.MySqlDeleteTable;
+import me.opkarol.opc.api.database.mysql.table.MySqlInsertTable;
+import me.opkarol.opc.api.database.mysql.table.MySqlTable;
 import me.opkarol.opc.api.files.Configuration;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
 import java.util.Objects;
 
-public final class OpMySqlDatabase<O> {
+public class OpMySqlDatabase<O> {
     private final String tableName;
-    private final MySqlConnection database;
-    private final MySqlObjects<O> objects;
+    private final OpMConnection database;
+    private final OpMObjects<O> objects;
     private final MySqlTable table;
 
-    public OpMySqlDatabase(String tableName, MySqlConnection database, @NotNull MySqlObjects<O> objects) {
+    public OpMySqlDatabase(String tableName, OpMConnection database, @NotNull OpMObjects<O> objects) {
         this.tableName = tableName;
         this.database = database;
         this.objects = objects;
@@ -64,11 +66,11 @@ public final class OpMySqlDatabase<O> {
         return tableName;
     }
 
-    public MySqlConnection database() {
+    public OpMConnection database() {
         return database;
     }
 
-    public MySqlObjects<O> objects() {
+    public OpMObjects<O> objects() {
         return objects;
     }
 

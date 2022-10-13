@@ -1,5 +1,6 @@
-package me.opkarol.opc.api.database.mysql;
+package me.opkarol.opc.api.database.mysql.table;
 
+import me.opkarol.opc.api.database.mysql.types.MySqlVariable;
 import me.opkarol.opc.api.map.OpMap;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,15 +31,17 @@ public class MySqlDeleteTable {
             throw new IllegalArgumentException("Too little arguments provided!");
         }
 
-        for (MySqlVariable variable : table.getMap().keySet()) {
-            Object value = valueMap.getOrDefault(variable.name(), null);
-            if (value == null) {
-                continue;
+        for (String s : valueMap.keySet()) {
+            Object value = valueMap.getOrDefault(s, null);
+            if (value != null) {
+                builder.append("`").append(s).append("` = '").append(value).append("'AND ");
             }
-
-            builder.append("`").append(variable.name()).append("` = '").append(value).append("', ");
         }
 
-        return builder.substring(0, builder.length() - 2);
+        if (builder.length() < 4) {
+            return "";
+        }
+
+        return builder.substring(0, builder.length() - 4);
     }
 }

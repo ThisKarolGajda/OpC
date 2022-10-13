@@ -1,10 +1,12 @@
-package me.opkarol.opc.api.database.mysql.v2;
+package me.opkarol.opc.api.database.mysql;
 
 import com.zaxxer.hikari.HikariDataSource;
+import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.database.IMySqlDatabase;
-import me.opkarol.opc.api.database.mysql.MySqlDeleteTable;
-import me.opkarol.opc.api.database.mysql.MySqlInsertTable;
-import me.opkarol.opc.api.database.mysql.MySqlTable;
+import me.opkarol.opc.api.database.mysql.table.MySqlDeleteTable;
+import me.opkarol.opc.api.database.mysql.table.MySqlInsertTable;
+import me.opkarol.opc.api.database.mysql.table.MySqlTable;
+import me.opkarol.opc.api.files.Configuration;
 import org.jetbrains.annotations.NotNull;
 
 import javax.sql.DataSource;
@@ -13,14 +15,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class MySqlDatabase implements IMySqlDatabase {
+public class OpMConnection implements IMySqlDatabase {
     private HikariDataSource hikariDataSource;
     private DataSource source;
-    private final MySqlIdentification mySqlIdentifications = new MySqlIdentification();
+
+    public OpMConnection(@NotNull Configuration configuration, String path) {
+        setup(configuration, path);
+    }
+
+    public OpMConnection() {}
 
     @Override
     public void setup() {
         setup("jdbc:mysql://localhost:3306/simpsons", "bart", "51mp50n");
+    }
+
+    public void setup(@NotNull Configuration configuration, String path) {
+        setup(configuration.get(path + "jdbc"), configuration.get("user"), configuration.get("password"));
     }
 
     public void setup(String jdbcUrl, String username, String password) {
@@ -71,6 +82,7 @@ public class MySqlDatabase implements IMySqlDatabase {
 
     @Override
     public void delete(@NotNull MySqlDeleteTable table) {
+        OpAPI.getInstance().getLogger().info(table.toDeleteString());
         try (Connection conn = source.getConnection();
              PreparedStatement stmt = conn.prepareStatement(table.toDeleteString())) {
             stmt.executeUpdate();
@@ -89,4 +101,27 @@ public class MySqlDatabase implements IMySqlDatabase {
         }
         return null;
     }
+
+    @Override
+    public void run(String statement) {
+        try (Connection conn = source.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(statement)) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public ResultSet query(String statement) {
+        try (Connection conn = source.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(statement)) {
+            return stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }
