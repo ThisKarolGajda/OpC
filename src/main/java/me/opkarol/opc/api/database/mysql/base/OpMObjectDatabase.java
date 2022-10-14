@@ -1,6 +1,7 @@
 package me.opkarol.opc.api.database.mysql.base;
 
 import me.opkarol.opc.api.database.mysql.objects.IObjectDatabase;
+import me.opkarol.opc.api.database.mysql.resultset.OpMResultSet;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -47,11 +48,11 @@ public class OpMObjectDatabase<O, I> extends IObjectDatabase<O, I> {
 
     }
 
-    public void load(Function<ResultSet, O> getObjectFromSet) {
+    public void load(Function<OpMResultSet, O> getObjectFromSet) {
         ResultSet set = database.get();
         try {
             while (set.next()) {
-                O object = getObjectFromSet.apply(set);
+                O object = getObjectFromSet.apply(new OpMResultSet(set));
                 getMap().put(getIdentification.apply(object), object);
             }
         } catch (SQLException e) {

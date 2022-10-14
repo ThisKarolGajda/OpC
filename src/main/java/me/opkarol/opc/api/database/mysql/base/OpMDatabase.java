@@ -2,6 +2,7 @@ package me.opkarol.opc.api.database.mysql.base;
 
 import me.opkarol.opc.OpC;
 import me.opkarol.opc.api.database.mysql.objects.IObjectDatabase;
+import me.opkarol.opc.api.database.mysql.resultset.OpMResultSet;
 import me.opkarol.opc.api.map.OpMap;
 import org.jetbrains.annotations.NotNull;
 
@@ -84,11 +85,11 @@ public abstract class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
         return true;
     }
 
-    public void load(Function<ResultSet, O> getObjectFromSet) {
+    public void load(Function<OpMResultSet, O> getObjectFromSet) {
         ResultSet set = database.get();
         try {
             while (set.next()) {
-                O object = getObjectFromSet.apply(set);
+                O object = getObjectFromSet.apply(new OpMResultSet(set));
                 getMap().put(getIdentification.apply(object), object);
                 addObject(object, getUUID.apply(object));
                 OpC.getInstance().getLogger().info(object.toString());
@@ -145,7 +146,7 @@ public abstract class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
         return false;
     }
 
-    public abstract Function<ResultSet, O> getObjectAsResultSet();
+    public abstract Function<OpMResultSet, O> getObjectAsResultSet();
 
     public abstract Function<O, Integer> getIdentification();
 

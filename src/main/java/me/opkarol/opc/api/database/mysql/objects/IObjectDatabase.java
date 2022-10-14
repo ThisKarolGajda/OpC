@@ -1,8 +1,8 @@
 package me.opkarol.opc.api.database.mysql.objects;
 
+import me.opkarol.opc.api.database.mysql.resultset.OpMResultSet;
 import me.opkarol.opc.api.map.OpMap;
 
-import java.sql.ResultSet;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -23,5 +23,5 @@ public abstract class IObjectDatabase<O, I> {
 
     public abstract boolean delete(I identification);
 
-    public abstract void load(Function<ResultSet, O> getObjectFromSet);
+    public abstract void load(Function<OpMResultSet, O> getObjectFromSet);
 }

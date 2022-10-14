@@ -46,11 +46,11 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.tchristofferson.configupdater</pattern>
-                                    <shadedPattern>me.opkarol.oppets.configupdater</shadedPattern>
+                                    <shadedPattern>me.opkarol.opc.configupdater</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.zaxxer.hikari</pattern>
-                                    <shadedPattern>me.opkarol.oppets.hikaricp</shadedPattern>
+                                    <shadedPattern>me.opkarol.opc.hikaricp</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
