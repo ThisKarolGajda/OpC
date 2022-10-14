@@ -36,16 +36,19 @@ public class OpMSingleDatabase<O> {
         database.delete(table);
     }
 
-    public void insert(O object, int lastId) {
+    public int insert(O object, int lastId) {
         MySqlInsertTable table = new MySqlInsertTable(getTable());
+        final int[] i = {-1};
         objects.getObjectList().forEach(o -> {
             if (o.isPrimary() && o.type().equals(MySqlVariableType.INT) && lastId < 0) {
+                i[0] = counter.getNextId();
                 table.addValue(o.getVariable(), counter.getNextId());
             } else {
                 table.addValue(o.getVariable(), o.object().apply(object));
             }
         });
         database.insert(table);
+        return i[0];
     }
 
     public ResultSet get() {

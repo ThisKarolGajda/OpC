@@ -5,18 +5,21 @@ import me.opkarol.opc.api.database.mysql.objects.IObjectDatabase;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
     private final OpMSingleDatabase<O> database;
     private final Function<O, Integer> getIdentification;
+    private final BiFunction<O, Integer, O> setIdentification;
 
-    public OpMDatabase(OpMSingleDatabase<O> database, Function<O, Integer> getIdentificationFunction) {
+    public OpMDatabase(OpMSingleDatabase<O> database, Function<O, Integer> getIdentificationFunction, BiFunction<O, Integer, O> setIdentification) {
         this.database = database;
         if (this.database != null) {
             database.create();
         }
         this.getIdentification = getIdentificationFunction;
+        this.setIdentification = setIdentification;
     }
 
     public OpMSingleDatabase<O> getDatabase() {
@@ -27,7 +30,10 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
     public void add(O object) {
         int id = getIdentification.apply(object);
         getMap().put(id, object);
-        database.insert(object, id);
+        int fixed = database.insert(object, id);
+        if (fixed == -1) {
+            setIdentification.apply(object, fixed);
+        }
     }
 
     @Override
