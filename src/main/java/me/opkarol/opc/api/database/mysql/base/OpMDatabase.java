@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
     private final OpMSingleDatabase<O> database;
@@ -98,5 +99,33 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
 
     public List<O> get(UUID uuid) {
         return uuidMap.getOrDefault(uuid, new ArrayList<>());
+    }
+
+    public Optional<O> get(UUID uuid, Predicate<O> predicate) {
+        return get(uuid).stream()
+                .filter(predicate)
+                .findAny();
+    }
+
+    public int getId(UUID uuid, Predicate<O> predicate) {
+        return get(uuid).stream()
+                .filter(predicate)
+                .findAny()
+                .map(getIdentification)
+                .orElse(-1);
+    }
+
+    public boolean contains(UUID uuid, Predicate<O> predicate) {
+        return get(uuid, predicate)
+                .isPresent();
+    }
+
+    public boolean delete(UUID uuid, Predicate<O> predicate) {
+        int id = getId(uuid, predicate);
+        if (id != -1) {
+            delete(id);
+            return true;
+        }
+        return false;
     }
 }
