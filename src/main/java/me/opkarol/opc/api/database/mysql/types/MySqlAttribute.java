@@ -3,7 +3,8 @@ package me.opkarol.opc.api.database.mysql.types;
 public enum MySqlAttribute {
     NOTNULL(" NOT NULL"),
     PRIMARY(" PRIMARY KEY (%s)"),
-    LENGTH(" (%s)");
+    LENGTH(" (%s)"),
+    IGNORE_IN_SEARCH("");
 
     private final String text;
 

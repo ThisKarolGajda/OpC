@@ -21,8 +21,9 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
     private final BiFunction<O, Integer, O> setIdentification;
     private final Function<O, UUID> getUUID;
     private final OpMap<UUID, List<O>> uuidMap = new OpMap<>();
+    private final Predicate<O> defaultSearchPredicate;
 
-    public OpMDatabase(OpMSingleDatabase<O> database, Function<O, Integer> getIdentificationFunction, BiConsumer<O, Integer> setIdentification, Function<O, UUID> getUUID) {
+    public OpMDatabase(OpMSingleDatabase<O> database, Function<O, Integer> getIdentificationFunction, BiConsumer<O, Integer> setIdentification, Function<O, UUID> getUUID, Function<ResultSet, O> getObjectFromSet) {
         this.database = database;
         if (this.database != null) {
             database.create();
@@ -33,7 +34,25 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
             return o;
         };
         this.getUUID = getUUID;
+        this.defaultSearchPredicate = o -> false;
+        load(getObjectFromSet);
     }
+
+    public OpMDatabase(OpMSingleDatabase<O> database, Function<O, Integer> getIdentificationFunction, BiConsumer<O, Integer> setIdentification, Function<O, UUID> getUUID, Function<ResultSet, O> getObjectFromSet, Predicate<O> defaultSearchPredicate) {
+        this.database = database;
+        if (this.database != null) {
+            database.create();
+        }
+        this.getIdentification = getIdentificationFunction;
+        this.setIdentification = (o, integer) -> {
+            setIdentification.accept(o, integer);
+            return o;
+        };
+        this.getUUID = getUUID;
+        this.defaultSearchPredicate = defaultSearchPredicate;
+        load(getObjectFromSet);
+    }
+
 
     public OpMSingleDatabase<O> getDatabase() {
         return database;
@@ -97,27 +116,39 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
         return list;
     }
 
-    public List<O> get(UUID uuid) {
+    public List<O> getList(UUID uuid) {
         return uuidMap.getOrDefault(uuid, new ArrayList<>());
     }
 
     public Optional<O> get(UUID uuid, Predicate<O> predicate) {
-        return get(uuid).stream()
+        return getList(uuid).stream()
                 .filter(predicate)
                 .findAny();
     }
 
+    public Optional<O> get(UUID uuid) {
+        return get(uuid, defaultSearchPredicate);
+    }
+
     public int getId(UUID uuid, Predicate<O> predicate) {
-        return get(uuid).stream()
+        return getList(uuid).stream()
                 .filter(predicate)
                 .findAny()
                 .map(getIdentification)
                 .orElse(-1);
     }
 
+    public int getId(UUID uuid) {
+        return getId(uuid, defaultSearchPredicate);
+    }
+
     public boolean contains(UUID uuid, Predicate<O> predicate) {
         return get(uuid, predicate)
                 .isPresent();
+    }
+
+    public boolean contains(UUID uuid) {
+        return contains(uuid, defaultSearchPredicate);
     }
 
     public boolean delete(UUID uuid, Predicate<O> predicate) {
@@ -127,5 +158,9 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
             return true;
         }
         return false;
+    }
+
+    public boolean delete(UUID uuid) {
+        return delete(uuid, defaultSearchPredicate);
     }
 }

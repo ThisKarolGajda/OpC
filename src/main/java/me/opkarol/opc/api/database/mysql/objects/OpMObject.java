@@ -35,4 +35,8 @@ public record OpMObject<O>(String name, Function<O, Object> object,
     public boolean isNotNull() {
         return getTypes().contains(MySqlAttribute.NOTNULL);
     }
+
+    public boolean isIgnoredInSearch() {
+        return getTypes().contains(MySqlAttribute.IGNORE_IN_SEARCH);
+    }
 }

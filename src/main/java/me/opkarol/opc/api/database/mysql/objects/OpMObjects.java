@@ -22,7 +22,7 @@ public class OpMObjects<O> {
     }
 
     public OpMObjects<O> addNotNullInt(String name, Function<O, Object> object) {
-        return add(new OpMObject<>(name, object, MySqlVariableType.INT, MySqlAttribute.NOTNULL));
+        return add(new OpMObject<>(name, object, MySqlVariableType.INT, MySqlAttribute.NOTNULL, MySqlAttribute.IGNORE_IN_SEARCH));
     }
 
     public OpMObjects<O> addPrimaryNotNullInt(String name, Function<O, Object> object) {
@@ -30,7 +30,7 @@ public class OpMObjects<O> {
     }
 
     public OpMObjects<O> addNotNullText(String name, Function<O, Object> object) {
-        return add(new OpMObject<>(name, object, MySqlVariableType.TEXT, MySqlAttribute.NOTNULL));
+        return add(new OpMObject<>(name, object, MySqlVariableType.TEXT, MySqlAttribute.NOTNULL, MySqlAttribute.IGNORE_IN_SEARCH));
     }
 
     @SafeVarargs

@@ -1,5 +1,6 @@
 package me.opkarol.opc.api.database.mysql.table;
 
+import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.database.mysql.types.MySqlAttribute;
 import me.opkarol.opc.api.database.mysql.types.MySqlVariable;
 import me.opkarol.opc.api.map.OpMap;
@@ -37,7 +38,9 @@ public class MySqlInsertTable {
     }
 
     public String toInsertIntoString() {
-        return String.format("INSERT INTO %s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s;", table.getTableName(), getShortenValues(), getValues(), getDuplicateKeys());
+        String s = String.format("INSERT INTO %s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s;", table.getTableName(), getShortenValues(), getValues(), getDuplicateKeys());
+        OpAPI.getInstance().getLogger().info(s);
+        return s;
     }
 
     public String getValues() {

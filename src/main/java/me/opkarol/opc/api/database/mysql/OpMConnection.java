@@ -7,6 +7,7 @@ import me.opkarol.opc.api.database.mysql.table.MySqlDeleteTable;
 import me.opkarol.opc.api.database.mysql.table.MySqlInsertTable;
 import me.opkarol.opc.api.database.mysql.table.MySqlTable;
 import me.opkarol.opc.api.files.Configuration;
+import me.opkarol.opc.api.utils.VariableUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.sql.DataSource;
@@ -16,6 +17,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OpMConnection implements IMySqlDatabase {
+
+    //TODO
+    // - load values don't seem to be working
+    // - remove debug messages
+
     private HikariDataSource hikariDataSource;
     private DataSource source;
 
@@ -25,12 +31,17 @@ public class OpMConnection implements IMySqlDatabase {
 
     public OpMConnection() {}
 
+    public OpMConnection(String jdbc, String user, String password) {
+        setup(jdbc, user, password);
+    }
+
     @Override
     public void setup() {
         setup("jdbc:mysql://localhost:3306/simpsons", "bart", "51mp50n");
     }
 
     public void setup(@NotNull Configuration configuration, String path) {
+        path = VariableUtil.ifNotEndsWithAdd(path, ".");
         setup(configuration.get(path + "jdbc"), configuration.get("user"), configuration.get("password"));
     }
 

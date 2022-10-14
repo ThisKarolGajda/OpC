@@ -1,5 +1,6 @@
 package me.opkarol.opc.api.database.mysql.base;
 
+import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.database.mysql.types.MySqlVariableType;
 import me.opkarol.opc.api.database.mysql.OpMConnection;
 import me.opkarol.opc.api.database.mysql.types.OpMCounter;
@@ -21,18 +22,25 @@ public class OpMSingleDatabase<O> {
     private final OpMCounter counter;
 
     public OpMSingleDatabase(String tableName, OpMConnection database, @NotNull OpMObjects<O> objects) {
+        OpAPI.getInstance().getLogger().info(tableName + " -= -= -=-= -=-= ==");
         this.tableName = tableName;
         this.database = database;
         this.objects = objects;
         MySqlTable table = new MySqlTable(tableName);
         objects.getObjectList().forEach(o -> table.addMySqlVariable(o.getVariable(), o.attributes()));
         this.table = table;
-        this.counter = new OpMCounter(database, tableName);
+        OpAPI.getInstance().getLogger().info(tableName + " -= -= -=-= -=-= == " + this.tableName);
+
+        this.counter = new OpMCounter(database, this.tableName);
     }
 
     public void delete(O object) {
         MySqlDeleteTable table = new MySqlDeleteTable(getTable());
-        objects.getObjectList().forEach(o -> table.addDeletion(o.getVariable(), o.object().apply(object)));
+        objects.getObjectList().forEach(o -> {
+            if (!o.isIgnoredInSearch()) {
+                table.addDeletion(o.getVariable(), o.object().apply(object));
+            }
+        });
         database.delete(table);
     }
 
@@ -42,7 +50,7 @@ public class OpMSingleDatabase<O> {
         objects.getObjectList().forEach(o -> {
             if (o.isPrimary() && o.type().equals(MySqlVariableType.INT) && lastId < 0) {
                 i[0] = counter.getNextId();
-                table.addValue(o.getVariable(), counter.getNextId());
+                table.addValue(o.getVariable(), i[0]);
             } else {
                 table.addValue(o.getVariable(), o.object().apply(object));
             }
