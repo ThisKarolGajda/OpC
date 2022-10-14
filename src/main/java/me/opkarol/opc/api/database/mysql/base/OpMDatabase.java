@@ -5,6 +5,7 @@ import me.opkarol.opc.api.database.mysql.objects.IObjectDatabase;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -13,13 +14,16 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
     private final Function<O, Integer> getIdentification;
     private final BiFunction<O, Integer, O> setIdentification;
 
-    public OpMDatabase(OpMSingleDatabase<O> database, Function<O, Integer> getIdentificationFunction, BiFunction<O, Integer, O> setIdentification) {
+    public OpMDatabase(OpMSingleDatabase<O> database, Function<O, Integer> getIdentificationFunction, BiConsumer<O, Integer> setIdentification) {
         this.database = database;
         if (this.database != null) {
             database.create();
         }
         this.getIdentification = getIdentificationFunction;
-        this.setIdentification = setIdentification;
+        this.setIdentification = (o, integer) -> {
+            setIdentification.accept(o, integer);
+            return o;
+        };
     }
 
     public OpMSingleDatabase<O> getDatabase() {
