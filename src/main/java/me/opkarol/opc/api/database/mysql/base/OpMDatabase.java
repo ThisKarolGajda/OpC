@@ -67,7 +67,20 @@ public abstract class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
         O object = optional.get();
         database.delete(object);
         getMap().remove(identification);
-        removeObject(object);
+        removeObject(object, o -> getUUID.apply(o).equals(getUUID.apply(object)));
+        return true;
+    }
+
+    public boolean delete(Integer identification, Predicate<O> predicate) {
+        Optional<O> optional = get(identification);
+        if (optional.isEmpty()) {
+            return false;
+        }
+
+        O object = optional.get();
+        database.delete(object);
+        getMap().remove(identification);
+        removeObject(object, predicate);
         return true;
     }
 
@@ -92,10 +105,10 @@ public abstract class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
         return list;
     }
 
-    private @NotNull List<O> removeObject(O object) {
+    private @NotNull List<O> removeObject(O object, Predicate<O> predicate) {
         UUID uuid = getUUID.apply(object);
         List<O> list = uuidMap.getOrDefault(uuid, new ArrayList<>());
-        list.removeIf(o -> getUUID.apply(o).equals(uuid));
+        list.removeIf(predicate);
         uuidMap.set(uuid, list);
         return list;
     }
@@ -108,10 +121,6 @@ public abstract class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
         return getList(uuid).stream()
                 .filter(predicate)
                 .findAny();
-    }
-
-    public Optional<O> get(UUID uuid, Object object) {
-        return get(uuid, o -> o.equals(object));
     }
 
     public int getId(UUID uuid, Predicate<O> predicate) {
@@ -130,7 +139,7 @@ public abstract class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
     public boolean delete(UUID uuid, Predicate<O> predicate) {
         int id = getId(uuid, predicate);
         if (id != -1) {
-            delete(id);
+            delete(id, predicate);
             return true;
         }
         return false;

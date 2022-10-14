@@ -45,6 +45,16 @@ public class ConfigurationMap {
         return object.toString();
     }
 
+    public String getValue(String path, TranslationObject... objects) {
+        String string = getValue(path);
+        if (objects != null) {
+            for (TranslationObject object1 : objects) {
+                string = object1.replace(string);
+            }
+        }
+        return string;
+    }
+
     public String getFormattedValue(String path) {
         return formatMessage(getValue(path));
     }

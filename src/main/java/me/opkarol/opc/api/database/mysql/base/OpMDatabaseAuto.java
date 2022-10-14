@@ -1,5 +1,6 @@
 package me.opkarol.opc.api.database.mysql.base;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -21,5 +22,9 @@ public abstract class OpMDatabaseAuto<O> extends OpMDatabase<O> {
 
     public int getId(UUID uuid, Object object) {
         return getId(uuid, getPredicate(object));
+    }
+
+    public Optional<O> get(UUID uuid, Object object) {
+        return get(uuid, getPredicate(object));
     }
 }
