@@ -1,15 +1,14 @@
 package me.opkarol.opc.api.database.mysql.base;
 
+import me.opkarol.opc.OpC;
 import me.opkarol.opc.api.database.mysql.objects.IObjectDatabase;
 import me.opkarol.opc.api.map.OpMap;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -21,7 +20,7 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
     private final BiFunction<O, Integer, O> setIdentification;
     private final Function<O, UUID> getUUID;
     private final OpMap<UUID, List<O>> uuidMap = new OpMap<>();
-    private final Predicate<O> defaultSearchPredicate;
+    private final Function<O, Object> defaultSearch;
 
     public OpMDatabase(OpMSingleDatabase<O> database, Function<O, Integer> getIdentificationFunction, BiConsumer<O, Integer> setIdentification, Function<O, UUID> getUUID, Function<ResultSet, O> getObjectFromSet) {
         this.database = database;
@@ -34,11 +33,11 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
             return o;
         };
         this.getUUID = getUUID;
-        this.defaultSearchPredicate = o -> false;
+        this.defaultSearch = o -> null;
         load(getObjectFromSet);
     }
 
-    public OpMDatabase(OpMSingleDatabase<O> database, Function<O, Integer> getIdentificationFunction, BiConsumer<O, Integer> setIdentification, Function<O, UUID> getUUID, Function<ResultSet, O> getObjectFromSet, Predicate<O> defaultSearchPredicate) {
+    public OpMDatabase(OpMSingleDatabase<O> database, Function<O, Integer> getIdentificationFunction, BiConsumer<O, Integer> setIdentification, Function<O, UUID> getUUID, Function<ResultSet, O> getObjectFromSet, Function<O, Object> defaultSearch) {
         this.database = database;
         if (this.database != null) {
             database.create();
@@ -49,7 +48,7 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
             return o;
         };
         this.getUUID = getUUID;
-        this.defaultSearchPredicate = defaultSearchPredicate;
+        this.defaultSearch = defaultSearch;
         load(getObjectFromSet);
     }
 
@@ -95,6 +94,7 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
                 O object = getObjectFromSet.apply(set);
                 getMap().put(getIdentification.apply(object), object);
                 addObject(object, getUUID.apply(object));
+                OpC.getInstance().getLogger().info(object.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -126,8 +126,8 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
                 .findAny();
     }
 
-    public Optional<O> get(UUID uuid) {
-        return get(uuid, defaultSearchPredicate);
+    public Optional<O> get(UUID uuid, Object object) {
+        return get(uuid, o -> o.equals(object));
     }
 
     public int getId(UUID uuid, Predicate<O> predicate) {
@@ -138,8 +138,8 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
                 .orElse(-1);
     }
 
-    public int getId(UUID uuid) {
-        return getId(uuid, defaultSearchPredicate);
+    public int getId(UUID uuid, Object object) {
+        return getId(uuid, getSearchPredicate(object));
     }
 
     public boolean contains(UUID uuid, Predicate<O> predicate) {
@@ -147,8 +147,8 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
                 .isPresent();
     }
 
-    public boolean contains(UUID uuid) {
-        return contains(uuid, defaultSearchPredicate);
+    public boolean contains(UUID uuid, Object object) {
+        return contains(uuid, getSearchPredicate(object));
     }
 
     public boolean delete(UUID uuid, Predicate<O> predicate) {
@@ -160,7 +160,12 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
         return false;
     }
 
-    public boolean delete(UUID uuid) {
-        return delete(uuid, defaultSearchPredicate);
+    public boolean delete(UUID uuid, Object object) {
+        return delete(uuid, getSearchPredicate(object));
+    }
+
+    @Contract(pure = true)
+    private @NotNull Predicate<O> getSearchPredicate(Object object) {
+        return o -> Objects.equals(defaultSearch.apply(o), object);
     }
 }

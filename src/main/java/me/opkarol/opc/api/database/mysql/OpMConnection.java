@@ -104,8 +104,9 @@ public class OpMConnection implements IMySqlDatabase {
 
     @Override
     public ResultSet get(MySqlTable table) {
+        OpAPI.getInstance().getLogger().info(String.format("SELECT * FROM %s;", table.getTableName()));
         try (Connection conn = source.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM `%s`", table.getTableName()))) {
+             PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM %s;", table.getTableName()))) {
             return stmt.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -133,6 +134,4 @@ public class OpMConnection implements IMySqlDatabase {
         }
         return null;
     }
-
-
 }
