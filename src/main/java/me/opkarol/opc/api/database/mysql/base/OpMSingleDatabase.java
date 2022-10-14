@@ -38,7 +38,7 @@ public class OpMSingleDatabase<O> {
 
     public int insert(O object, int lastId) {
         MySqlInsertTable table = new MySqlInsertTable(getTable());
-        final int[] i = {-1};
+        final int[] i = {lastId};
         objects.getObjectList().forEach(o -> {
             if (o.isPrimary() && o.type().equals(MySqlVariableType.INT) && lastId < 0) {
                 i[0] = counter.getNextId();
