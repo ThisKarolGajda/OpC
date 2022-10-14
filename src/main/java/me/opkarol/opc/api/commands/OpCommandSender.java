@@ -3,9 +3,16 @@ package me.opkarol.opc.api.commands;
 import me.opkarol.opc.api.utils.FormatUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 public record OpCommandSender(CommandSender sender) {
+
+    public @NotNull UUID getUUID() {
+        return getPlayer().getUniqueId();
+    }
 
     public Player getPlayer() {
         return (Player) sender;
