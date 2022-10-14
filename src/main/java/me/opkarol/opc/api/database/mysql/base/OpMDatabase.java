@@ -3,55 +3,39 @@ package me.opkarol.opc.api.database.mysql.base;
 import me.opkarol.opc.OpC;
 import me.opkarol.opc.api.database.mysql.objects.IObjectDatabase;
 import me.opkarol.opc.api.map.OpMap;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
+public abstract class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
     private final OpMSingleDatabase<O> database;
     private final Function<O, Integer> getIdentification;
     private final BiFunction<O, Integer, O> setIdentification;
     private final Function<O, UUID> getUUID;
     private final OpMap<UUID, List<O>> uuidMap = new OpMap<>();
-    private final Function<O, Object> defaultSearch;
 
-    public OpMDatabase(OpMSingleDatabase<O> database, Function<O, Integer> getIdentificationFunction, BiConsumer<O, Integer> setIdentification, Function<O, UUID> getUUID, Function<ResultSet, O> getObjectFromSet) {
+    public OpMDatabase(OpMSingleDatabase<O> database) {
         this.database = database;
         if (this.database != null) {
             database.create();
         }
-        this.getIdentification = getIdentificationFunction;
+        this.getIdentification = getIdentification();
         this.setIdentification = (o, integer) -> {
-            setIdentification.accept(o, integer);
+            setIdentification().accept(o, integer);
             return o;
         };
-        this.getUUID = getUUID;
-        this.defaultSearch = o -> null;
-        load(getObjectFromSet);
+        this.getUUID = getUUID();
+        load(getObjectAsResultSet());
     }
-
-    public OpMDatabase(OpMSingleDatabase<O> database, Function<O, Integer> getIdentificationFunction, BiConsumer<O, Integer> setIdentification, Function<O, UUID> getUUID, Function<ResultSet, O> getObjectFromSet, Function<O, Object> defaultSearch) {
-        this.database = database;
-        if (this.database != null) {
-            database.create();
-        }
-        this.getIdentification = getIdentificationFunction;
-        this.setIdentification = (o, integer) -> {
-            setIdentification.accept(o, integer);
-            return o;
-        };
-        this.getUUID = getUUID;
-        this.defaultSearch = defaultSearch;
-        load(getObjectFromSet);
-    }
-
 
     public OpMSingleDatabase<O> getDatabase() {
         return database;
@@ -138,17 +122,9 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
                 .orElse(-1);
     }
 
-    public int getId(UUID uuid, Object object) {
-        return getId(uuid, getSearchPredicate(object));
-    }
-
     public boolean contains(UUID uuid, Predicate<O> predicate) {
         return get(uuid, predicate)
                 .isPresent();
-    }
-
-    public boolean contains(UUID uuid, Object object) {
-        return contains(uuid, getSearchPredicate(object));
     }
 
     public boolean delete(UUID uuid, Predicate<O> predicate) {
@@ -160,12 +136,11 @@ public class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
         return false;
     }
 
-    public boolean delete(UUID uuid, Object object) {
-        return delete(uuid, getSearchPredicate(object));
-    }
+    public abstract Function<ResultSet, O> getObjectAsResultSet();
 
-    @Contract(pure = true)
-    private @NotNull Predicate<O> getSearchPredicate(Object object) {
-        return o -> Objects.equals(defaultSearch.apply(o), object);
-    }
+    public abstract Function<O, Integer> getIdentification();
+
+    public abstract BiConsumer<O, Integer> setIdentification();
+
+    public abstract Function<O, UUID> getUUID();
 }
