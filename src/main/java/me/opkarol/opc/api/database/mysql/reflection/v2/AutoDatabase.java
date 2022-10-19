@@ -1,4 +1,4 @@
-package me.opkarol.opc.api.database.mysql.base;
+package me.opkarol.opc.api.database.mysql.reflection.v2;
 
 import me.opkarol.opc.api.database.manager.IDefaultDatabase;
 
@@ -6,9 +6,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public abstract class OpMDatabaseAuto<O> extends OpMDatabase<O> implements IDefaultDatabase<O> {
+public abstract class AutoDatabase<O> extends Database<O> implements IDefaultDatabase<O> {
 
-    public OpMDatabaseAuto(OpMSingleDatabase<O> database) {
+    public AutoDatabase(SingleDatabase<O> database) throws InstantiationException {
         super(database);
     }
 

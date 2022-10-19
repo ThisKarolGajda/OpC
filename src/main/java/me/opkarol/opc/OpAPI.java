@@ -28,4 +28,8 @@ public class OpAPI {
     public static Configuration getConfig() {
         return plugin.getConfiguration();
     }
+
+    public static void logInfo(String message) {
+        getInstance().getLogger().info(message);
+    }
 }

@@ -1,0 +1,5 @@
+mysql:
+  enabled: false
+  jdbc: jdbc:mysql://localhost:3306/test
+  user: opkar
+  password: 'password'

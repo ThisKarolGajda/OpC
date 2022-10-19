@@ -18,10 +18,6 @@ import java.sql.SQLException;
 
 public class OpMConnection implements IMySqlDatabase {
 
-    //TODO
-    // - load values don't seem to be working
-    // - remove debug messages
-
     private HikariDataSource hikariDataSource;
     private DataSource source;
 

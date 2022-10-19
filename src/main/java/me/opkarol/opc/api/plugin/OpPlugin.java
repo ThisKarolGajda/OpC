@@ -1,5 +1,8 @@
 package me.opkarol.opc.api.plugin;
 
+import me.opkarol.opc.OpAPI;
+import me.opkarol.opc.api.autostart.OpAutoDisable;
+import me.opkarol.opc.api.autostart.OpAutoStart;
 import me.opkarol.opc.api.files.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,10 +20,12 @@ public abstract class OpPlugin extends JavaPlugin {
         plugin = this;
         configuration = new Configuration(this, "config.yml");
         configuration.createConfig();
+        OpAPI.init(this);
     }
 
     @Override
     public void onEnable() {
+        OpAutoStart.activate(this);
         enable();
         registerEvents();
         registerCommands();
@@ -36,7 +41,8 @@ public abstract class OpPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        disable();
+        OpAPI.unregisterCommands();
+        OpAutoDisable.activate(this);
         plugin = null;
     }
 
