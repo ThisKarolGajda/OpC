@@ -21,7 +21,7 @@ public class SingleDatabase<O> {
     private final MySqlTable table;
     private final OpMCounter counter;
 
-    public SingleDatabase(OpMConnection database, @NotNull OpMReflection<O> reflection) {
+    public SingleDatabase(OpMConnection database, @NotNull OpMReflection reflection) {
         this.tableName = reflection.getTableName();
         this.database = database;
         this.objects = reflection.getObjects();
@@ -33,7 +33,7 @@ public class SingleDatabase<O> {
         this.counter = new OpMCounter(database, this.tableName);
     }
 
-    public SingleDatabase(String configurationPath, @NotNull OpMReflection<O> reflection) {
+    public SingleDatabase(String configurationPath, @NotNull OpMReflection reflection) {
         this.tableName = reflection.getTableName();
         this.database = new OpMConnection(OpAPI.getConfig(), configurationPath);
         this.objects = reflection.getObjects();
@@ -46,7 +46,7 @@ public class SingleDatabase<O> {
     }
 
     public SingleDatabase(String configurationPath, @NotNull O object) {
-        OpMReflection<O> reflection = new OpMReflection<>(object);
+        OpMReflection reflection = new OpMReflection(object.getClass());
         this.tableName = reflection.getTableName();
         this.database = new OpMConnection(OpAPI.getConfig(), configurationPath);
         this.objects = reflection.getObjects();
@@ -59,7 +59,7 @@ public class SingleDatabase<O> {
     }
 
     public SingleDatabase(OpMConnection database, @NotNull O object) {
-        OpMReflection<O> reflection = new OpMReflection<>(object);
+        OpMReflection reflection = new OpMReflection(object.getClass());
         this.tableName = reflection.getTableName();
         this.database = database;
         this.objects = reflection.getObjects();
@@ -69,6 +69,32 @@ public class SingleDatabase<O> {
         OpAPI.getInstance().getLogger().info(tableName + " -= -= -=-= -=-= == " + this.tableName);
 
         this.counter = new OpMCounter(database, this.tableName);
+    }
+
+    public SingleDatabase(OpMConnection database, @NotNull Class<O> object) {
+        OpMReflection reflection = new OpMReflection(object);
+        this.tableName = reflection.getTableName();
+        this.database = database;
+        this.objects = reflection.getObjects();
+        MySqlTable table = new MySqlTable(tableName);
+        objects.getObjectList().forEach(o -> table.addMySqlVariable(o.getVariable(), o.attributes()));
+        this.table = table;
+        OpAPI.getInstance().getLogger().info(tableName + " -= -= -=-= -=-= == " + this.tableName);
+
+        this.counter = new OpMCounter(database, this.tableName);
+    }
+
+    public SingleDatabase(String database, @NotNull Class<O> object) {
+        OpMReflection reflection = new OpMReflection(object);
+        this.tableName = reflection.getTableName();
+        this.database = new OpMConnection(OpAPI.getConfig(), database);
+        this.objects = reflection.getObjects();
+        MySqlTable table = new MySqlTable(tableName);
+        objects.getObjectList().forEach(o -> table.addMySqlVariable(o.getVariable(), o.attributes()));
+        this.table = table;
+        OpAPI.getInstance().getLogger().info(tableName + " -= -= -=-= -=-= == " + this.tableName);
+
+        this.counter = new OpMCounter(this.database, this.tableName);
     }
 
     public void delete(O object) {

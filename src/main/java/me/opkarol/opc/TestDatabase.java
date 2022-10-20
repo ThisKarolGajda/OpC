@@ -9,8 +9,8 @@ import java.util.function.Predicate;
 
 public class TestDatabase extends AutoDatabase<TestObject> {
 
-    public TestDatabase(SingleDatabase<TestObject> database) throws InstantiationException {
-        super(database);
+    public TestDatabase() throws InstantiationException {
+        super(new SingleDatabase<>("mysql", TestObject.class));
     }
 
     @Override

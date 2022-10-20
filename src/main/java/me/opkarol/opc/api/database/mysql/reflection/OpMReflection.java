@@ -1,25 +1,21 @@
 package me.opkarol.opc.api.database.mysql.reflection;
 
-import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.utils.VariableUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class OpMReflection<O> {
-    private final O object;
+public class OpMReflection {
     private final Class<?> classObject;
     private OpMTable table;
     private final Objects objects = new Objects();
     private final List<Field> list;
 
-    public OpMReflection(@NotNull O object) {
-        this.object = object;
-        this.classObject = object.getClass();
+    public OpMReflection(@NotNull Class<?> object) {
+        this.classObject = object;
         setTableName();
         list = buildFields();
 
@@ -28,11 +24,6 @@ public class OpMReflection<O> {
         }
 
         getIdentificationMethod().ifPresent(objects::setIdentificationObject);
-
-        for (Object object1 : objects.getObjectList()) {
-            OpAPI.logInfo(object1.toName() + " -- " + object1.type() + " -- " + Arrays.toString(object1.attributes()));
-            OpAPI.logInfo(object1.getObject(object).toString());
-        }
     }
 
     private @NotNull Optional<Method> getIdentificationMethod() {
@@ -44,19 +35,7 @@ public class OpMReflection<O> {
     }
 
     private List<Field> buildFields() {
-        return Utils.getFields(classObject, field -> {
-            OpAPI.logInfo(field.getName() + " -- " + field.toString() + " -- " + Utils.isAnnotationPresent(field.getClass(), OpMValue.class)) ;
-            OpAPI.logInfo((field.getAnnotation(OpMValue.class) == null) + " ---");
-            OpAPI.logInfo(Arrays.toString(field.getAnnotations()));
-            OpAPI.logInfo(field.getType().getSimpleName());
-            OpAPI.logInfo(OpMType.switchMySqlType(field).toString());
-            OpAPI.logInfo(Utils.get(field, object).toString());
-            return Utils.isAnnotationPresent(field.getClass(), OpMValue.class);
-        });
-    }
-
-    public O getObject() {
-        return object;
+        return Utils.getFields(classObject, field -> Utils.isAnnotationPresent(field.getClass(), OpMValue.class));
     }
 
     public Class<?> getClassObject() {
