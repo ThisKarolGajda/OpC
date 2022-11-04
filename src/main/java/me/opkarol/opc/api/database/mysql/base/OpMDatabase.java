@@ -1,6 +1,5 @@
 package me.opkarol.opc.api.database.mysql.base;
 
-import me.opkarol.opc.OpC;
 import me.opkarol.opc.api.database.mysql.objects.IObjectDatabase;
 import me.opkarol.opc.api.database.mysql.resultset.OpMResultSet;
 import me.opkarol.opc.api.map.OpMap;
@@ -92,7 +91,6 @@ public abstract class OpMDatabase<O> extends IObjectDatabase<O, Integer> {
                 O object = getObjectFromSet.apply(new OpMResultSet(set));
                 getMap().put(getIdentification.apply(object), object);
                 addObject(object, getUUID.apply(object));
-                OpC.getInstance().getLogger().info(object.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();

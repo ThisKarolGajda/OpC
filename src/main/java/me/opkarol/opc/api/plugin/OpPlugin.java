@@ -11,21 +11,21 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.logging.Logger;
 
-public abstract class OpPlugin extends JavaPlugin {
+public class OpPlugin extends JavaPlugin {
     private Configuration configuration;
     private static OpPlugin plugin;
 
     @Override
     public void onLoad() {
         plugin = this;
-        configuration = new Configuration(this, "config.yml");
+        configuration = new Configuration(plugin, "config.yml");
         configuration.createConfig();
         OpAPI.init(this);
     }
 
     @Override
     public void onEnable() {
-        OpAutoStart.activate(this);
+        OpAutoStart.activate(plugin);
         enable();
         registerEvents();
         registerCommands();
@@ -42,7 +42,7 @@ public abstract class OpPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         OpAPI.unregisterCommands();
-        OpAutoDisable.activate(this);
+        OpAutoDisable.activate(plugin);
         plugin = null;
     }
 
@@ -56,7 +56,6 @@ public abstract class OpPlugin extends JavaPlugin {
         return configuration;
     }
 
-    @Deprecated
     @NotNull
     @Override
     protected File getFile() {

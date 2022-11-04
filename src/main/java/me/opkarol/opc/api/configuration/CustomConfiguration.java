@@ -110,7 +110,6 @@ public class CustomConfiguration {
     }
 
     public String getString(String path) {
-        //OpAPI.getInstance().getLogger().info(getPath(path) + " --- " + getConfig().getString(getPath(path)));
         return getConfig().getString(getPath(path));
     }
 

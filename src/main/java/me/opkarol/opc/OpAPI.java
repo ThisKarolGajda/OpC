@@ -4,6 +4,7 @@ import me.opkarol.opc.api.commands.OpCommand;
 import me.opkarol.opc.api.files.Configuration;
 import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.plugin.OpPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public class OpAPI {
     private static OpPlugin plugin;
@@ -13,8 +14,9 @@ public class OpAPI {
         return plugin;
     }
 
-    public static void init(OpPlugin plugin) {
+    public static void init(@NotNull OpPlugin plugin) {
         OpAPI.plugin = plugin;
+        logInfo(plugin.getName());
     }
 
     public static void addCommand(OpCommand command) {

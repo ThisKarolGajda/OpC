@@ -4,7 +4,8 @@ public enum MySqlAttribute {
     NOTNULL(" NOT NULL"),
     PRIMARY(" PRIMARY KEY (%s)"),
     LENGTH(" (%s)"),
-    IGNORE_IN_SEARCH("");
+    IGNORE_IN_SEARCH(""),
+    IGNORE_IN_ALL_SEARCH("");
 
     private final String text;
 

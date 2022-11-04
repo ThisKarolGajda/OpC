@@ -1,4 +1,6 @@
-package me.opkarol.opc.api.database.mysql.reflection;
+package me.opkarol.opc.api.database.mysql.reflection.objects;
+
+import me.opkarol.opc.api.database.mysql.reflection.types.OpMType;
 
 import java.lang.reflect.Field;
 

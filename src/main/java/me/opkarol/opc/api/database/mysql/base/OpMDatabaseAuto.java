@@ -6,27 +6,27 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public abstract class OpMDatabaseAuto<O> extends OpMDatabase<O> implements IDefaultDatabase<O> {
+public abstract class OpMDatabaseAuto<O, C> extends OpMDatabase<O> implements IDefaultDatabase<O, C> {
 
     public OpMDatabaseAuto(OpMSingleDatabase<O> database) {
         super(database);
     }
 
-    public abstract Predicate<O> getPredicate(Object object);
+    public abstract Predicate<O> getPredicate(C object);
 
-    public boolean delete(UUID uuid, Object object) {
+    public boolean delete(UUID uuid, C object) {
         return delete(uuid, getPredicate(object));
     }
 
-    public boolean contains(UUID uuid, Object object) {
+    public boolean contains(UUID uuid, C object) {
         return contains(uuid, getPredicate(object));
     }
 
-    public int getId(UUID uuid, Object object) {
+    public int getId(UUID uuid, C object) {
         return getId(uuid, getPredicate(object));
     }
 
-    public Optional<O> get(UUID uuid, Object object) {
+    public Optional<O> get(UUID uuid, C object) {
         return get(uuid, getPredicate(object));
     }
 }

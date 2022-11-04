@@ -5,6 +5,9 @@ import me.opkarol.opc.api.database.mysql.types.MySqlVariable;
 import me.opkarol.opc.api.database.mysql.types.MySqlVariableType;
 import me.opkarol.opc.api.map.OpLinkedMap;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;
 
 public class MySqlTable {
@@ -74,5 +77,9 @@ public class MySqlTable {
 
     public OpLinkedMap<MySqlVariable, MySqlAttribute[]> getMap() {
         return map;
+    }
+
+    public List<MySqlAttribute> getAttributes(MySqlVariable variable) {
+        return Arrays.asList(getMap().getMap().get(variable));
     }
 }

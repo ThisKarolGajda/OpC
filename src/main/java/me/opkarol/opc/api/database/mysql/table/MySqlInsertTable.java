@@ -1,12 +1,9 @@
 package me.opkarol.opc.api.database.mysql.table;
 
-import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.database.mysql.types.MySqlAttribute;
 import me.opkarol.opc.api.database.mysql.types.MySqlVariable;
 import me.opkarol.opc.api.map.OpMap;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
 
 public class MySqlInsertTable {
     private final MySqlTable table;
@@ -38,9 +35,7 @@ public class MySqlInsertTable {
     }
 
     public String toInsertIntoString() {
-        String s = String.format("INSERT INTO %s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s;", table.getTableName(), getShortenValues(), getValues(), getDuplicateKeys());
-        OpAPI.getInstance().getLogger().info(s);
-        return s;
+        return String.format("INSERT INTO %s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s;", table.getTableName(), getShortenValues(), getValues(), getDuplicateKeys());
     }
 
     public String getValues() {
@@ -73,7 +68,7 @@ public class MySqlInsertTable {
 
         for (MySqlVariable variable : table.getMap().keySet()) {
             Object value = valueMap.getOrDefault(variable.name(), null);
-            if (value == null || Arrays.asList(table.getMap().getMap().get(variable)).contains(MySqlAttribute.PRIMARY)) {
+            if (value == null || table.getAttributes(variable).contains(MySqlAttribute.PRIMARY) || table.getAttributes(variable).contains(MySqlAttribute.IGNORE_IN_ALL_SEARCH)) {
                 continue;
             }
 

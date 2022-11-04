@@ -1,13 +1,14 @@
 package me.opkarol.opc.api.commands.arguments;
 
+import me.opkarol.opc.api.commands.types.IType;
 import me.opkarol.opc.api.utils.StringUtil;
 import org.bukkit.SoundCategory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class SoundCategoryArg extends OpCommandArg {
-    public SoundCategoryArg(String name) {
+public class SoundCategoryArg <I extends IType> extends OpTypeArg<I> {
+    public SoundCategoryArg(I name) {
         super(name);
     }
 

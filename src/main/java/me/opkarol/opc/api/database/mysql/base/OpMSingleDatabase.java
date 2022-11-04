@@ -1,13 +1,12 @@
 package me.opkarol.opc.api.database.mysql.base;
 
-import me.opkarol.opc.OpAPI;
-import me.opkarol.opc.api.database.mysql.types.MySqlVariableType;
 import me.opkarol.opc.api.database.mysql.OpMConnection;
-import me.opkarol.opc.api.database.mysql.types.OpMCounter;
 import me.opkarol.opc.api.database.mysql.objects.OpMObjects;
 import me.opkarol.opc.api.database.mysql.table.MySqlDeleteTable;
 import me.opkarol.opc.api.database.mysql.table.MySqlInsertTable;
 import me.opkarol.opc.api.database.mysql.table.MySqlTable;
+import me.opkarol.opc.api.database.mysql.types.MySqlVariableType;
+import me.opkarol.opc.api.database.mysql.types.OpMCounter;
 import me.opkarol.opc.api.files.Configuration;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,15 +21,12 @@ public class OpMSingleDatabase<O> {
     private final OpMCounter counter;
 
     public OpMSingleDatabase(String tableName, OpMConnection database, @NotNull OpMObjects<O> objects) {
-        OpAPI.getInstance().getLogger().info(tableName + " -= -= -=-= -=-= ==");
         this.tableName = tableName;
         this.database = database;
         this.objects = objects;
         MySqlTable table = new MySqlTable(tableName);
         objects.getObjectList().forEach(o -> table.addMySqlVariable(o.getVariable(), o.attributes()));
         this.table = table;
-        OpAPI.getInstance().getLogger().info(tableName + " -= -= -=-= -=-= == " + this.tableName);
-
         this.counter = new OpMCounter(database, this.tableName);
     }
 

@@ -40,7 +40,7 @@ public class HashCreator {
             // Instantiate a message digest for the chosen algorithm
             hasher = MessageDigest.getInstance(algorithm);
 
-            // Insert name space if NOT NULL
+            // Insert name space if NOT EMPTY
             if (namespace != null) {
                 hasher.update(toBytes(namespace.getMostSignificantBits()));
                 hasher.update(toBytes(namespace.getLeastSignificantBits()));

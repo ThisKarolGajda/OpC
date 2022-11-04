@@ -1,12 +1,13 @@
 package me.opkarol.opc.api.commands.arguments;
 
+import me.opkarol.opc.api.commands.types.IType;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.Nullable;
 
-public class EnchantArg extends OpCommandArg {
+public class EnchantArg <I extends IType> extends OpTypeArg<I> {
 
-    public EnchantArg(String name) {
+    public EnchantArg(I name) {
         super(name);
     }
 

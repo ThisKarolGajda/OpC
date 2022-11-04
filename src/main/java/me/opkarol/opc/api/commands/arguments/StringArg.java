@@ -1,10 +1,11 @@
 package me.opkarol.opc.api.commands.arguments;
 
+import me.opkarol.opc.api.commands.types.IType;
 import org.jetbrains.annotations.Nullable;
 
-public class StringArg extends OpCommandArg {
+public class StringArg<I extends IType> extends OpTypeArg<I> {
 
-    public StringArg(String name) {
+    public StringArg(I name) {
         super(name);
     }
 

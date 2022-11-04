@@ -19,11 +19,10 @@ import java.util.function.Consumer;
 public class Configuration {
     private final Plugin plugin;
     private final String pluginName;
-    private String fileName;
     private final File pluginDataFolder;
-
     private final File configuration;
     private FileConfiguration config;
+    private String fileName;
 
     public Configuration(@NotNull Plugin plugin, String fileName) {
         setName(fileName);
@@ -52,22 +51,25 @@ public class Configuration {
             if (!pluginDataFolder.exists()) {
                 this.pluginDataFolder.mkdirs();
             }
-            plugin.saveResource(fileName, false);
-            updateConfig();
+            try {
+                plugin.saveResource(fileName, false);
+                updateConfig();
+            } catch (IllegalArgumentException ignore) {
+                createNewFile();
+            }
         }
     }
 
     public void createNewFile() {
         try {
-            configuration.mkdirs();
-            configuration.createNewFile();
+            File file = getFile();
+            file.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void updateConfig() {
-        createConfig();
         try {
             ConfigUpdater.update(plugin, fileName, configuration);
         } catch (IOException e) {
@@ -80,7 +82,7 @@ public class Configuration {
             return;
         }
 
-        if (name.endsWith(".yml")) {
+        if (name.contains(".")) {
             fileName = name;
         } else {
             fileName = name + ".yml";
@@ -192,5 +194,19 @@ public class Configuration {
 
     public <K extends Enum<K>> void useEnumValue(String path, Class<K> clazz, Consumer<K> consumer) {
         StringUtil.getEnumValue(get(path), clazz).ifPresent(consumer);
+    }
+
+    public boolean getBoolean(String path) {
+        if (getConfig() != null) {
+            return getConfig().getBoolean(path);
+        }
+        return false;
+    }
+
+    public String getString(String path) {
+        if (getConfig() != null) {
+            return getConfig().getString(path);
+        }
+        return null;
     }
 }

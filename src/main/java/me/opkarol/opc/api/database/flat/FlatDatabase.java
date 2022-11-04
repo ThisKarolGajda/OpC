@@ -18,7 +18,7 @@ public class FlatDatabase<K> implements IFlatDatabase<K> {
     @Nullable
     public K loadObject() {
         File file = configuration.getConfiguration();
-        if (!file.isFile() || !file.exists()) {
+        if (!file.isFile() || !file.exists() || file.length() == 0) {
             return null;
         }
         try {

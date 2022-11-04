@@ -1,11 +1,12 @@
 package me.opkarol.opc.api.commands;
 
 import me.opkarol.opc.OpAPI;
-import me.opkarol.opc.api.commands.arguments.OpCommandArg;
 import me.opkarol.opc.api.commands.arguments.OpCommandArgument;
+import me.opkarol.opc.api.commands.arguments.OpTypeArg;
 import me.opkarol.opc.api.commands.suggestions.OpCommandSuggestion;
 import me.opkarol.opc.api.commands.suggestions.OpSimpleSuggestion;
 import me.opkarol.opc.api.commands.suggestions.StaticSuggestions;
+import me.opkarol.opc.api.commands.types.IType;
 import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.map.OpLinkedMap;
 import me.opkarol.opc.api.utils.StringUtil;
@@ -27,17 +28,21 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public class OpCommand extends BukkitCommand {
     private boolean isMain;
     private OpList<Integer> argsNumber = OpList.asList(1);
     private final String name;
     private final OpList<OpCommand> list = new OpList<>();
-    private final OpLinkedMap<String, OpCommandArg> args = new OpLinkedMap<>();
-    private BiConsumer<OpCommandSender, OpCommandArgument> biConsumer;
+    private final OpLinkedMap<IType, OpTypeArg<?>> args = new OpLinkedMap<>();
+    private BiConsumer<OpCommandSender, OpCommandArgument<?>> biConsumer;
     private final OpList<OpCommandSuggestion> suggestions = new OpList<>();
     private final OpList<OpSimpleSuggestion> simpleSuggestions = new OpList<>();
     private boolean hasToBePlayer, removeDefaultCommandSuggestion;
     private OpCommandPermission seeTabComplete = new OpCommandPermission(null, null, OpCommandPermission.PERMISSION_TYPE.SEE_TAB_COMPLETE), useCommand = new OpCommandPermission(null, null, OpCommandPermission.PERMISSION_TYPE.USE_COMMAND);
+    private OpTypeArg<?> globalCommandArg;
+    private OpSimpleSuggestion globalSimpleSuggestion;
+    private OpCommandSuggestion globalCommandSuggestion;
 
     public OpCommand(@NotNull String name) {
         super(name);
@@ -51,27 +56,54 @@ public class OpCommand extends BukkitCommand {
         this.list.add(subCommand);
         subCommand.isMain = false;
         subCommand.addArgNumber();
-        OpAPI.getInstance().getLogger().info(subCommand.getName() + " [-] " + subCommand.isMain);
+        if (globalCommandArg != null) {
+            subCommand.addArg(globalCommandArg);
+        }
+        if (globalSimpleSuggestion != null) {
+            subCommand.addSuggestion(globalSimpleSuggestion);
+        }
+        if (globalCommandSuggestion != null) {
+            subCommand.addSuggestion(globalCommandSuggestion);
+        }
         return this;
     }
 
-    public OpCommand addArgSuggestion(OpCommandArg arg, OpSimpleSuggestion suggestion) {
+    public OpCommand addCommandWithoutGlobals(@NotNull OpCommand subCommand) {
+        this.list.add(subCommand);
+        subCommand.isMain = false;
+        subCommand.addArgNumber();
+        return this;
+    }
+
+    public <I extends IType> OpCommand setGlobalArgSuggestion(OpTypeArg<I> arg, String suggestion) {
+        return setGlobalCommandArg(arg).setGlobalSimpleSuggestion(new OpSimpleSuggestion(suggestion));
+    }
+
+    public <I extends IType> OpCommand setGlobalArgSuggestion(OpTypeArg<I> arg, OpCommandSuggestion suggestion) {
+        return setGlobalCommandArg(arg).setGlobalCommandSuggestion(suggestion);
+    }
+
+    public <I extends IType> OpCommand setGlobalArgSuggestion(OpTypeArg<I> arg, OpSimpleSuggestion suggestion) {
+        return setGlobalCommandArg(arg).setGlobalSimpleSuggestion(suggestion);
+    }
+
+    public <I extends IType> OpCommand addArgSuggestion(OpTypeArg<I> arg, OpSimpleSuggestion suggestion) {
         return addArg(arg).addSuggestion(suggestion);
     }
 
-    public OpCommand addArgSuggestion(OpCommandArg arg, OpCommandSuggestion suggestion) {
+    public <I extends IType> OpCommand addArgSuggestion(OpTypeArg<I> arg, OpCommandSuggestion suggestion) {
         return addArg(arg).addSuggestion(suggestion);
     }
 
-    public OpCommand addArgSuggestion(OpCommandArg arg, StaticSuggestions.SUGGESTION_TYPE suggestion) {
+    public <I extends IType> OpCommand addArgSuggestion(OpTypeArg<I> arg, StaticSuggestions.SUGGESTION_TYPE suggestion) {
         return addArg(arg).addSuggestion(suggestion);
     }
 
-    public OpCommand addArgSuggestion(OpCommandArg arg, String suggestion) {
+    public <I extends IType> OpCommand addArgSuggestion(OpTypeArg<I> arg, String suggestion) {
         return addArg(arg).addSuggestion(suggestion);
     }
 
-    public OpCommand addArgSuggestion(OpCommandArg arg, OpList<String> suggestion) {
+    public <I extends IType> OpCommand addArgSuggestion(OpTypeArg<I> arg, OpList<String> suggestion) {
         return addArg(arg).addSuggestion(suggestion);
     }
 
@@ -101,7 +133,7 @@ public class OpCommand extends BukkitCommand {
         return list;
     }
 
-    public OpCommand addArg(OpCommandArg arg) {
+    public <I extends IType> OpCommand addArg(OpTypeArg<I> arg) {
         args.set(arg.getName(), arg);
         return this;
     }
@@ -164,7 +196,6 @@ public class OpCommand extends BukkitCommand {
             }
         } else if (args.length > 1) {
             if (getName().equals(args[0])) {
-                OpAPI.getInstance().getLogger().info(args.length + " - " + getSimpleSuggestionsCount() + " - " + getSuggestionSize() + " - ");
                 if (getSimpleSuggestionsCount() == args.length - 1) {
                     completions.addAll(simpleSuggestions.get(args.length - 2).getSuggestions());
                 }
@@ -225,21 +256,21 @@ public class OpCommand extends BukkitCommand {
         }
     }
 
-    public BiConsumer<OpCommandSender, OpCommandArgument> getConsumer() {
+    public BiConsumer<OpCommandSender, OpCommandArgument<?>> getConsumer() {
         return biConsumer;
     }
 
-    public OpCommand execute(BiConsumer<OpCommandSender, OpCommandArgument> biConsumer) {
+    public OpCommand execute(BiConsumer<OpCommandSender, OpCommandArgument<?>> biConsumer) {
         this.biConsumer = biConsumer;
         return this;
     }
 
-    public OpCommand executeAsPlayer(BiConsumer<OpCommandSender, OpCommandArgument> biConsumer) {
+    public OpCommand executeAsPlayer(BiConsumer<OpCommandSender, OpCommandArgument<?>> biConsumer) {
         setHasToBePlayer(true);
         return execute(biConsumer);
     }
 
-    public OpCommand executeAsPlayerWithArgLength(BiConsumer<OpCommandSender, OpCommandArgument> biConsumer, int argLength) {
+    public OpCommand executeAsPlayerWithArgLength(BiConsumer<OpCommandSender, OpCommandArgument<?>> biConsumer, int argLength) {
         setHasToBePlayer(true);
         return executeWithArgLength(biConsumer, argLength);
     }
@@ -249,7 +280,7 @@ public class OpCommand extends BukkitCommand {
         return this;
     }
 
-    public OpCommand executeWithArgLength(BiConsumer<OpCommandSender, OpCommandArgument> biConsumer, int argLength) {
+    public OpCommand executeWithArgLength(BiConsumer<OpCommandSender, OpCommandArgument<?>> biConsumer, int argLength) {
         this.biConsumer = ((sender, args) -> {
             if (args.getLength() == argLength) {
                 biConsumer.accept(sender, args);
@@ -352,12 +383,45 @@ public class OpCommand extends BukkitCommand {
         int count = 0;
         for (OpSimpleSuggestion suggestion : simpleSuggestions) {
             count+=suggestion.getSuggestions().size();
-            OpAPI.getInstance().getLogger().info(count + " - " + suggestion.getSuggestions().size() + " - " + suggestion.getSuggestions().toArrayString());
         }
         return count;
     }
 
     public int getSuggestionSize() {
         return suggestions.size();
+    }
+
+    public OpTypeArg<?> getGlobalCommandArg() {
+        return globalCommandArg;
+    }
+
+    public <I extends IType> OpCommand setGlobalCommandArg(OpTypeArg<I> globalCommandArg) {
+        this.globalCommandArg = globalCommandArg;
+        return this;
+    }
+
+    public OpSimpleSuggestion getGlobalSimpleSuggestion() {
+        return globalSimpleSuggestion;
+    }
+
+    public OpCommand setGlobalSimpleSuggestion(OpSimpleSuggestion globalSimpleSuggestion) {
+        this.globalSimpleSuggestion = globalSimpleSuggestion;
+        return this;
+    }
+
+    public OpCommandSuggestion getGlobalCommandSuggestion() {
+        return globalCommandSuggestion;
+    }
+
+    public OpCommand setGlobalCommandSuggestion(OpCommandSuggestion globalCommandSuggestion) {
+        this.globalCommandSuggestion = globalCommandSuggestion;
+        return this;
+    }
+
+    public OpCommand clearGlobalAdditions() {
+        this.globalCommandSuggestion = null;
+        this.globalSimpleSuggestion = null;
+        this.globalCommandArg = null;
+        return this;
     }
 }

@@ -2,6 +2,7 @@ package me.opkarol.opc.api.database.mysql.resultset;
 
 import me.opkarol.opc.api.location.OpSerializableLocation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,5 +39,14 @@ public record OpMResultSet(ResultSet set) {
 
     public @NotNull UUID getUUID(String column) {
         return UUID.fromString(getText(column));
+    }
+
+    public @Nullable Object getObject(String column) {
+        try {
+            return set.getObject(column);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

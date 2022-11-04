@@ -1,4 +1,4 @@
-package me.opkarol.opc.api.database.mysql.reflection;
+package me.opkarol.opc.api.database.mysql.reflection.types;
 
 import me.opkarol.opc.api.database.mysql.types.MySqlVariableType;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ public final class OpMType {
             case "Integer", "int" -> {
                 return MySqlVariableType.INT;
             }
-            case "String" -> {
+            case "String", "UUID" -> {
                 return MySqlVariableType.TEXT;
             }
             case "Float", "float" -> {

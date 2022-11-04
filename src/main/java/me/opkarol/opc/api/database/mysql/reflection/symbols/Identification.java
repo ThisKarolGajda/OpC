@@ -1,13 +1,11 @@
-package me.opkarol.opc.api.database.mysql.reflection;
+package me.opkarol.opc.api.database.mysql.reflection.symbols;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(value = ElementType.FIELD)
+@Target(value = ElementType.METHOD)
 @Retention(value = RetentionPolicy.RUNTIME)
-public @interface OpMValue {
-
-    OpMObjectValues value() default OpMObjectValues.NULL;
+public @interface Identification {
 }

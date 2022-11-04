@@ -41,11 +41,33 @@ public class OpTimerRunnable {
         }).runTaskTimerAsynchronously(0, 20);
     }
 
+    public OpRunnable runTaskTimesDownAsynchronously(BiConsumer<OpRunnable, Integer> onEachConsumer, int times) {
+        final int[] i = {times};
+        return new OpRunnable(r -> {
+            if (i[0] < 1) {
+                r.cancel();
+            }
+            onEachConsumer.accept(r, i[0]);
+            i[0]--;
+        }).runTaskTimerAsynchronously(0, 20);
+    }
+
     public synchronized void runTaskTimesUpAsynchronously(BiConsumer<OpRunnable, Integer> onEachConsumer, Consumer<OpRunnable> onEndConsumer, int times) {
         final int[] i = {1};
         new OpRunnable(r -> {
-            if (i[0] >= times) {
+            if (i[0] > times) {
                 onEndConsumer.accept(r);
+                r.cancel();
+            }
+            onEachConsumer.accept(r, i[0]);
+            i[0]++;
+        }).runTaskTimerAsynchronously(0, 20);
+    }
+
+    public synchronized void runTaskTimesUpAsynchronously(BiConsumer<OpRunnable, Integer> onEachConsumer, int times) {
+        final int[] i = {1};
+        new OpRunnable(r -> {
+            if (i[0] > times) {
                 r.cancel();
             }
             onEachConsumer.accept(r, i[0]);

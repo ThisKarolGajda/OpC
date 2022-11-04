@@ -1,12 +1,13 @@
 package me.opkarol.opc.api.commands.arguments;
 
+import me.opkarol.opc.api.commands.types.IType;
 import me.opkarol.opc.api.utils.StringUtil;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 
-public class MaterialArg extends OpCommandArg {
+public class MaterialArg <I extends IType> extends OpTypeArg<I> {
 
-    public MaterialArg(String name) {
+    public MaterialArg(I name) {
         super(name);
     }
 

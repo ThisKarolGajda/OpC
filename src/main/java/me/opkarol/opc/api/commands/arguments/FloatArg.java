@@ -1,10 +1,11 @@
 package me.opkarol.opc.api.commands.arguments;
 
+import me.opkarol.opc.api.commands.types.IType;
 import me.opkarol.opc.api.utils.StringUtil;
 import org.jetbrains.annotations.Nullable;
 
-public class FloatArg extends OpCommandArg {
-    public FloatArg(String name) {
+public class FloatArg <I extends IType> extends OpTypeArg<I> {
+    public FloatArg(I name) {
         super(name);
     }
 

@@ -1,7 +1,6 @@
 package me.opkarol.opc.api.database.mysql;
 
 import com.zaxxer.hikari.HikariDataSource;
-import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.database.IMySqlDatabase;
 import me.opkarol.opc.api.database.mysql.table.MySqlDeleteTable;
 import me.opkarol.opc.api.database.mysql.table.MySqlInsertTable;
@@ -89,7 +88,6 @@ public class OpMConnection implements IMySqlDatabase {
 
     @Override
     public void delete(@NotNull MySqlDeleteTable table) {
-        OpAPI.getInstance().getLogger().info(table.toDeleteString());
         try (Connection conn = source.getConnection();
              PreparedStatement stmt = conn.prepareStatement(table.toDeleteString())) {
             stmt.executeUpdate();
@@ -100,7 +98,6 @@ public class OpMConnection implements IMySqlDatabase {
 
     @Override
     public ResultSet get(MySqlTable table) {
-        OpAPI.getInstance().getLogger().info(String.format("SELECT * FROM %s;", table.getTableName()));
         try (Connection conn = source.getConnection();
              PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM %s;", table.getTableName()))) {
             return stmt.executeQuery();
