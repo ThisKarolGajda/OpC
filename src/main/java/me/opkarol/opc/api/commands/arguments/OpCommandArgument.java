@@ -1,11 +1,10 @@
 package me.opkarol.opc.api.commands.arguments;
 
-import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.commands.types.IType;
+import me.opkarol.opc.api.commands.types.OP16;
 import me.opkarol.opc.api.map.OpLinkedMap;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
+import org.jetbrains.annotations.Range;
 
 public record OpCommandArgument<I extends IType>(
         OpLinkedMap<IType, OpTypeArg<I>> args,
@@ -40,5 +39,9 @@ public record OpCommandArgument<I extends IType>(
 
     public String getString(@NotNull IType name) {
         return String.valueOf(get(name));
+    }
+
+    public String getString(@Range(from = 0, to = 15) int i) {
+        return String.valueOf(get(OP16.values()[i]));
     }
 }
