@@ -6,6 +6,7 @@ import me.opkarol.opc.api.database.mysql.table.MySqlTable;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public interface IMySqlDatabase {
     void setup();
@@ -22,5 +23,5 @@ public interface IMySqlDatabase {
 
     void run(String statement);
 
-    ResultSet query(String statement);
+    ResultSet query(String statement) throws SQLException;
 }

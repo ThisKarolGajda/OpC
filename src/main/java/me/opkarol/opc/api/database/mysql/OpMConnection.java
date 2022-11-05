@@ -118,13 +118,10 @@ public class OpMConnection implements IMySqlDatabase {
     }
 
     @Override
-    public ResultSet query(String statement) {
+    public ResultSet query(String statement) throws SQLException {
         try (Connection conn = source.getConnection();
              PreparedStatement stmt = conn.prepareStatement(statement)) {
             return stmt.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return null;
     }
 }

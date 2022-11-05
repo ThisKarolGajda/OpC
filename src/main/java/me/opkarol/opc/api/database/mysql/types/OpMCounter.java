@@ -26,17 +26,17 @@ public class OpMCounter {
     }
 
     public void loadLastId(@NotNull OpMConnection connection) {
-        ResultSet set = connection.query(String.format("SELECT MAX(`id`) FROM `%s`;", tableName));
-        if (set == null) {
-            id = 0;
-            return;
-        }
+        ResultSet set;
         try {
+            set = connection.query(String.format("SELECT MAX(`id`) FROM `%s`;", tableName));
+            if (set == null) {
+                id = 0;
+                return;
+            }
             if (set.next()) {
                 id = set.getInt("MAX(`id`)");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ignore) {
         }
     }
 }
