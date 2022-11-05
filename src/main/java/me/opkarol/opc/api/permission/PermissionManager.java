@@ -2,10 +2,10 @@ package me.opkarol.opc.api.permission;
 
 import me.opkarol.opc.api.configuration.CustomConfigurable;
 import me.opkarol.opc.api.configuration.CustomConfiguration;
+import me.opkarol.opc.api.list.OpList;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import me.opkarol.opc.api.list.OpList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -57,13 +57,15 @@ public class PermissionManager<K> implements CustomConfigurable {
 
     public Object getPlayerObject(Player player, @NotNull OBJECT_TYPE type) {
         List<PermissionGroup<K>> groups = list.stream().filter(group ->
-                        player.hasPermission(group.group()) || group.group().equalsIgnoreCase("default"))
+                        player.hasPermission(group.group())
+                        || group.group().equalsIgnoreCase("default")
+                        || (group.group().equalsIgnoreCase("op") && player.isOp()))
                 .toList();
         if (type.equals(OBJECT_TYPE.INTEGER)) {
-            int lowest = -1;
+            int lowest = Integer.MAX_VALUE;
             for (PermissionGroup<K> group : groups) {
                 int object = (int) group.object();
-                if (lowest == -1 || object < lowest) {
+                if (object < lowest) {
                     lowest = object;
                 }
             }
@@ -74,7 +76,7 @@ public class PermissionManager<K> implements CustomConfigurable {
 
     @Override
     public Consumer<CustomConfiguration> get() {
-        return get -> get.useSectionKeys(s -> add(new PermissionGroup<>(s, (K) get.get(get.getPath(s)))));
+        return get -> get.useSectionKeys(s -> add(new PermissionGroup<>(s, (K) get.get(s))));
     }
 
     @Override
@@ -82,8 +84,14 @@ public class PermissionManager<K> implements CustomConfigurable {
         return save -> save.forEachIterable(list, group -> save.set(group.group(), group.object())).save();
     }
 
-
     public enum OBJECT_TYPE {
         INTEGER
+    }
+
+    @Override
+    public String toString() {
+        return "PermissionManager{" +
+                "list=" + list.toArrayString() +
+                '}';
     }
 }

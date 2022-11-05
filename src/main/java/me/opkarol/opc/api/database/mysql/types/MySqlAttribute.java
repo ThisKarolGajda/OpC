@@ -5,7 +5,8 @@ public enum MySqlAttribute {
     PRIMARY(" PRIMARY KEY (%s)"),
     LENGTH(" (%s)"),
     IGNORE_IN_SEARCH(""),
-    IGNORE_IN_ALL_SEARCH("");
+    IGNORE_IN_ALL_SEARCH(""),
+    CHARACTER_SET(" CHARACTER SET utf8 COLLATE utf8_unicode_ci");
 
     private final String text;
 

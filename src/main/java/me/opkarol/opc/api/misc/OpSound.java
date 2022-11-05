@@ -1,6 +1,5 @@
 package me.opkarol.opc.api.misc;
 
-import me.opkarol.opc.OpC;
 import me.opkarol.opc.api.configuration.CustomConfiguration;
 import me.opkarol.opc.api.configuration.IEmptyConfiguration;
 import me.opkarol.opc.api.location.OpSerializableLocation;
@@ -227,7 +226,6 @@ public class OpSound implements Serializable, IEmptyConfiguration {
     @Override
     public Consumer<CustomConfiguration> get() {
         return c -> {
-            OpC.getLog().info(c.getPath("volume") + " --- 1");
             this.volume = c.getFloat("volume");
             this.pitch = c.getFloat("pitch");
             this.sound = c.getUnsafeEnum("sound", Sound.class);

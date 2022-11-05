@@ -1,5 +1,6 @@
 package me.opkarol.opc.api.teleport;
 
+import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.configuration.CustomConfigurable;
 import me.opkarol.opc.api.configuration.CustomConfiguration;
 import me.opkarol.opc.api.misc.OpParticle;
@@ -54,15 +55,16 @@ public class TeleportSettings implements CustomConfigurable {
         OpParticle particle = settingsVisual.particle();
         OpTitle title = settingsVisual.title();
         OpText text = settingsVisual.text();
-        if (sound != null) {
+
+        if (sound != null && !sound.isEmpty()) {
             sound.play(player);
         }
 
-        if (particle != null) {
+        if (particle != null && !particle.isEmpty()) {
             particle.display(player);
         }
 
-        if (title != null) {
+        if (title != null && !title.isEmpty()) {
             if (specialData.length > 1) {
                 title.setSubTitle(specialData[0], specialData[1]).setTitle(specialData[0], specialData[1]).display(player);
             } else {

@@ -16,8 +16,8 @@ public class OpAPI {
 
     public static void init(@NotNull OpPlugin plugin) {
         OpAPI.plugin = plugin;
-        logInfo(plugin.getName());
     }
+
     public static void addCommand(OpCommand command) {
         commands.add(command);
     }

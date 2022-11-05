@@ -1,6 +1,5 @@
 package me.opkarol.opc.api.teleport;
 
-import me.opkarol.opc.OpC;
 import me.opkarol.opc.api.commands.OpCommandSender;
 import me.opkarol.opc.api.configuration.CustomConfigurable;
 import me.opkarol.opc.api.configuration.CustomConfiguration;
@@ -12,9 +11,12 @@ import me.opkarol.opc.api.runnable.OpRunnable;
 import me.opkarol.opc.api.runnable.OpTimerRunnable;
 import me.opkarol.opc.api.utils.FormatUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -115,7 +117,7 @@ public class OpTeleport implements Serializable, CustomConfigurable {
 
     public boolean isSafeLocation(@NotNull OpLocation location) {
         Block feet = location.getLocation().getBlock();
-        if (!feet.getType().isTransparent() && !feet.getLocation().add(0, 1, 0).getBlock().getType().isTransparent()) {
+        if (feet.getType().equals(Material.LAVA) || feet.getType().equals(Material.WATER) || !feet.getType().isTransparent() && !feet.getLocation().add(0, 1, 0).getBlock().getType().isTransparent()) {
             return false;
         }
         Block head = feet.getRelative(BlockFace.UP);
@@ -123,6 +125,7 @@ public class OpTeleport implements Serializable, CustomConfigurable {
             return false;
         }
         Block ground = feet.getRelative(BlockFace.DOWN);
+
         return ground.getType().isSolid();
     }
 
@@ -159,32 +162,47 @@ public class OpTeleport implements Serializable, CustomConfigurable {
         if (teleportSettings == null) {
             teleportSettings = new DefaultTeleportSettings();
         }
+
         if (getRegistration() != null) {
             registration.addPlayer(player, this);
         }
+
         TeleportSettings settings = teleportSettings;
-        settings.use(player, settings.getOnStart());
-        location.getLocation().getChunk().load();
+        loadChunk(location.getLocation().getChunk());
+
         int playerTeleportLength = (int) group.getPlayerObject(player, PermissionManager.OBJECT_TYPE.INTEGER);
-        if (playerTeleportLength < 1) {
-            if (endActionMethod(location, player, settings)) {
-                return this;
-            }
-        }
-        task = new OpTimerRunnable().runTaskTimesDownAsynchronously((onEach, integer) -> {
-            String s = String.valueOf(integer);
-            settings.use(player, settings.getOnEach(), "%time%", s);
-        }, end -> new OpRunnable(r -> {
+        if (playerTeleportLength <= 1) {
             if (!endActionMethod(location, player, settings)) {
                 settings.use(player, settings.getOnInvalid());
             }
+            return this;
+        } else {
+            settings.use(player, settings.getOnStart());
+        }
+
+        task = new OpTimerRunnable().runTaskTimesDownAsynchronously(
+                (onEach, integer) -> {
+                    if (integer > 0) {
+                        settings.use(player, settings.getOnEach(), "%time%", String.valueOf(integer));
+                    }
+                },
+                end -> new OpRunnable(r -> {
+                    if (!endActionMethod(location, player, settings)) {
+                        settings.use(player, settings.getOnInvalid());
+                    }
         }).runTask(), playerTeleportLength);
         return this;
     }
 
+    private void loadChunk(@NotNull Chunk chunk) {
+        if (!chunk.isLoaded()) {
+            chunk.load();
+        }
+    }
+
     private boolean endActionMethod(@NotNull OpSerializableLocation location, Player player, TeleportSettings settings) {
         if (isSafeLocation(location.toLocation())) {
-            if (player.teleport(location.getLocation())) {
+            if (player.teleport(location.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN)) {
                 settings.use(player, settings.getOnEnd(), "%location%", location.toFamilyString());
                 return true;
             }
@@ -296,7 +314,6 @@ public class OpTeleport implements Serializable, CustomConfigurable {
         return c -> {
             permissionGroup = new PermissionManager<>(c.getPath("permission"));
             settings = new TeleportSettings(c.getPath("settings"));
-            OpC.getLog().info(settings.toString());
             location = c.getLocation("location");
         };
     }

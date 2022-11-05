@@ -80,7 +80,7 @@ public class OpMReflection {
     }
 
     private List<Field> buildFields() {
-        return OpMReflectionUtils.getFields(classObject, field -> OpMReflectionUtils.isAnnotationPresent(field.getClass(), Value.class));
+        return OpMReflectionUtils.getFields(classObject, field -> field.isAnnotationPresent(Value.class));
     }
 
     public Class<?> getClassObject() {

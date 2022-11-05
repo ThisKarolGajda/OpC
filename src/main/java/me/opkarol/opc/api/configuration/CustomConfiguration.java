@@ -145,7 +145,7 @@ public class CustomConfiguration {
     }
 
     public <K extends Enum<K>> Optional<K> getEnum(String path, Class<K> clazz) {
-        return StringUtil.getEnumValue(getPath(path), clazz);
+        return StringUtil.getEnumValue(getString(path), clazz);
     }
 
     public <K extends Enum<K>> K getUnsafeEnum(String path, Class<K> clazz) {
@@ -162,7 +162,8 @@ public class CustomConfiguration {
     }
 
     public CustomConfiguration useSectionKeys(Consumer<String> consumer) {
-        return useSectionKeys(VariableUtil.ifEndsWithRemove(defaultPath, "."), consumer);
+        configuration.useSectionKeys(VariableUtil.ifEndsWithRemove(defaultPath, "."), consumer);
+        return this;
     }
 
     public CustomConfiguration useSectionKeys(String path, Consumer<String> consumer) {

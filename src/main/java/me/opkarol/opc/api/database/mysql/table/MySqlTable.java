@@ -49,12 +49,16 @@ public class MySqlTable {
             builder.append(variable.name()).append(" ").append(variable.variableName());
             MySqlAttribute[] attributes = map.getOrDefault(variable, null);
             if (attributes != null && attributes.length != 0) {
+                boolean alreadySet = false;
                 for (MySqlAttribute attribute : attributes) {
                     if (attribute.equals(MySqlAttribute.PRIMARY)) {
                         primary = variable;
                     } else {
+                        if (!alreadySet && variable.variableName().equals(MySqlVariableType.TEXT)) {
+                            builder.append(MySqlAttribute.CHARACTER_SET.getText());
+                            alreadySet = true;
+                        }
                         builder.append(attribute.getText());
-
                     }
                 }
             }

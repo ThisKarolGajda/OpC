@@ -1,7 +1,5 @@
 package me.opkarol.opc.api.misc;
 
-import me.opkarol.opc.OpC;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -70,7 +68,6 @@ public class HashCreator {
     }
 
     public static UUID getSha1Uuid(String string) {
-        OpC.getLog().info(getHashUuid(null, string, MESSAGE_DIGEST_SHA1, VERSION_5) + " --- " + string);
         return getHashUuid(null, string, MESSAGE_DIGEST_SHA1, VERSION_5);
     }
 

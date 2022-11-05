@@ -33,7 +33,6 @@ public class OpParticle implements IEmptyConfiguration, Serializable {
 
     public OpParticle(String path) {
         get(path);
-        //OpC.getLog().info(String.valueOf(this.particle));
     }
 
     public OpParticle() { }
@@ -216,7 +215,6 @@ public class OpParticle implements IEmptyConfiguration, Serializable {
             this.setOffset(c.getString("offset"));
             this.location = c.getLocation("location");
             this.particle = c.getUnsafeEnum("particle", Particle.class);
-            //OpC.getLog().info(String.valueOf(c.getUnsafeEnum("particle", Particle.class)));
             this.amount = c.getInt("amount");
         };
     }
