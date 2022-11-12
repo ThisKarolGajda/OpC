@@ -37,6 +37,19 @@ public interface IDefaultDatabase<O, C> {
         }
     }
 
+    default void checkAndUse(UUID uuid, C object, Runnable noObject, Runnable objectFound) {
+        if (contains(uuid, object)) {
+            Optional<O> optional = get(uuid, object);
+            if (optional.isEmpty()) {
+                noObject.run();
+            } else {
+                objectFound.run();
+            }
+        } else {
+            noObject.run();
+        }
+    }
+
     default void deleteAndUse(UUID uuid, C object, Runnable noObject, Runnable objectFound) {
         if (delete(uuid, object)) {
             objectFound.run();
@@ -51,6 +64,15 @@ public interface IDefaultDatabase<O, C> {
         } else {
             add(uuid, obj);
             objectFound.accept(obj);
+        }
+    }
+
+    default void addAndUse(UUID uuid, C object, O obj, Runnable noObject, Runnable objectFound) {
+        if (contains(uuid, object)) {
+            noObject.run();
+        } else {
+            add(uuid, obj);
+            objectFound.run();
         }
     }
 

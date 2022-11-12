@@ -1,5 +1,6 @@
 package me.opkarol.opc.api.commands;
 
+import me.opkarol.opc.api.location.OpSerializableLocation;
 import me.opkarol.opc.api.utils.FormatUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,5 +33,9 @@ public record OpCommandSender(CommandSender sender) {
         } else {
             sender.sendMessage(message);
         }
+    }
+
+    public @Nullable OpSerializableLocation getLocation() {
+        return isPlayer() ? new OpSerializableLocation(getPlayer().getLocation()) : null;
     }
 }

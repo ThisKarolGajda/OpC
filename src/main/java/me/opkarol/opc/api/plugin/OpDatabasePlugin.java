@@ -1,9 +1,12 @@
 package me.opkarol.opc.api.plugin;
 
 import me.opkarol.opc.api.database.manager.Database;
+import me.opkarol.opc.api.database.manager.DatabaseHolder;
 import me.opkarol.opc.api.database.manager.DatabaseImpl;
 import me.opkarol.opc.api.database.manager.IDefaultDatabase;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 public abstract class OpDatabasePlugin<O, C> extends OpPlugin {
     private static DatabaseImpl<?, ?> databaseInterface;
@@ -27,6 +30,7 @@ public abstract class OpDatabasePlugin<O, C> extends OpPlugin {
     @Override
     public void onEnable() {
         setDatabasePlugin(getBase());
+        DatabaseHolder.setDatabase((DatabaseImpl<UUID, String>) getLocalDatabase());
         super.onEnable();
     }
 

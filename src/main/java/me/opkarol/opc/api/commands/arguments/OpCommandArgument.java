@@ -6,6 +6,8 @@ import me.opkarol.opc.api.map.OpLinkedMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+import java.util.function.Consumer;
+
 public record OpCommandArgument<I extends IType>(
         OpLinkedMap<IType, OpTypeArg<I>> args,
         String[] strings,
@@ -43,5 +45,13 @@ public record OpCommandArgument<I extends IType>(
 
     public String getString(@Range(from = 0, to = 15) int i) {
         return String.valueOf(get(OP16.values()[i]));
+    }
+
+    public void useString(@NotNull IType name, @NotNull Consumer<String> consumer) {
+        consumer.accept(getString(name));
+    }
+
+    public void useString(@Range(from = 0, to = 15) int i, @NotNull Consumer<String> consumer) {
+        consumer.accept(getString(i));
     }
 }
