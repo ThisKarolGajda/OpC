@@ -125,7 +125,6 @@ public class OpTeleport implements Serializable, CustomConfigurable {
             return false;
         }
         Block ground = feet.getRelative(BlockFace.DOWN);
-
         return ground.getType().isSolid();
     }
 

@@ -55,6 +55,25 @@ public class ConfigurationMap {
         return string;
     }
 
+    /**
+     * Parameter objects in each of their table should have 2 objects.
+     *
+     * @param path the path from which value will be taken
+     * @param objects table of strings, first parameter in each table is replacement and second is replacement
+     * @return configured value
+     */
+    public String getValue(String path, String[][] objects) {
+        String string = getValue(path);
+        if (objects != null) {
+            for (String[] str : objects) {
+                if (str.length == 2) {
+                    string = string.replace(str[0], str[1]);
+                }
+            }
+        }
+        return string;
+    }
+
     public String getFormattedValue(String path) {
         return formatMessage(getValue(path));
     }
