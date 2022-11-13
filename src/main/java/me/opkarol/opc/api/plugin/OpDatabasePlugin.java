@@ -30,8 +30,8 @@ public abstract class OpDatabasePlugin<O, C> extends OpPlugin {
     @Override
     public void onEnable() {
         setDatabasePlugin(getBase());
-        DatabaseHolder.setDatabase((DatabaseImpl<UUID, String>) getLocalDatabase());
         super.onEnable();
+        DatabaseHolder.setDatabase((DatabaseImpl<UUID, String>) getLocalDatabase());
     }
 
     public abstract Database<O, C> getBase();

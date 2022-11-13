@@ -6,9 +6,11 @@ import me.opkarol.opc.api.files.TranslationObject;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class OpMessagesPlugin<O, C> extends OpDatabasePlugin<O, C> {
-    private static final ConfigurationMap configurationMap;
+    private static ConfigurationMap configurationMap;
 
-    static {
+    @Override
+    public void onEnable() {
+        super.onEnable();
         configurationMap = new ConfigurationMap(getInstance(), "messages");
         configurationMap.getConfiguration().updateConfig();
     }
@@ -37,7 +39,15 @@ public abstract class OpMessagesPlugin<O, C> extends OpDatabasePlugin<O, C> {
         sender.sendMessage(getValue(path, strings));
     }
 
+    public static void sendMappedMessage(@NotNull OpCommandSender sender, String path) {
+        sender.sendMessage(getValue(path));
+    }
+
     public static @NotNull Runnable getMappedMessage(OpCommandSender sender, String path, String[][] strings) {
         return () -> sender.sendMessage(getValue(path, strings));
+    }
+
+    public static @NotNull Runnable getMappedMessage(OpCommandSender sender, String path) {
+        return () -> sender.sendMessage(getValue(path));
     }
 }
