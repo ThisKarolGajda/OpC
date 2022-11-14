@@ -165,7 +165,12 @@ public class Configuration {
         if (getConfig() != null) {
             return config.get(path);
         }
-        return null;
+        try {
+            YamlConfiguration.loadConfiguration(configuration);
+        } catch (Exception ignore) {
+            return null;
+        }
+        return getObject(path);
     }
 
     public int getInt(String path) {
