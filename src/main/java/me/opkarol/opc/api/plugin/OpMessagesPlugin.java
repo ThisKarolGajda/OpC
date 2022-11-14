@@ -13,7 +13,7 @@ public abstract class OpMessagesPlugin<O, C> extends OpDatabasePlugin<O, C> {
     public void onEnable() {
         super.onEnable();
         configurationMap = new ConfigurationMap(getInstance(), "messages");
-        configurationMap.getConfiguration().updateConfig();
+        configurationMap.getConfiguration().createConfig();
     }
 
     public static ConfigurationMap getMap() {
