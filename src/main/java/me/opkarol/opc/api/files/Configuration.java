@@ -168,6 +168,7 @@ public class Configuration {
         try {
             YamlConfiguration.loadConfiguration(configuration);
         } catch (Exception ignore) {
+            ignore.printStackTrace();
             return null;
         }
         return getObject(path);
