@@ -1,6 +1,7 @@
 package me.opkarol.opc.api.files;
 
 import me.opkarol.opc.api.map.OpMap;
+import me.opkarol.opc.api.utils.VariableUtil;
 import org.bukkit.plugin.Plugin;
 
 import static me.opkarol.opc.api.utils.FormatUtils.formatMessage;
@@ -31,10 +32,10 @@ public class ConfigurationMap {
         if (map.containsKey(path)) {
             return map.getMap().get(path);
         }
-
         Object object = getConfiguration().getObject(path);
         if (object == null) {
-            return path;
+            getConfiguration().reload();
+            return VariableUtil.getOrDefault(map.getMap().get(path), path);
         }
 
         if (object instanceof String str) {

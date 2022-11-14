@@ -34,19 +34,23 @@ public class Configuration {
         createConfig();
     }
 
-    public Configuration(@NotNull Plugin plugin, String fileName, boolean readOnly) {
+    public Configuration(@NotNull Plugin plugin, String fileName, boolean loadConfiguration) {
         setName(fileName);
         this.plugin = plugin;
         this.pluginName = plugin.getName();
         this.pluginDataFolder = plugin.getDataFolder();
         configuration = getFile();
-        if (!readOnly) {
+        if (!loadConfiguration) {
             config = YamlConfiguration.loadConfiguration(configuration);
+            createConfig();
         }
-        createConfig();
     }
 
-    public void createConfig() {
+    /**
+     * @return boolean value that represents false value if the file was newly created
+     */
+    public boolean createConfig() {
+        boolean b = getFile().exists();
         if (!configuration.exists()) {
             if (!pluginDataFolder.exists()) {
                 this.pluginDataFolder.mkdirs();
@@ -58,6 +62,7 @@ public class Configuration {
                 createNewFile();
             }
         }
+        return b == getFile().exists();
     }
 
     public void createNewFile() {
@@ -165,13 +170,7 @@ public class Configuration {
         if (getConfig() != null) {
             return config.get(path);
         }
-        try {
-            YamlConfiguration.loadConfiguration(configuration);
-        } catch (Exception ignore) {
-            ignore.printStackTrace();
-            return null;
-        }
-        return getObject(path);
+        return null;
     }
 
     public int getInt(String path) {

@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class OpPlugin extends JavaPlugin {
@@ -76,5 +77,10 @@ public class OpPlugin extends JavaPlugin {
 
     public static OpPlugin getInstance() {
         return plugin;
+    }
+
+    protected void disablePlugin(String message) {
+        getLog().log(Level.SEVERE, message);
+        getServer().getPluginManager().disablePlugin(this);
     }
 }
