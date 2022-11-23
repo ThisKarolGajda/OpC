@@ -30,7 +30,7 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <outputFile>../../../Servers/Test6Plugin - 1.19.2/plugins/opc - 1.1.0.jar</outputFile>
+                            <outputFile>E:/Servers/Test6Plugin - 1.19.2/plugins/opc - 1.1.0.jar</outputFile>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
