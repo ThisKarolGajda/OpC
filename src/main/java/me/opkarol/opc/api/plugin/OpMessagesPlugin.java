@@ -6,8 +6,14 @@ import me.opkarol.opc.api.files.SimpleTranslation;
 import me.opkarol.opc.api.files.TranslationObject;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Function;
+
 public abstract class OpMessagesPlugin<O, C> extends OpDatabasePlugin<O, C> {
     private static ConfigurationMap configurationMap;
+
+    public OpMessagesPlugin(String fileName, Function<O, C> getObject) {
+        super(fileName, getObject);
+    }
 
     @Override
     public void onEnable() {
