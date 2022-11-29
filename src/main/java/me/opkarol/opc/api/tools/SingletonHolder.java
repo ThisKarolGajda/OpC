@@ -1,5 +1,6 @@
 package me.opkarol.opc.api.tools;
 
+import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.map.OpMap;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,6 +11,7 @@ public class SingletonHolder {
 
     public SingletonHolder() {
         addInstance(this);
+        OpAPI.logInfo(this.getClass() + " class");
     }
 
     private static final OpMap<Class<?>, ClassHolder<?>> map = new OpMap<>();

@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 @SuppressWarnings("all")
-public abstract class Database<O, C> extends AbstractDatabase<O> {
+public abstract class Database<O, C>{
     private static DatabaseImpl databasePlugin;
     private static Database plugin;
     private DatabaseImpl<O, C> databaseInterface;
