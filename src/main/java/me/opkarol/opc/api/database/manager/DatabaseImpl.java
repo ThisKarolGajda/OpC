@@ -37,7 +37,7 @@ public class DatabaseImpl<O, C> {
         }
     }
 
-    public DatabaseImpl(@NotNull MySqlDatabaseSettings mysqlSettings, FlatDatabaseSettings<O, C> flatSettings, Class<O> clazz) {
+    public DatabaseImpl(@NotNull MySqlDatabaseSettings mysqlSettings, FlatDatabaseSettings<O, C> flatSettings, Class<? extends O> clazz) {
         this.mySqlSettings = mysqlSettings;
         this.flatSettings = flatSettings;
         if (mysqlSettings.isEnabled()) {

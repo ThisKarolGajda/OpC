@@ -18,7 +18,7 @@ public abstract class Database<O, C> extends AbstractDatabase<O> {
         plugin = this;
     }
 
-    public Database(@NotNull Class<O> clazz, String fileName, Function<O, C> getObject) {
+    public Database(@NotNull Class<? extends O> clazz, String fileName, Function<O, C> getObject) {
         this.databaseInterface = setDatabasePluginWithMySql(fileName, getObject, clazz);
     }
 
@@ -46,7 +46,7 @@ public abstract class Database<O, C> extends AbstractDatabase<O> {
         return (IDefaultDatabase<O, C>) databasePlugin.getLocalDatabase();
     }
 
-    public DatabaseImpl<O, C> setDatabasePluginWithMySql(String fileName, Function<O, C> getObject, Class<O> clazz) {
+    public DatabaseImpl<O, C> setDatabasePluginWithMySql(String fileName, Function<O, C> getObject, Class<? extends O> clazz) {
         Database.databasePlugin = new DatabaseImpl<O, C>(new MySqlDatabaseSettings(), new FlatDatabaseSettings<>(fileName) {
             @Override
             public Predicate<O> getPredicate(C object) {

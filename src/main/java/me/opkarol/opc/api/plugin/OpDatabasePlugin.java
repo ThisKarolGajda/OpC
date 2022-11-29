@@ -42,5 +42,5 @@ public abstract class OpDatabasePlugin<O, C> extends OpPlugin {
         return new Database<>(getClassInstance(), base.getFirst().get(), base.getSecond().get()) {};
     }
 
-    public abstract Class<O> getClassInstance();
+    public abstract Class<? extends O> getClassInstance();
 }
