@@ -12,8 +12,7 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class OpPlugin extends JavaPlugin
-{
+public class OpPlugin extends JavaPlugin {
     private Configuration configuration;
     private static OpPlugin plugin;
 

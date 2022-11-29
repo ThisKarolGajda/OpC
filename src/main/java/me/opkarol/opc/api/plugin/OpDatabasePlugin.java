@@ -32,14 +32,19 @@ public abstract class OpDatabasePlugin<O, C> extends OpPlugin {
 
     @Override
     public void onEnable() {
-        setDatabasePlugin(getDatabaseAsBase(getBase()));
+        setDatabasePlugin(getDatabaseAsBase());
+        super.onEnable();
     }
 
     public abstract BiOptional<String, Function<O, C>> getBase();
 
+    public abstract String getFlatFileName();
+
+    public abstract Function<O, C> getBaseFunction();
+
     @SuppressWarnings("all")
-    private @NotNull Database<O, C> getDatabaseAsBase(@NotNull BiOptional<String, Function<O, C>> base) {
-        return new Database<>(getClassInstance(), base.getFirst().get(), base.getSecond().get()) {};
+    private @NotNull Database<O, C> getDatabaseAsBase() {
+        return new Database<>(getClassInstance(), getFlatFileName(), getBaseFunction()) {};
     }
 
     public abstract Class<? extends O> getClassInstance();
