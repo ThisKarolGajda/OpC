@@ -125,4 +125,8 @@ public class OpMap<K, V> implements IMap<K,V>, Serializable {
     public Optional<K> getFromIndex(int index) {
         return Optional.empty();
     }
+
+    public V unsafeGet(K k) {
+        return getMap().get(k);
+    }
 }

@@ -1,5 +1,6 @@
 package me.opkarol.opc.api.database.mysql.reflection.base;
 
+import me.opkarol.opc.api.autostart.OpAutoDisable;
 import me.opkarol.opc.api.commands.suggestions.OpCommandSuggestion;
 import me.opkarol.opc.api.database.manager.IDefaultDatabase;
 import me.opkarol.opc.api.database.manager.settings.MySqlDatabaseSettings;
@@ -16,31 +17,37 @@ public class OpDatabaseImpl<O, C> extends DatabaseImpl<O, C> implements IDefault
 
     public OpDatabaseImpl() {
         database = this;
+        registerDisablement();
     }
 
     public OpDatabaseImpl(String mysql) {
         super(mysql);
         database = this;
+        registerDisablement();
     }
 
     public OpDatabaseImpl(MySqlDatabaseSettings mysql) {
         super(mysql);
         database = this;
+        registerDisablement();
     }
 
     public OpDatabaseImpl(MySqlDatabaseSettings mysql, Class<O> clazz) {
         super(clazz, mysql);
         database = this;
+        registerDisablement();
     }
 
     public OpDatabaseImpl(Configuration configuration, String mysql) {
         super(configuration, mysql);
         database = this;
+        registerDisablement();
     }
 
     public OpDatabaseImpl(Class<O> clazz, Configuration configuration, String mysql) {
         super(clazz, configuration, mysql);
         database = this;
+        registerDisablement();
     }
 
     public OpDatabaseImpl<O, C> getLocalDatabase() {
@@ -95,8 +102,11 @@ public class OpDatabaseImpl<O, C> extends DatabaseImpl<O, C> implements IDefault
     }
 
     @Override
-    @SuppressWarnings("all")
     public void add(UUID uuid, O object) {
         add(object);
+    }
+
+    private void registerDisablement() {
+        OpAutoDisable.register((plugin) -> database.close());
     }
 }

@@ -1,6 +1,6 @@
 package me.opkarol.opc.api.teleport;
 
-import me.opkarol.opc.api.events.OpEvent;
+import me.opkarol.opc.api.events.EventRegister;
 import me.opkarol.opc.api.map.OpMap;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -24,7 +24,7 @@ public class TeleportRegistration {
     }
 
     private void registerMovement() {
-        OpEvent.registerEvent(PlayerMoveEvent.class, EventPriority.MONITOR, e -> {
+        EventRegister.registerEvent(PlayerMoveEvent.class, EventPriority.MONITOR, e -> {
             if (e.getTo() == null || !isTheSameLocation(e.getFrom(), e.getTo())) {
                 removeIfHasPlayer(e.getPlayer());
             }

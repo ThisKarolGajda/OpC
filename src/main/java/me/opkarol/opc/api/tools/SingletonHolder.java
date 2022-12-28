@@ -1,11 +1,10 @@
 package me.opkarol.opc.api.tools;
 
-import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.map.OpMap;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
 
 public class SingletonHolder {
 
@@ -14,7 +13,6 @@ public class SingletonHolder {
 
     public SingletonHolder() {
         addInstance(this);
-        OpAPI.logInfo(this.getClass() + " class");
     }
 
     private static final OpMap<Class<?>, ClassHolder<?>> map = new OpMap<>();
@@ -23,7 +21,7 @@ public class SingletonHolder {
         map.set(k.getClass(), new ClassHolder<>(k));
     }
 
-    public static <K> @Nullable K getInstance(Class<K> kClass) {
+    public static <K> K getInstance(Class<K> kClass) {
         if (map.getMap().containsKey(kClass)) {
             if (map.getMap().get(kClass).object != null) {
                 return (K) map.getMap().get(kClass).object();
@@ -37,5 +35,9 @@ public class SingletonHolder {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static <K> Optional<K> getOptionalInstance(Class<K> kClass) {
+        return Optional.ofNullable(getInstance(kClass));
     }
 }

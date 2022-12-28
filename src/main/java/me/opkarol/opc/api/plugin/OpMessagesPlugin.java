@@ -11,7 +11,7 @@ public abstract class OpMessagesPlugin<O, C> extends OpDatabasePlugin<O, C> {
 
     @Override
     public void onEnable() {
-        configurationMap = new ConfigurationMap(getInstance(), "messages", true);
+        configurationMap = new ConfigurationMap(getInstance(), "messages");
         if (!configurationMap.getConfiguration().createConfig()) {
             disablePlugin("Messages file created. Restart the server now, in order to allow plugin load messages.");
         }

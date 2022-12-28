@@ -16,16 +16,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static me.opkarol.opc.api.utils.FormatUtils.formatList;
 import static me.opkarol.opc.api.utils.FormatUtils.formatMessage;
 
-public class OpItemBuilder implements IEmptyConfiguration {
+public class OpItemBuilder<K extends OpItemBuilder<?>> implements IEmptyConfiguration {
     private String displayName;
     private int amount = 1;
     private Material material;
@@ -34,7 +32,13 @@ public class OpItemBuilder implements IEmptyConfiguration {
     private OpMap<String, String> pdc;
     private HashSet<ItemFlag> flags;
 
-    public OpItemBuilder(@NotNull ItemStack item) {
+    private String defaultDisplayName;
+    private List<String> defaultLore;
+
+    public OpItemBuilder(ItemStack item) {
+        if (item == null) {
+            return;
+        }
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return;
@@ -46,6 +50,8 @@ public class OpItemBuilder implements IEmptyConfiguration {
         this.enchantments = getEnchants(meta.getEnchants());
         this.pdc = PDCUtils.getAllValues(item);
         this.flags = new HashSet<>(meta.getItemFlags());
+        this.defaultDisplayName = this.displayName;
+        this.defaultLore = this.lore;
     }
 
     public OpItemBuilder(Material material) {
@@ -60,27 +66,33 @@ public class OpItemBuilder implements IEmptyConfiguration {
         return VariableUtil.getOrDefault(displayName, getUuid());
     }
 
-    public OpItemBuilder setDisplayName(String displayName) {
+    public K name(String displayName) {
         this.displayName = displayName;
-        return this;
+        if (defaultDisplayName == null) {
+            defaultDisplayName = displayName;
+        }
+        return (K) this;
     }
 
     public Material getMaterial() {
         return material;
     }
 
-    public OpItemBuilder setMaterial(Material material) {
+    public K material(Material material) {
         this.material = material;
-        return this;
+        return (K) this;
     }
 
     public List<String> getLore() {
         return lore;
     }
 
-    public OpItemBuilder setLore(List<String> lore) {
+    public K lore(List<String> lore) {
         this.lore = lore;
-        return this;
+        if (defaultLore == null) {
+            defaultLore = lore;
+        }
+        return (K) this;
     }
 
     public OpMap<Enchantment, Integer> getEnchantments() {
@@ -95,18 +107,18 @@ public class OpItemBuilder implements IEmptyConfiguration {
         return list;
     }
 
-    public OpItemBuilder setEnchantments(OpMap<Enchantment, Integer> enchantments) {
+    public K enchantments(OpMap<Enchantment, Integer> enchantments) {
         this.enchantments = enchantments;
-        return this;
+        return (K) this;
     }
 
     public OpMap<String, String> getPdc() {
         return pdc;
     }
 
-    public OpItemBuilder setPdc(OpMap<String, String> pdc) {
+    public K pdc(OpMap<String, String> pdc) {
         this.pdc = pdc;
-        return this;
+        return (K) this;
     }
 
     public ItemStack generate() {
@@ -116,21 +128,21 @@ public class OpItemBuilder implements IEmptyConfiguration {
         if (meta != null) {
             meta.setDisplayName(formatMessage(displayName));
             meta.setLore(formatList(lore));
-            setFlags(item);
+            flags(item);
             item.setItemMeta(meta);
         }
         return applyPdc(item);
     }
 
-    public OpItemBuilder enchantItem(ItemStack item) {
+    public K enchantItem(ItemStack item) {
         getEnchantments().keySet()
                 .forEach(e -> item.addUnsafeEnchantment(e, getEnchantments().getMap().get(e)));
-        return this;
+        return (K) this;
     }
 
-    public OpItemBuilder setAmount(int amount) {
+    public K amount(int amount) {
         this.amount = amount;
-        return this;
+        return (K) this;
     }
 
     private ItemStack applyPdc(ItemStack item) {
@@ -142,17 +154,17 @@ public class OpItemBuilder implements IEmptyConfiguration {
         return item;
     }
 
-    public OpItemBuilder setFlags(@NotNull ItemStack item) {
+    public K flags(@NotNull ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             flags.forEach(meta::addItemFlags);
         }
-        return this;
+        return (K) this;
     }
 
-    public OpItemBuilder setFlags(HashSet<ItemFlag> flags) {
+    public K flags(HashSet<ItemFlag> flags) {
         this.flags = flags;
-        return this;
+        return (K) this;
     }
 
     private @NotNull OpMap<Enchantment, Integer> getEnchants(@NotNull Map<Enchantment, Integer> map) {
@@ -201,5 +213,18 @@ public class OpItemBuilder implements IEmptyConfiguration {
 
     public String getUuid() {
         return HashCreator.getSha1Uuid(amount * material.hashCode() + getMaterial().toString()).toString();
+    }
+
+    public void replaceItem(String replace, String replacement) {
+        if (defaultLore != null) {
+            List<String> tempLore = new ArrayList<>();
+            for (String s : defaultLore) {
+                tempLore.add(s.replace(replace, replacement));
+            }
+            lore(tempLore);
+        }
+        if (defaultDisplayName != null) {
+            name(defaultDisplayName.replace(replace, replacement));
+        }
     }
 }

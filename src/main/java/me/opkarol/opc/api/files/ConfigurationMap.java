@@ -42,7 +42,6 @@ public class ConfigurationMap {
             map.set(path, str);
             return str;
         }
-
         return object.toString();
     }
 

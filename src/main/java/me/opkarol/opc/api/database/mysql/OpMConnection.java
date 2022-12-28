@@ -63,6 +63,8 @@ public class OpMConnection implements IMySqlDatabase {
     public void close() {
         if (hikariDataSource != null && !hikariDataSource.isClosed()) {
             hikariDataSource.close();
+            hikariDataSource = null;
+            source = null;
         }
     }
 

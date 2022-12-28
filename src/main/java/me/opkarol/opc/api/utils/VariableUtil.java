@@ -1,6 +1,12 @@
 package me.opkarol.opc.api.utils;
 
+import me.opkarol.opc.api.map.OpMap;
+import me.opkarol.opc.api.misc.Tuple;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class VariableUtil {
 
@@ -20,5 +26,27 @@ public class VariableUtil {
             return "";
         }
         return text.endsWith(endsWith) ? text : text.concat(endsWith);
+    }
+
+    @SafeVarargs
+    public static <A, B> @NotNull OpMap<A, B> getMapFromTuples(Tuple<A, B>... tuples) {
+        OpMap<A, B> map = new OpMap<>();
+        if (tuples == null) {
+            return map;
+        }
+
+        for (Tuple<A, B> tuple : tuples) {
+            map.set(tuple.first(), tuple.second());
+        }
+        return map;
+    }
+
+    public static <K> @NotNull List<K> getWith(@Nullable List<K> list, K k) {
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+
+        list.add(k);
+        return list;
     }
 }

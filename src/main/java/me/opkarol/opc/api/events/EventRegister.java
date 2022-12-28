@@ -9,7 +9,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.function.Consumer;
 
-public class OpEvent {
+public class EventRegister {
     private static final Plugin opC = OpAPI.getInstance();
 
     public static <E extends Event> void registerEvent(Class<E> clazz, Consumer<E> consumer) {
