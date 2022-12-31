@@ -6,6 +6,7 @@ import me.opkarol.opc.api.configuration.IEmptyConfiguration;
 import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.misc.HashCreator;
+import me.opkarol.opc.api.misc.Tuple;
 import me.opkarol.opc.api.utils.PDCUtils;
 import me.opkarol.opc.api.utils.VariableUtil;
 import org.bukkit.Material;
@@ -112,6 +113,12 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> implements IEmptyConfigur
         return (K) this;
     }
 
+    @SafeVarargs
+    public final K enchantments(Tuple<Enchantment, Integer>... enchantments) {
+        this.enchantments = VariableUtil.getMapFromTuples(enchantments);
+        return (K) this;
+    }
+
     public OpMap<String, String> getPdc() {
         return pdc;
     }
@@ -128,8 +135,8 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> implements IEmptyConfigur
         if (meta != null) {
             meta.setDisplayName(formatMessage(displayName));
             meta.setLore(formatList(lore));
-            flags(item);
             item.setItemMeta(meta);
+            item = applyFlags(item);
         }
         return applyPdc(item);
     }
@@ -154,16 +161,26 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> implements IEmptyConfigur
         return item;
     }
 
-    public K flags(@NotNull ItemStack item) {
+    public ItemStack applyFlags(@NotNull ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             flags.forEach(meta::addItemFlags);
         }
-        return (K) this;
+        item.setItemMeta(meta);
+        return item;
     }
 
     public K flags(HashSet<ItemFlag> flags) {
         this.flags = flags;
+        return (K) this;
+    }
+
+    public K flags(ItemFlag... flags) {
+        if (flags != null) {
+            HashSet<ItemFlag> set = VariableUtil.getOrDefault(this.flags, new HashSet<>());
+            set.addAll(Arrays.asList(flags));
+            this.flags = set;
+        }
         return (K) this;
     }
 

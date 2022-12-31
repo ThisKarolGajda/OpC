@@ -2,6 +2,7 @@ package me.opkarol.opc.api.utils;
 
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.misc.Tuple;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,5 +49,15 @@ public class VariableUtil {
 
         list.add(k);
         return list;
+    }
+
+    @Contract(pure = true)
+    public static int @NotNull [] range(int from, int to) {
+        int size = to - from + 1; // Additional 1 so it includes last number
+        int[] range = new int[size];
+        for (int i = 0; i < size; i++) {
+            range[i] = from + i;
+        }
+        return range;
     }
 }

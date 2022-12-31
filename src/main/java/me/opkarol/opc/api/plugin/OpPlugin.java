@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class OpPlugin extends JavaPlugin {
+public abstract class OpPlugin extends JavaPlugin {
     private Configuration configuration;
     private static OpPlugin plugin;
 
@@ -32,13 +32,9 @@ public class OpPlugin extends JavaPlugin {
         registerCommands();
     }
 
-    public void enable() {
+    public abstract void enable();
 
-    }
-
-    public void disable() {
-
-    }
+    public abstract void disable();
 
     @Override
     public void onDisable() {

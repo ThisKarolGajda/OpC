@@ -69,7 +69,7 @@ public class InventoryListener {
 
             switch (inventory.getInventoryHolder().getType()) {
                 case DEFAULT -> inventory.getInventoryHolder().getDefaultHolder().getInventory().get(slot).ifPresent(item -> {
-                    OnItemClicked event = new OnItemClicked(inventory.getInventoryHolder(), e.getWhoClicked(), slot);
+                    OnItemClicked event = new OnItemClicked(inventory.getInventoryHolder(), e.getWhoClicked(), slot, item);
                     InventoryItemEventHolder eventHolder = item.getItemEventHolder();
                     if (eventHolder != null) {
                         eventHolder.interact(event);
@@ -140,7 +140,7 @@ public class InventoryListener {
     }
 
     private void handlePagedItemClick(@NotNull ReplacementInventoryImpl inventory, @NotNull InventoryClickEvent e, int slot, @NotNull InventoryItem item) {
-        OnItemClicked event = new OnItemClicked(inventory.getInventoryHolder(), e.getWhoClicked(), slot);
+        OnItemClicked event = new OnItemClicked(inventory.getInventoryHolder(), e.getWhoClicked(), slot, item);
         InventoryItemEventHolder eventHolder = item.getItemEventHolder();
         if (eventHolder != null) {
             eventHolder.interact(event);

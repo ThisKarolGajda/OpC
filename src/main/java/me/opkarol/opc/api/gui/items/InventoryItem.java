@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class InventoryItem extends OpItemBuilder<InventoryItem> {
-    private final InventoryItemEventHolder itemEventHolder;
+    private InventoryItemEventHolder itemEventHolder;
     private List<InventoryItemSpecialData> specialData = new ArrayList<>();
 
     public InventoryItem(@NotNull ItemStack item, InventoryItemEventHolder itemEventHolder) {
@@ -79,5 +79,9 @@ public class InventoryItem extends OpItemBuilder<InventoryItem> {
 
     public boolean hasAnyData() {
         return specialData != null && specialData.size() > 0;
+    }
+
+    public void setItemEventHolder(InventoryItemEventHolder itemEventHolder) {
+        this.itemEventHolder = itemEventHolder;
     }
 }

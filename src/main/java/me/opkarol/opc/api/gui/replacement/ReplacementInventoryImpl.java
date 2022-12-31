@@ -163,10 +163,25 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
         set(0, item, slot);
     }
 
+    public void setNextEmpty(InventoryItem item) {
+        for (int page = 0; page < getMaxPages(); page++) {
+            for (int slot = 0; slot < getInventoryHolder().getInventorySlots(); slot++) {
+                if (isSlotEmpty(page, slot)) {
+                    set(page, item, slot);
+                    return;
+                }
+            }
+        }
+    }
+
     public void safeSet(int page, InventoryItem item, int slot) {
-        if (getInventoryHolder().getItem(slot).isEmpty()) {
+        if (isSlotEmpty(page, slot)) {
             set(page, item, slot);
         }
+    }
+
+    public boolean isSlotEmpty(int page, int slot) {
+        return getInventoryHolder().getItem(page, slot).isEmpty();
     }
 
     public void safeSet(int page, InventoryItem item, int... slots) {
