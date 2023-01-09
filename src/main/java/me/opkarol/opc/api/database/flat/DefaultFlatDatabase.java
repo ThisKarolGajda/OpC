@@ -1,7 +1,7 @@
 package me.opkarol.opc.api.database.flat;
 
 import me.opkarol.opc.OpAPI;
-import me.opkarol.opc.api.autostart.OpAutoDisable;
+import me.opkarol.opc.api.tools.autostart.OpAutoDisable;
 import me.opkarol.opc.api.database.manager.IDefaultDatabase;
 import me.opkarol.opc.api.database.manager.settings.FlatDatabaseSettings;
 import me.opkarol.opc.api.map.OpMap;

@@ -1,7 +1,7 @@
 package me.opkarol.opc.api.database.flat;
 
 import me.opkarol.opc.api.database.IFlatDatabase;
-import me.opkarol.opc.api.files.Configuration;
+import me.opkarol.opc.api.file.Configuration;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 

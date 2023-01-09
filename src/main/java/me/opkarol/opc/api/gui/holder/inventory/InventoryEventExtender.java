@@ -1,6 +1,6 @@
 package me.opkarol.opc.api.gui.holder.inventory;
 
-import me.opkarol.opc.api.gui.events.chest.OnInventoryClose;
+import me.opkarol.opc.api.gui.events.OnInventoryClose;
 
 import java.util.function.Consumer;
 

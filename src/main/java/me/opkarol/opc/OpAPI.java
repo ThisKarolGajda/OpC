@@ -1,9 +1,9 @@
 package me.opkarol.opc;
 
-import me.opkarol.opc.api.commands.OpCommand;
-import me.opkarol.opc.api.files.Configuration;
+import me.opkarol.opc.api.command.OpCommand;
+import me.opkarol.opc.api.file.Configuration;
 import me.opkarol.opc.api.list.OpList;
-import me.opkarol.opc.api.plugin.OpPlugin;
+import me.opkarol.opc.api.plugins.OpPlugin;
 import org.jetbrains.annotations.NotNull;
 
 public class OpAPI {

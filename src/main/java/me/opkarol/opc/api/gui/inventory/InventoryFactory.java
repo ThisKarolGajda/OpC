@@ -1,6 +1,6 @@
 package me.opkarol.opc.api.gui.inventory;
 
-import me.opkarol.opc.api.gui.database.InvHolderImpl;
+import me.opkarol.opc.api.gui.database.InventoryHolderFactory;
 import me.opkarol.opc.api.gui.items.InventoryItem;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
@@ -31,7 +31,7 @@ public class InventoryFactory extends AbstractInventory<Integer, InventoryItem> 
     }
 
     @Override
-    public InvHolderImpl.INVENTORY_HOLDER_TYPE getType() {
-        return InvHolderImpl.INVENTORY_HOLDER_TYPE.DEFAULT;
+    public InventoryHolderFactory.INVENTORY_HOLDER_TYPE getType() {
+        return InventoryHolderFactory.INVENTORY_HOLDER_TYPE.DEFAULT;
     }
 }

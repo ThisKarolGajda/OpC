@@ -1,6 +1,6 @@
 package me.opkarol.opc.api.gui.inventory;
 
-import me.opkarol.opc.api.gui.events.chest.OnItemClicked;
+import me.opkarol.opc.api.gui.events.OnItemClicked;
 import me.opkarol.opc.api.gui.items.InventoryItem;
 import org.bukkit.Material;
 

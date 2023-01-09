@@ -1,18 +1,15 @@
 package me.opkarol.opc.api.gui.events;
 
-import me.opkarol.opc.api.events.EventRegister;
+import me.opkarol.opc.api.event.EventRegister;
 import me.opkarol.opc.api.gui.InventoryCache;
-import me.opkarol.opc.api.gui.database.InvHolderImpl;
-import me.opkarol.opc.api.gui.database.PagedInvHolder;
-import me.opkarol.opc.api.gui.events.chest.InventoryCloseReason;
-import me.opkarol.opc.api.gui.events.chest.OnInventoryClose;
-import me.opkarol.opc.api.gui.events.chest.OnItemClicked;
+import me.opkarol.opc.api.gui.database.InventoryHolderFactory;
+import me.opkarol.opc.api.gui.database.PagedInventoryHolder;
 import me.opkarol.opc.api.gui.holder.IHolder;
 import me.opkarol.opc.api.gui.holder.inventory.InventoryEventHolder;
 import me.opkarol.opc.api.gui.holder.item.InventoryItemEventHolder;
 import me.opkarol.opc.api.gui.items.InventoryItem;
 import me.opkarol.opc.api.gui.replacement.ReplacementInventoryImpl;
-import me.opkarol.opc.api.runnable.OpRunnable;
+import me.opkarol.opc.api.tools.runnable.OpRunnable;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -79,7 +76,7 @@ public class InventoryListener {
                     }
                 });
                 case PAGED -> {
-                    PagedInvHolder invHolder = inventory.getInventoryHolder().getPagedHolder();
+                    PagedInventoryHolder invHolder = inventory.getInventoryHolder().getPagedHolder();
                     int page = invHolder.getCurrentPage();
                     invHolder.getInventory().get(page)
                             .flatMap(inventoryPage -> inventoryPage.get(slot))
@@ -103,7 +100,7 @@ public class InventoryListener {
 
                 // Check if there is an active inventory for the player in the cache
                 cache.getActiveInventory(uuid).ifPresent(inventory -> {
-                    if (inventory.getInventoryHolder().getType().equals(InvHolderImpl.INVENTORY_HOLDER_TYPE.PAGED)) {
+                    if (inventory.getInventoryHolder().getType().equals(InventoryHolderFactory.INVENTORY_HOLDER_TYPE.PAGED)) {
                         return;
                     }
 

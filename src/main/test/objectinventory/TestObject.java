@@ -1,7 +1,7 @@
 package objectinventory;
 
 import me.opkarol.opc.api.gui.inventory.IInventoryObject;
-import me.opkarol.opc.api.gui.events.chest.OnItemClicked;
+import me.opkarol.opc.api.gui.events.OnItemClicked;
 import org.bukkit.Material;
 
 import java.util.Arrays;

@@ -1,6 +1,6 @@
 package me.opkarol.opc.api.gui.replacement;
 
-import me.opkarol.opc.api.gui.database.InvHolderImpl;
+import me.opkarol.opc.api.gui.database.InventoryHolderFactory;
 import me.opkarol.opc.api.gui.items.InventoryItem;
 import me.opkarol.opc.api.gui.pattern.InventoryPattern;
 import me.opkarol.opc.api.item.OpItemBuilder;
@@ -21,15 +21,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReplacementInventoryImpl extends ReplacementInventory {
-    private final InvHolderImpl inventoryHolder;
+    private final InventoryHolderFactory inventoryHolder;
     private final static String REGEX = "%[A-Za_-z0-9_]+%";
     private OpMap<String, Function<ReplacementInventoryImpl, Object>> defaultTranslations;
 
-    public ReplacementInventoryImpl(InvHolderImpl inventoryHolder) {
+    public ReplacementInventoryImpl(InventoryHolderFactory inventoryHolder) {
         this.inventoryHolder = inventoryHolder;
     }
 
-    public InvHolderImpl getInventoryHolder() {
+    public InventoryHolderFactory getInventoryHolder() {
         return inventoryHolder;
     }
 

@@ -60,4 +60,15 @@ public class VariableUtil {
         }
         return range;
     }
+
+    public static <K, V> String stringValueOfMap(OpMap<K, V> map) {
+        StringBuilder builder = new StringBuilder();
+
+        for (K key : map.keySet()) {
+            V value = map.unsafeGet(key);
+
+            builder.append(key).append("-").append(value).append(", ");
+        }
+        return builder.toString();
+    }
 }

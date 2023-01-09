@@ -1,7 +1,7 @@
 package me.opkarol.opc.api.database.manager.settings;
 
 import me.opkarol.opc.OpAPI;
-import me.opkarol.opc.api.files.Configuration;
+import me.opkarol.opc.api.file.Configuration;
 import me.opkarol.opc.api.utils.VariableUtil;
 import org.jetbrains.annotations.NotNull;
 

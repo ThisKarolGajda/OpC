@@ -1,6 +1,6 @@
-import me.opkarol.opc.api.events.EventRegister;
+import me.opkarol.opc.api.event.EventRegister;
 import me.opkarol.opc.api.gui.OpInventory;
-import me.opkarol.opc.api.gui.events.chest.OnItemClicked;
+import me.opkarol.opc.api.gui.events.OnItemClicked;
 import me.opkarol.opc.api.gui.inventory.InventoryFactory;
 import me.opkarol.opc.api.gui.inventory.PagedInventoryFactory;
 import me.opkarol.opc.api.gui.items.InventoryItem;

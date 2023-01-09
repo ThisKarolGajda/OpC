@@ -1,6 +1,6 @@
 package me.opkarol.opc.api.gui.items;
 
-import me.opkarol.opc.api.gui.events.chest.OnItemClicked;
+import me.opkarol.opc.api.gui.events.OnItemClicked;
 import me.opkarol.opc.api.gui.holder.item.InventoryItemEventHolder;
 import me.opkarol.opc.api.gui.holder.item.InventoryItemExtender;
 import me.opkarol.opc.api.item.OpItemBuilder;
@@ -32,15 +32,15 @@ public class InventoryItem extends OpItemBuilder<InventoryItem> {
         this.itemEventHolder = new InventoryItemExtender(itemEventHolder);
     }
 
-    public InventoryItem(@NotNull ItemStack item, Consumer<OnItemClicked> itemEventHolder) {
-        super(item);
-        this.itemEventHolder = new InventoryItemExtender(itemEventHolder);
-    }
-
-    public InventoryItem(String path, InventoryItemEventHolder itemEventHolder) {
-        super(path);
-        this.itemEventHolder = itemEventHolder;
-    }
+    // public InventoryItem(@NotNull ItemStack item, Consumer<OnItemClicked> itemEventHolder) {
+    //     super(item);
+    //     this.itemEventHolder = new InventoryItemExtender(itemEventHolder);
+    // }
+//
+    // public InventoryItem(String path, InventoryItemEventHolder itemEventHolder) {
+    //     super(path);
+    //     this.itemEventHolder = itemEventHolder;
+    // }
 
     public InventoryItem(@NotNull ItemStack item) {
         super(item);
@@ -52,10 +52,10 @@ public class InventoryItem extends OpItemBuilder<InventoryItem> {
         this.itemEventHolder = null;
     }
 
-    public InventoryItem(String path) {
-        super(path);
-        this.itemEventHolder = null;
-    }
+    // public InventoryItem(String path) {
+    //     super(path);
+    //     this.itemEventHolder = null;
+    // }
 
     public InventoryItemEventHolder getItemEventHolder() {
         return itemEventHolder;

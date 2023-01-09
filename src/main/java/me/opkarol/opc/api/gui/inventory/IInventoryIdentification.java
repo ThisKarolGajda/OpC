@@ -1,7 +1,7 @@
 package me.opkarol.opc.api.gui.inventory;
 
-import me.opkarol.opc.api.gui.database.InvHolderImpl;
+import me.opkarol.opc.api.gui.database.InventoryHolderFactory;
 
 public interface IInventoryIdentification {
-    InvHolderImpl.INVENTORY_HOLDER_TYPE getType();
+    InventoryHolderFactory.INVENTORY_HOLDER_TYPE getType();
 }

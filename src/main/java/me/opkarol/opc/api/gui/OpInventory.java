@@ -1,8 +1,8 @@
 package me.opkarol.opc.api.gui;
 
 import me.opkarol.opc.api.gui.inventory.IInventoryObject;
-import me.opkarol.opc.api.gui.database.InvHolderImpl;
-import me.opkarol.opc.api.gui.events.chest.OnInventoryClose;
+import me.opkarol.opc.api.gui.database.InventoryHolderFactory;
+import me.opkarol.opc.api.gui.events.OnInventoryClose;
 import me.opkarol.opc.api.gui.holder.inventory.InventoryEventExtender;
 import me.opkarol.opc.api.gui.holder.inventory.InventoryEventHolder;
 import me.opkarol.opc.api.gui.holder.item.InventoryItemExtender;
@@ -17,15 +17,15 @@ import java.util.function.Consumer;
 
 public final class OpInventory extends ReplacementInventoryImpl {
     public <K extends AbstractInventory<?, ?> & IInventoryIdentification> OpInventory(K factory, Consumer<OnInventoryClose> action) {
-        super(new InvHolderImpl(factory.getType(), factory, new InventoryEventExtender(action)));
+        super(new InventoryHolderFactory(factory.getType(), factory, new InventoryEventExtender(action)));
     }
 
     public <K extends AbstractInventory<?, ?> & IInventoryIdentification> OpInventory(K factory, InventoryEventHolder action) {
-        super(new InvHolderImpl(factory.getType(), factory, action));
+        super(new InventoryHolderFactory(factory.getType(), factory, action));
     }
 
     public <K extends AbstractInventory<?, ?> & IInventoryIdentification> OpInventory(K factory) {
-        super(new InvHolderImpl(factory.getType(), factory, null));
+        super(new InventoryHolderFactory(factory.getType(), factory, null));
     }
 
     public void setGlobalItem(InventoryItem item, int slot) {

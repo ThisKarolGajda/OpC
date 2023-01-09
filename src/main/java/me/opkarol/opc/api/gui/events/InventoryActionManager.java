@@ -1,16 +1,16 @@
 package me.opkarol.opc.api.gui.events;
 
-import me.opkarol.opc.api.gui.database.InvHolderImpl;
+import me.opkarol.opc.api.gui.database.InventoryHolderFactory;
 import me.opkarol.opc.api.gui.holder.inventory.InventoryEventHolder;
 import me.opkarol.opc.api.gui.replacement.ReplacementInventoryImpl;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-public record InventoryActionManager(InvHolderImpl holder,
+public record InventoryActionManager(InventoryHolderFactory holder,
                                      InventoryEventHolder closeAction) {
 
-    public InvHolderImpl getHolder() {
+    public InventoryHolderFactory getHolder() {
         return holder;
     }
 

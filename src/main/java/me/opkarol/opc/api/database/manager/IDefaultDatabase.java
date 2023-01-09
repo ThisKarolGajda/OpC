@@ -1,6 +1,6 @@
 package me.opkarol.opc.api.database.manager;
 
-import me.opkarol.opc.api.commands.suggestions.OpCommandSuggestion;
+import me.opkarol.opc.api.command.suggestions.OpCommandSuggestion;
 
 import java.util.Collections;
 import java.util.List;
