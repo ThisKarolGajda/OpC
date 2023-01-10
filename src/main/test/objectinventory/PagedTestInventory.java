@@ -1,5 +1,6 @@
 package objectinventory;
 
+import me.opkarol.opc.api.gui.InventoryCache;
 import me.opkarol.opc.api.gui.OpInventory;
 import me.opkarol.opc.api.gui.inventory.PagedInventoryFactory;
 import me.opkarol.opc.api.gui.items.InventoryItem;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class PagedTestInventory {
     public void openInventory(Player player, @NotNull List<TestObject> objects) {
-        PagedInventoryFactory factory = new PagedInventoryFactory(27, "&bOBJECTS!!");
+        PagedInventoryFactory factory = new PagedInventoryFactory(InventoryCache.getCache(), 27, "&bOBJECTS!!");
 
         OpInventory inventory = new OpInventory(factory, e -> e.getPlayer().sendMessage("You have closed inventory!"));
         inventory.setAutoBuild(false);

@@ -1,4 +1,5 @@
 import me.opkarol.opc.api.event.EventRegister;
+import me.opkarol.opc.api.gui.InventoryCache;
 import me.opkarol.opc.api.gui.OpInventory;
 import me.opkarol.opc.api.gui.events.OnItemClicked;
 import me.opkarol.opc.api.gui.inventory.InventoryFactory;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class TestInventory {
     public void pagedInventoryImpl() {
-        PagedInventoryFactory factory = new PagedInventoryFactory(27, "&bHI!");
+        PagedInventoryFactory factory = new PagedInventoryFactory(InventoryCache.getCache(), 27, "&bHI!");
 
         InventoryItem item2 = new InventoryItem(Material.STONE, OnItemClicked::close)
                 .lore(Arrays.asList("%test1%", "Second line should be the same!!!", "and third should have this %replace% replaced", "%test1%"))
@@ -53,7 +54,7 @@ public class TestInventory {
     }
 
     public void defaultInventoryImpl() {
-        InventoryFactory inventory = new InventoryFactory(27, "Title!!!");
+        InventoryFactory inventory = new InventoryFactory(InventoryCache.getCache(), 27, "Title!!!");
 
         InventoryItem item2 = new InventoryItem(Material.STONE, OnItemClicked::close)
                 .lore(Arrays.asList("%test1%", "Second line should be the same!!!", "and third should have this %replace% replaced", "%test1%"))

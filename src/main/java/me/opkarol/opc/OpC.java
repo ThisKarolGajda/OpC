@@ -7,7 +7,6 @@ public class OpC extends OpPlugin {
     @Override
     public void enable() {
 
-
     }
 
     @Override

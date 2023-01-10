@@ -30,19 +30,21 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <outputFile>E:/Servers/Test6Plugin - 1.19.2/plugins/opc - ${project.version}.jar</outputFile>
-                           <filters>
-                               <filter>
-                                   <artifact>*:*</artifact>
-                                   <includes>
-                                       <include>me/opkarol/opc/**</include>
-                                       <include>plugin.yml</include>
-                                       <include>config.yml</include>
-                                       <include>com/tchristofferson/configupdater/**</include>
-                                       <include>com/zaxxer/hikari/**</include>
-                                   </includes>
-                               </filter>
-                           </filters>
+                            <outputFile>E:\Servers\1.19.3\plugins\opc - ${project.version}.jar</outputFile>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <includes>
+                                        <include>me/opkarol/opc/**</include>
+                                        <include>plugin.yml</include>
+                                        <include>config.yml</include>
+                                        <include>com/tchristofferson/configupdater/**</include>
+                                        <include>com/zaxxer/hikari/**</include>
+                                        <include>com/mojang/brigadier/**</include>
+                                        <include>me/lucko/commodore/**</include>
+                                    </includes>
+                                </filter>
+                            </filters>
                             <relocations>
                                 <relocation>
                                     <pattern>com.tchristofferson.configupdater</pattern>
@@ -91,7 +93,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.19.2-R0.1-SNAPSHOT</version>
+            <version>1.19.3-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
