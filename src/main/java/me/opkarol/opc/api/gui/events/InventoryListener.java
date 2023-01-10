@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -100,6 +101,11 @@ public class InventoryListener {
 
                 // Check if there is an active inventory for the player in the cache
                 cache.getActiveInventory(uuid).ifPresent(inventory -> {
+                    // Check if there wasn't inventory changed in between
+                    if (!Objects.equals(e.getInventory().getHolder(), inventory.getInventoryHolder().getHolder().getInventory().getInventoryHolder())) {
+                        return;
+                    }
+
                     if (inventory.getInventoryHolder().getType().equals(InventoryHolderFactory.INVENTORY_HOLDER_TYPE.PAGED)) {
                         return;
                     }

@@ -1,6 +1,5 @@
 package me.opkarol.opc.api.gui.inventory;
 
-import me.opkarol.opc.api.gui.InventoryCache;
 import me.opkarol.opc.api.gui.database.InventoryHolderFactory;
 import me.opkarol.opc.api.gui.items.InventoryItem;
 import org.bukkit.Bukkit;
@@ -9,12 +8,12 @@ import org.bukkit.inventory.Inventory;
 import java.util.Optional;
 
 public class PagedInventoryFactory extends AbstractInventory<Integer, InventoryPage<Integer, InventoryItem>> implements IInventoryIdentification {
-    public PagedInventoryFactory(InventoryCache cache, int inventorySlots, String inventoryTitle) {
-        super(cache, inventorySlots, () -> inventoryTitle, inventoryTitle);
+    public PagedInventoryFactory(int inventorySlots, String inventoryTitle) {
+        super(inventorySlots, () -> inventoryTitle, inventoryTitle);
     }
 
-    public PagedInventoryFactory(InventoryCache cache, String inventoryTitle) {
-        super(cache, () -> inventoryTitle, inventoryTitle);
+    public PagedInventoryFactory(String inventoryTitle) {
+        super(() -> inventoryTitle, inventoryTitle);
     }
 
     @Override

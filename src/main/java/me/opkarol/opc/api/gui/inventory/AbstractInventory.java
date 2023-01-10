@@ -9,20 +9,18 @@ import org.bukkit.inventory.Inventory;
 import java.util.Optional;
 
 public abstract class AbstractInventory<K, V> extends InventoryPage<K, V> {
-    private final InventoryCache cache;
+    private final InventoryCache cache = InventoryCache.getCache();
     private int inventorySlots;
     private final IHolder inventoryHolder;
     private final String inventoryTitle;
 
-    protected AbstractInventory(InventoryCache cache, int inventorySlots, IHolder inventoryHolder, String inventoryTitle) {
-        this.cache = cache;
+    protected AbstractInventory(int inventorySlots, IHolder inventoryHolder, String inventoryTitle) {
         this.inventorySlots = inventorySlots;
         this.inventoryHolder = inventoryHolder;
         this.inventoryTitle = inventoryTitle;
     }
 
-    protected AbstractInventory(InventoryCache cache, IHolder inventoryHolder, String inventoryTitle) {
-        this.cache = cache;
+    protected AbstractInventory(IHolder inventoryHolder, String inventoryTitle) {
         this.inventoryHolder = inventoryHolder;
         this.inventoryTitle = inventoryTitle;
     }
