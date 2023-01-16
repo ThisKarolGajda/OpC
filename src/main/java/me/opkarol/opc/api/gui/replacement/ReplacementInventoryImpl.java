@@ -1,5 +1,6 @@
 package me.opkarol.opc.api.gui.replacement;
 
+import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.gui.database.InventoryHolderFactory;
 import me.opkarol.opc.api.gui.items.InventoryItem;
 import me.opkarol.opc.api.gui.pattern.InventoryPattern;
@@ -67,12 +68,31 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
 
     public final void replaceNotBuilt(int page, OpMap<String, String> replacements) {
         assureMapExistence(page);
+
+        OpMap<Integer, InventoryItem> temp = new OpMap<>();
         for (String replace : getReplacements().unsafeGet(page).keySet()) {
-            for (int i : getReplacements().unsafeGet(page).unsafeGet(replace)) {
-                getInventoryHolder().getItem(page, i).ifPresent(item ->
-                        replacements.getByKey(replace)
-                                .ifPresent(replacement -> item.replaceItem(replace, replacement)));
+            Optional<String> optional = replacements.getByKey(replace);
+            if (optional.isEmpty()) {
+                continue;
             }
+            String replacement = optional.get();
+            for (int i : getReplacements().unsafeGet(page).unsafeGet(replace)) {
+                if (temp.containsKey(i)) {
+                    InventoryItem item = temp.unsafeGet(i);
+                    item.replaceItemCurrent(replace, replacement);
+                    temp.set(i, item);
+                } else {
+                    getInventoryHolder().getItem(page, i).ifPresent(item -> {
+                        item.replaceItemCurrent(replace, replacement);
+                        temp.set(i, item);
+                    });
+                }
+            }
+        }
+
+        for (int i : temp.keySet()) {
+            InventoryItem item = temp.unsafeGet(i);
+            set(i, item);
         }
     }
 
@@ -82,7 +102,7 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
             for (int i : getReplacements().unsafeGet(page).unsafeGet(replace)) {
                 getInventoryHolder().getItem(page, i).ifPresent(item ->
                         replacements.getByKey(replace)
-                                .ifPresent(replacement -> item.replaceItem(replace, String.valueOf(replacement.apply(this)))));
+                                .ifPresent(replacement -> item.replaceItemCurrent(replace, String.valueOf(replacement.apply(this)))));
             }
         }
     }
@@ -102,7 +122,7 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
                 }
                 replacements.getByKey(replace)
                         .ifPresent(replacement -> {
-                            builder.replaceItem(replace, replacement);
+                            builder.replaceItemCurrent(replace, replacement);
                             tempMap.set(i, builder);
                         });
             }
@@ -130,7 +150,7 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
                 }
                 replacements.getByKey(replace)
                         .ifPresent(replacement -> {
-                            builder.replaceItem(replace, String.valueOf(replacement.apply(this)));
+                            builder.replaceItemCurrent(replace, String.valueOf(replacement.apply(this)));
                             tempMap.set(i, builder);
                         });
             }
@@ -290,6 +310,8 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
     }
 
     public void open(int page, Player player, OpMap<String, String> translations) {
+        OpAPI.logInfo(page + " --- " + player + " -- " + VariableUtil.stringValueOfMap(translations) + " --- " + getInventoryHolder().isBuilt(page));
+
         if (getInventoryHolder().isBuilt(page)) {
             replaceAndOpenBuiltInventory(page, player, translations);
         } else {

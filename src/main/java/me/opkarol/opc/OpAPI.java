@@ -30,7 +30,7 @@ public class OpAPI {
         return plugin.getConfiguration();
     }
 
-    public static void logInfo(String message) {
-        getInstance().getLogger().info(message);
+    public static void logInfo(Object message) {
+        getInstance().getLogger().info(message == null ? "" : message.toString());
     }
 }

@@ -211,7 +211,7 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
         return HashCreator.getSha1Uuid(amount * material.hashCode() + getMaterial().toString()).toString();
     }
 
-    public void replaceItem(String replace, String replacement) {
+    public OpItemBuilder<K> replaceItem(String replace, String replacement) {
         if (defaultLore != null) {
             List<String> tempLore = new ArrayList<>();
             for (String s : defaultLore) {
@@ -222,6 +222,17 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
         if (defaultDisplayName != null) {
             name(defaultDisplayName.replace(replace, replacement));
         }
+        return this;
+    }
+
+    public OpItemBuilder<K> replaceItemCurrent(String replace, String replacement) {
+        List<String> tempLore = new ArrayList<>();
+        for (String s : getLore()) {
+            tempLore.add(s.replace(replace, replacement));
+        }
+        lore(tempLore);
+        name(getDisplayName().replace(replace, replacement));
+        return this;
     }
 
     @Override

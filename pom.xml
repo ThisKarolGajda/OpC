@@ -16,6 +16,9 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -40,8 +43,6 @@
                                         <include>config.yml</include>
                                         <include>com/tchristofferson/configupdater/**</include>
                                         <include>com/zaxxer/hikari/**</include>
-                                        <include>com/mojang/brigadier/**</include>
-                                        <include>me/lucko/commodore/**</include>
                                     </includes>
                                 </filter>
                             </filters>

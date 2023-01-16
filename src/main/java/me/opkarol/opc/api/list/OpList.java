@@ -130,6 +130,7 @@ public class OpList<K> implements IList<K>, Serializable {
     }
 
     @Override
+    @Deprecated
     public boolean retainAll(@NotNull Collection<?> c) {
         return false;
     }
@@ -190,6 +191,16 @@ public class OpList<K> implements IList<K>, Serializable {
     public void createIfNotExists() {
         if (list == null) {
             list = new ArrayList<>();
+        }
+    }
+
+    public boolean isPresent(int index) {
+        return list.size() > index;
+    }
+
+    public void ifPresent(int index, Consumer<K> consumer) {
+        if (isPresent(index)) {
+            consumer.accept(get(index));
         }
     }
 

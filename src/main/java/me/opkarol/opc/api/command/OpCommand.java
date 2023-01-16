@@ -139,7 +139,9 @@ public class OpCommand extends BukkitCommand {
     }
 
     public List<OpCommand> getCommandsForArg(int arg) {
-        return list.stream().filter(command -> command.getArgsNumber().stream().anyMatch(integer -> integer.equals(arg - 1))).toList();
+        return list.stream()
+                .filter(command -> command.getArgsNumber().stream()
+                        .anyMatch(integer -> integer.equals(arg - 1))).toList();
     }
 
     @Override
