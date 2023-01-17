@@ -1,6 +1,5 @@
 package me.opkarol.opc.api.list;
 
-import me.opkarol.opc.api.utils.VariableUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -79,7 +78,7 @@ public class OpList<K> implements IList<K>, Serializable {
 
     @Override
     public boolean containsAll(@NotNull Collection<?> c) {
-        return list.containsAll(c);
+        return new HashSet<>(list).containsAll(c);
     }
 
     @Override
@@ -128,7 +127,10 @@ public class OpList<K> implements IList<K>, Serializable {
 
     @Override
     public K getOrDefault(int index, K def) {
-        return VariableUtil.getOrDefault(get(index), def);
+        if (isPresent(index)) {
+            return unsafeGet(index);
+        }
+        return def;
     }
 
     @Override
@@ -207,7 +209,7 @@ public class OpList<K> implements IList<K>, Serializable {
 
     public void ifPresent(int index, Consumer<K> consumer) {
         if (isPresent(index)) {
-            consumer.accept(get(index));
+            get(index).ifPresent(consumer);
         }
     }
 

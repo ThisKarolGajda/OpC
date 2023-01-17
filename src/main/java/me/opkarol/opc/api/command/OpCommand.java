@@ -192,17 +192,17 @@ public class OpCommand extends BukkitCommand {
 
         if (isMain && args.length == 1) {
             if (simpleSuggestions.size() > 0) {
-                completions.addAll(simpleSuggestions.get(0).getSuggestions());
+                completions.addAll(simpleSuggestions.unsafeGet(0).getSuggestions());
             } else if (suggestions.size() > 0) {
-                completions.addAll(suggestions.get(0).apply(new OpCommandSender(sender), args));
+                completions.addAll(suggestions.unsafeGet(0).apply(new OpCommandSender(sender), args));
             }
         } else if (args.length > 1) {
             if (getName().equals(args[0])) {
                 if (getSimpleSuggestionsCount() == args.length - 1) {
-                    completions.addAll(simpleSuggestions.get(args.length - 2).getSuggestions());
+                    completions.addAll(simpleSuggestions.unsafeGet(args.length - 2).getSuggestions());
                 }
                 if (getSuggestionSize() == args.length - 1) {
-                    completions.addAll(suggestions.get(args.length - 2).apply(new OpCommandSender(sender), args));
+                    completions.addAll(suggestions.unsafeGet(args.length - 2).apply(new OpCommandSender(sender), args));
                 }
             }
         }
@@ -318,7 +318,7 @@ public class OpCommand extends BukkitCommand {
         OpList<Integer> list = VariableUtil.getOrDefault(getArgsNumber(), new OpList<>());
         int last = -1;
         if (list.size() != 0) {
-            last = list.get(list.size() - 1);
+            last = list.unsafeGet(list.size() - 1);
         }
         if (last == -1) {
             if (isMain) {

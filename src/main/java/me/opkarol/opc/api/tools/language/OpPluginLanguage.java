@@ -46,7 +46,7 @@ public class OpPluginLanguage {
                 .ifPresent(opConfigLanguage -> temp[0] = opConfigLanguage.getConfiguration().getConfig().getString(path));
 
         if (temp[0] == null) {
-            return languages.get(0).getConfiguration().getConfig().getString(path);
+            return languages.unsafeGet(0).getConfiguration().getConfig().getString(path);
         }
 
         return path;
