@@ -98,7 +98,14 @@ public class OpList<K> implements IList<K>, Serializable {
     }
 
     @Override
-    public K get(int index) {
+    public Optional<K> get(int index) {
+        if (!isPresent(index)) {
+            return Optional.empty();
+        }
+        return Optional.of(list.get(index));
+    }
+
+    public K unsafeGet(int index) {
         return list.get(index);
     }
 

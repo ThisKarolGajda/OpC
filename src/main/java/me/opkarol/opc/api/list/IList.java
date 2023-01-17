@@ -3,6 +3,7 @@ package me.opkarol.opc.api.list;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -25,7 +26,7 @@ public interface IList<K> extends Collection<K> {
 
     void clear();
 
-    K get(int index);
+    Optional<K> get(int index);
 
     K set(int index, K element);
 
