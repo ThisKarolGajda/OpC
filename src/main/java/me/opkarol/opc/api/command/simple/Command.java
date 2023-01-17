@@ -65,7 +65,7 @@ public abstract class Command extends BukkitCommand implements SubCommand {
             return new ArrayList<>();
 
         // Default tab completion for any subcommands
-        if (args.length == 1) {
+        if (args.length == 1 && !hasCustomTabCompletion()) {
             List<String> subcommandsNames = subcommands.stream()
                     .filter(subCommand -> hasPermissionOnSubCommand(subCommand, sender))
                     .map(SubCommand::getName)
@@ -79,7 +79,7 @@ public abstract class Command extends BukkitCommand implements SubCommand {
                 .findAny().orElse(this);
 
         // Gets the tabCompletion from the subCommand.
-        List<String> tabCompleteSubCommand = chosenSubcommand.tabComplete(args.length - 2, args);
+        List<String> tabCompleteSubCommand = chosenSubcommand.tabComplete(args.length, args);
 
         return getMatchingStrings(tabCompleteSubCommand, args[args.length - 1], argumentMatcher);
     }

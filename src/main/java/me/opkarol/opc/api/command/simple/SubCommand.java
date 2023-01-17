@@ -17,6 +17,10 @@ public interface SubCommand {
         return false;
     }
 
+    default boolean hasCustomTabCompletion() {
+        return false;
+    }
+
     default List<String> tabComplete(int currentIndex, String[] args) {
         return new ArrayList<>();
     }
