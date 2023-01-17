@@ -320,6 +320,7 @@ public class OpCommand extends BukkitCommand {
         if (list.size() != 0) {
             last = list.unsafeGet(list.size() - 1);
         }
+
         if (last == -1) {
             if (isMain) {
                 list.set(0, 0);
