@@ -21,7 +21,7 @@ public interface SubCommand {
         return false;
     }
 
-    default List<String> tabComplete(int currentIndex, String[] args) {
+    default List<String> tabComplete(int currentIndex, OpList<String> args) {
         return new ArrayList<>();
     }
 

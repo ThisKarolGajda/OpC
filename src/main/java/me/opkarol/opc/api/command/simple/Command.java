@@ -9,7 +9,10 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class Command extends BukkitCommand implements SubCommand {
@@ -79,7 +82,7 @@ public abstract class Command extends BukkitCommand implements SubCommand {
                 .findAny().orElse(this);
 
         // Gets the tabCompletion from the subCommand.
-        List<String> tabCompleteSubCommand = chosenSubcommand.tabComplete(args.length, args);
+        List<String> tabCompleteSubCommand = chosenSubcommand.tabComplete(args.length, OpList.asList(args));
 
         return getMatchingStrings(tabCompleteSubCommand, args[args.length - 1], argumentMatcher);
     }
