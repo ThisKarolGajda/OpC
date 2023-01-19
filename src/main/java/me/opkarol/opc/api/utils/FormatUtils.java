@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 public final class FormatUtils {
     private static final Pattern HEX_PATTERN = Pattern.compile("[A-f0-9]{6}");
-    private static final char COLOR_CHAR = '\u00A7';
+    private static final char COLOR_CHAR = '§';
 
     public static @NotNull String formatMessage(String message) {
         try {

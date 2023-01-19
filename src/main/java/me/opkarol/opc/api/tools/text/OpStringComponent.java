@@ -96,6 +96,10 @@ public record OpStringComponent(String string) {
             }
         }
 
+        return getTextComponent(tempString, tempMap);
+    }
+
+    public @NotNull TextComponent getTextComponent(String[] tempString, OpMap<String, TextComponent> tempMap) {
         TextComponent temp = new TextComponent();
         for (String s : tempString[0].split(" ")) {
             tempMap.keySet().stream().filter(s::contains).findAny().ifPresentOrElse(group -> {
@@ -153,27 +157,7 @@ public record OpStringComponent(String string) {
             }
         }
 
-        TextComponent temp = new TextComponent();
-        for (String s : tempString[0].split(" ")) {
-            tempMap.keySet().stream().filter(s::contains).findAny().ifPresentOrElse(group -> {
-                int startIndex = s.indexOf(group);
-                int endIndex = startIndex + group.length();
-
-                String textBefore = s.substring(0, startIndex);
-                if (textBefore.length() != 0) {
-                    temp.addExtra(textBefore);
-                }
-
-                temp.addExtra(tempMap.getOrDefault(group, null));
-
-                String textAfter = s.substring(endIndex);
-                if (textAfter.length() != 0) {
-                    temp.addExtra(textAfter + " ");
-                }
-            }, () -> temp.addExtra(s + " "));
-        }
-
-        return temp;
+        return getTextComponent(tempString, tempMap);
     }
 
     @Contract("_ -> new")
