@@ -48,11 +48,6 @@ public class OpLinkedMap<K, V> implements IMap<K, V>, Serializable {
     }
 
     @Override
-    public void setMap(HashMap<K, V> map) {
-        this.map = (LinkedHashMap<K, V>) map;
-    }
-
-    @Override
     public boolean containsKey(K k) {
         if (this.isEmpty()) {
             return false;
@@ -71,6 +66,11 @@ public class OpLinkedMap<K, V> implements IMap<K, V>, Serializable {
     @Override
     public Map<K, V> getMap() {
         return map;
+    }
+
+    @Override
+    public void setMap(HashMap<K, V> map) {
+        this.map = (LinkedHashMap<K, V>) map;
     }
 
     @Override
@@ -126,7 +126,7 @@ public class OpLinkedMap<K, V> implements IMap<K, V>, Serializable {
         return Optional.empty();
     }
 
-    public K getByIndex(int index){
+    public K getByIndex(int index) {
         return (K) (map.keySet().toArray())[index];
     }
 

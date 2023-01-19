@@ -1,11 +1,10 @@
 package me.opkarol.opc.api.plugins;
 
 import me.opkarol.opc.OpAPI;
-import me.opkarol.opc.api.serialization.Serialization;
 import me.opkarol.opc.api.file.Configuration;
 import me.opkarol.opc.api.misc.opobjects.*;
+import me.opkarol.opc.api.serialization.Serialization;
 import me.opkarol.opc.api.tools.autostart.OpAutoDisable;
-import me.opkarol.opc.api.tools.autostart.OpAutoStart;
 import me.opkarol.opc.api.tools.location.OpSerializableLocation;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,7 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class OpPlugin extends JavaPlugin {
-    private Configuration configuration;
     private static OpPlugin plugin;
 
     static {
@@ -26,6 +24,16 @@ public abstract class OpPlugin extends JavaPlugin {
         Serialization.registerClass(OpText.class);
         Serialization.registerClass(OpTitle.class);
         Serialization.registerClass(OpSerializableLocation.class);
+    }
+
+    private Configuration configuration;
+
+    public static @NotNull Logger getLog() {
+        return plugin.getLogger();
+    }
+
+    public static OpPlugin getInstance() {
+        return plugin;
     }
 
     @Override
@@ -38,7 +46,6 @@ public abstract class OpPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        OpAutoStart.activate(plugin);
         enable();
         registerEvents();
         registerCommands();
@@ -50,8 +57,8 @@ public abstract class OpPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        OpAutoDisable.registerDisable();
         OpAPI.unregisterCommands();
-        OpAutoDisable.activate(plugin);
         plugin = null;
     }
 
@@ -77,14 +84,6 @@ public abstract class OpPlugin extends JavaPlugin {
 
     public void registerCommands() {
 
-    }
-
-    public static @NotNull Logger getLog() {
-        return plugin.getLogger();
-    }
-
-    public static OpPlugin getInstance() {
-        return plugin;
     }
 
     protected void disablePlugin(String message) {

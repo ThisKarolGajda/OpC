@@ -23,10 +23,6 @@ public class PlaceholderAPI {
         return getOrDefault(placeholderAPI, new PlaceholderAPI());
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
     public static @NotNull PlaceholderAPI registerExtension(String identifier, String author, String version, BiFunction<OfflinePlayer, String, String> biFunction) {
         PlaceholderAPI placeholderAPI = getInstance();
         if (placeholderAPI.isEnabled()) {
@@ -53,5 +49,9 @@ public class PlaceholderAPI {
             }.register();
         }
         return placeholderAPI;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }

@@ -1,10 +1,10 @@
 package me.opkarol.opc.api.tools.teleport;
 
 import me.opkarol.opc.api.command.OpCommandSender;
-import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.map.OpMapBuilder;
+import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.tools.location.OpLocation;
 import me.opkarol.opc.api.tools.location.OpSerializableLocation;
 import me.opkarol.opc.api.tools.permission.PermissionManager;
@@ -181,7 +181,7 @@ public class OpTeleport extends Serialize {
 
         int playerTeleportLength = (int) group.getPlayerObject(player, PermissionManager.OBJECT_TYPE.INTEGER);
         if (playerTeleportLength <= 1) {
-            if (!endActionMethod(location, player, settings)) {
+            if (invertEndActionMethod(location, player, settings)) {
                 settings.use(player, settings.getOnInvalid());
             }
             return this;
@@ -196,10 +196,10 @@ public class OpTeleport extends Serialize {
                     }
                 },
                 end -> new OpRunnable(r -> {
-                    if (!endActionMethod(location, player, settings)) {
+                    if (invertEndActionMethod(location, player, settings)) {
                         settings.use(player, settings.getOnInvalid());
                     }
-        }).runTask(), playerTeleportLength);
+                }).runTask(), playerTeleportLength);
         return this;
     }
 
@@ -209,14 +209,14 @@ public class OpTeleport extends Serialize {
         }
     }
 
-    private boolean endActionMethod(@NotNull OpSerializableLocation location, Player player, TeleportSettings settings) {
+    private boolean invertEndActionMethod(@NotNull OpSerializableLocation location, Player player, TeleportSettings settings) {
         if (isSafeLocation(location.toLocation())) {
             if (player.teleport(location.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN)) {
                 settings.use(player, settings.getOnEnd(), "%location%", location.toFamilyString());
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public OpTeleport teleport(OpSerializableLocation location, @NotNull PermissionManager<Integer> group, @NotNull TeleportSettings settings) {

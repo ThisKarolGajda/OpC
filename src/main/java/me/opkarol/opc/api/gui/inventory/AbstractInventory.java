@@ -10,9 +10,9 @@ import java.util.Optional;
 
 public abstract class AbstractInventory<K, V> extends InventoryPage<K, V> {
     private final InventoryCache cache = InventoryCache.getCache();
-    private int inventorySlots;
     private final IHolder inventoryHolder;
     private final String inventoryTitle;
+    private int inventorySlots;
 
     protected AbstractInventory(int inventorySlots, IHolder inventoryHolder, String inventoryTitle) {
         this.inventorySlots = inventorySlots;

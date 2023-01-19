@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class SoundArg <I extends IType> extends OpTypeArg<I> {
+public class SoundArg<I extends IType> extends OpTypeArg<I> {
     public SoundArg(I name) {
         super(name);
     }

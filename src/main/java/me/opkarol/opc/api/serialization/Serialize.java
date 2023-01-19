@@ -13,6 +13,16 @@ public abstract class Serialize implements Serializable {
         Serialization.registerClass(getClass());
     }
 
+    public synchronized static Serializable get(@NotNull Configuration configuration, String path) {
+        FileConfiguration config = configuration.getConfig();
+        String finalPath = VariableUtil.ifNotEndsWithAdd(path, ".");
+        OpMapBuilder<String, Object> tempMap = new OpMapBuilder<>();
+
+        configuration.useSectionKeys(path, s -> tempMap.set(s, config.get(finalPath + s)));
+
+        return Serialization.deserializeObject(tempMap);
+    }
+
     public synchronized void save(@NotNull OpMap<String, Object> objects, @NotNull Configuration configuration, String path) {
         FileConfiguration config = configuration.getConfig();
         path = VariableUtil.ifNotEndsWithAdd(path, ".");
@@ -30,15 +40,5 @@ public abstract class Serialize implements Serializable {
             config.set(path + string, object);
         }
         configuration.save();
-    }
-
-    public synchronized static Serializable get(@NotNull Configuration configuration, String path) {
-        FileConfiguration config = configuration.getConfig();
-        String finalPath = VariableUtil.ifNotEndsWithAdd(path, ".");
-        OpMapBuilder<String, Object> tempMap = new OpMapBuilder<>();
-
-        configuration.useSectionKeys(path, s -> tempMap.set(s, config.get(finalPath + s)));
-
-        return Serialization.deserializeObject(tempMap);
     }
 }

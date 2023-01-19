@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;
 
-public class HeadDatabase{
+public class HeadDatabase {
     private static HeadDatabase headDatabase;
     private final OpMap<String, ItemStack> map = new OpMap<>();
 

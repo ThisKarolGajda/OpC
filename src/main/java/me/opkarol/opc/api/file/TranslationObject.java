@@ -4,12 +4,12 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 @Deprecated
-/**
- * Deprecated, due to SimpleTranslation better use and multi translations per class storage.
- *
- * @see SimpleTranslation
+/*
+  Deprecated, due to SimpleTranslation better use and multi translations per class storage.
+
+  @see SimpleTranslation
  */
-public final record TranslationObject(String pattern, String replace) {
+public record TranslationObject(String pattern, String replace) {
 
     @Contract(pure = true)
     public @NotNull String replace(@NotNull String s) {

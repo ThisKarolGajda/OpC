@@ -20,7 +20,7 @@ public final class BiOptional<A, B> {
     private final Optional<A> first;
     private final Optional<B> second;
 
-    public BiOptional(Optional<A> first, Optional<B> second){
+    public BiOptional(Optional<A> first, Optional<B> second) {
         this.first = first;
         this.second = second;
     }
@@ -28,6 +28,14 @@ public final class BiOptional<A, B> {
     public BiOptional(A first, B second) {
         this.first = Optional.of(first);
         this.second = Optional.of(second);
+    }
+
+    public static <A, B> @NotNull BiOptional<A, B> empty() {
+        return of(null, null);
+    }
+
+    public static <A, B> @NotNull BiOptional<A, B> of(A f, B s) {
+        return new BiOptional<>(Optional.ofNullable(f), Optional.ofNullable(s));
     }
 
     public Optional<A> getFirst() {
@@ -54,38 +62,30 @@ public final class BiOptional<A, B> {
         return first.isPresent() || second.isPresent();
     }
 
-    public BiOptional<A, B> ifFirstPresent(Consumer<? super A> ifPresent){
+    public BiOptional<A, B> ifFirstPresent(Consumer<? super A> ifPresent) {
         if (!second.isPresent()) {
             first.ifPresent(ifPresent);
         }
         return this;
     }
 
-    public BiOptional<A, B> ifSecondPresent(Consumer<? super B> ifPresent){
+    public BiOptional<A, B> ifSecondPresent(Consumer<? super B> ifPresent) {
         if (!first.isPresent()) {
             second.ifPresent(ifPresent);
         }
         return this;
     }
 
-    public BiOptional<A, B> ifBothPresent(BiConsumer<? super A, ? super B> ifPresent){
-        if(first.isPresent() && second.isPresent()){
+    public BiOptional<A, B> ifBothPresent(BiConsumer<? super A, ? super B> ifPresent) {
+        if (first.isPresent() && second.isPresent()) {
             ifPresent.accept(first.get(), second.get());
         }
         return this;
     }
 
-    public <T extends Throwable> void orElseThrow(Supplier<? extends T> exProvider) throws T{
-        if(!first.isPresent() && !second.isPresent()){
+    public <T extends Throwable> void orElseThrow(Supplier<? extends T> exProvider) throws T {
+        if (!first.isPresent() && !second.isPresent()) {
             throw exProvider.get();
         }
-    }
-
-    public static <A, B> @NotNull BiOptional<A, B> empty() {
-        return of(null, null);
-    }
-
-    public static <A, B> @NotNull BiOptional<A, B> of(A f, B s) {
-        return new BiOptional<>(Optional.ofNullable(f), Optional.ofNullable(s));
     }
 }

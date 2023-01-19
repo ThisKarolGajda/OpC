@@ -1,6 +1,7 @@
 package me.opkarol.opc.api.list;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.*;
@@ -27,7 +28,19 @@ public class OpList<K> implements IList<K>, Serializable {
         this.list = new ArrayList<>();
         addAll(Arrays.asList(ks));
     }
-    
+
+    public static <K> @NotNull Collector<K, ?, OpList<K>> getCollector() {
+        return Collectors.toCollection(OpList::new);
+    }
+
+    @SafeVarargs
+    public static <K> @NotNull OpList<K> asList(K @Nullable ... a) {
+        if (a == null || a.length == 0) {
+            return new OpList<>();
+        }
+        return new OpList<>(Arrays.asList(a));
+    }
+
     @Override
     public int size() {
         createIfNotExists();
@@ -87,7 +100,7 @@ public class OpList<K> implements IList<K>, Serializable {
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
+    public boolean removeAll(@NotNull Collection<?> c) {
         return list.removeAll(c);
     }
 
@@ -97,7 +110,7 @@ public class OpList<K> implements IList<K>, Serializable {
     }
 
     @Override
-    public Optional<K> get(int index) {
+    public @NotNull Optional<K> get(int index) {
         if (!isPresent(index)) {
             return Optional.empty();
         }
@@ -145,7 +158,7 @@ public class OpList<K> implements IList<K>, Serializable {
     }
 
     @Override
-    public boolean removeAndThen(Predicate<K> predicate, Consumer<K> consumer) {
+    public boolean removeAndThen(@NotNull Predicate<K> predicate, @NotNull Consumer<K> consumer) {
         AtomicBoolean removed = new AtomicBoolean(false);
         list.forEach(obj -> {
             if (predicate.test(obj) && remove(obj)) {
@@ -170,20 +183,8 @@ public class OpList<K> implements IList<K>, Serializable {
         return list.stream();
     }
 
-    public static <K> @NotNull Collector<K, ?, OpList<K>> getCollector() {
-        return Collectors.toCollection(OpList::new);
-    }
-
-    @SafeVarargs
-    public static <K> @NotNull OpList<K> asList(K... a) {
-        if (a == null || a.length == 0) {
-            return new OpList<>();
-        }
-        return new OpList<>(Arrays.asList(a));
-    }
-
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -213,7 +214,7 @@ public class OpList<K> implements IList<K>, Serializable {
         }
     }
 
-    public String toArrayString() {
+    public @NotNull String toArrayString() {
         return Arrays.toString(list.toArray());
     }
 }

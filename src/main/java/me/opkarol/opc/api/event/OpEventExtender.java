@@ -7,13 +7,13 @@ import org.jetbrains.annotations.NotNull;
 public class OpEventExtender extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
 
-    @NotNull
-    @Override
-    public HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 
-    public static HandlerList getHandlerList() {
+    @NotNull
+    @Override
+    public HandlerList getHandlers() {
         return HANDLERS;
     }
 }

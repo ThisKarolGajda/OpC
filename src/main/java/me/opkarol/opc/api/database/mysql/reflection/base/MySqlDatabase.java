@@ -8,8 +8,8 @@ import me.opkarol.opc.api.database.mysql.reflection.objects.MySqlObjects;
 import me.opkarol.opc.api.database.mysql.table.MySqlDeleteTable;
 import me.opkarol.opc.api.database.mysql.table.MySqlInsertTable;
 import me.opkarol.opc.api.database.mysql.table.MySqlTable;
-import me.opkarol.opc.api.database.mysql.types.MySqlVariableType;
 import me.opkarol.opc.api.database.mysql.types.MySqlIdCount;
+import me.opkarol.opc.api.database.mysql.types.MySqlVariableType;
 import me.opkarol.opc.api.file.Configuration;
 import org.jetbrains.annotations.NotNull;
 

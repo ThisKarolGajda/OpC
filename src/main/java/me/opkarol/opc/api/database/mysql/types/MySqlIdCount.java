@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MySqlIdCount {
-    private int id = -1;
     private final String tableName;
+    private int id = -1;
 
     public MySqlIdCount(MySqlConnection connection, String tableName) {
         this.tableName = tableName;
@@ -16,7 +16,7 @@ public class MySqlIdCount {
     }
 
     public int getNextId() {
-        id+=1;
+        id += 1;
         return id;
     }
 

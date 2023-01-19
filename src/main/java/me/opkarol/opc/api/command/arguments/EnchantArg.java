@@ -5,7 +5,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.Nullable;
 
-public class EnchantArg <I extends IType> extends OpTypeArg<I> {
+public class EnchantArg<I extends IType> extends OpTypeArg<I> {
 
     public EnchantArg(I name) {
         super(name);

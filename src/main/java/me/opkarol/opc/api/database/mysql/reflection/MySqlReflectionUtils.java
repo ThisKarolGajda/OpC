@@ -19,7 +19,7 @@ public class MySqlReflectionUtils {
         Arrays.stream(classObject.getDeclaredFields())
                 .map(AccessibleObject::getAnnotations)
                 .map(Arrays::asList)
-                .collect(Collectors.toList())
+                .toList()
                 .forEach(list::addAll);
         return list;
     }
@@ -98,8 +98,7 @@ public class MySqlReflectionUtils {
             return MySqlReflectionUtils.getConstructor(classObject);
         }
         Class<?>[] argTypes = new Class<?>[args.length];
-        for ( int i = 0; i < args.length; ++i)
-        {
+        for (int i = 0; i < args.length; ++i) {
             if (args[i] == null) {
                 argTypes[i] = MySqlObject.class;
             } else {
@@ -112,7 +111,8 @@ public class MySqlReflectionUtils {
     public static <T> @Nullable T invokeSafeConstructor(Class<?> clazz, java.lang.Object... objects) {
         try {
             return (T) getConstructor(clazz, objects).newInstance(objects);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException ignore) {}
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException ignore) {
+        }
         return null;
     }
 }

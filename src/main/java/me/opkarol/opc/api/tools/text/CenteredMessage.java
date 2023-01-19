@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 public class CenteredMessage {
     private final static int CENTER_PX = 154;
 
-    public static @NotNull String center(String message){
+    public static @NotNull String center(String message) {
         String[] lines = ChatColor.translateAlternateColorCodes('&', message).split("\n", 40);
         StringBuilder returnMessage = new StringBuilder();
 
@@ -31,7 +31,7 @@ public class CenteredMessage {
             int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
             int compensated = 0;
             StringBuilder sb = new StringBuilder();
-            while(compensated < toCompensate){
+            while (compensated < toCompensate) {
                 sb.append(" ");
                 compensated += spaceLength;
             }

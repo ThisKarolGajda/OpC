@@ -1,10 +1,10 @@
 package me.opkarol.opc.api.misc.opobjects;
 
-import me.opkarol.opc.api.serialization.SerializableName;
-import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.map.OpMapBuilder;
+import me.opkarol.opc.api.serialization.SerializableName;
+import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.utils.FormatUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

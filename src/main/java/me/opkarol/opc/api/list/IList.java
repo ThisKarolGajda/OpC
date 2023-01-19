@@ -22,7 +22,7 @@ public interface IList<K> extends Collection<K> {
 
     boolean addAll(@NotNull Collection<? extends K> c);
 
-    boolean removeAll(Collection<?> c);
+    boolean removeAll(@NotNull Collection<?> c);
 
     void clear();
 
@@ -42,7 +42,7 @@ public interface IList<K> extends Collection<K> {
      * If the provided predicate is not null, and its valid then it executes the consumer.
      *
      * @param predicate given predicate
-     * @param consumer consumer that run on valid predicate
+     * @param consumer  consumer that run on valid predicate
      */
     boolean removeAndThen(Predicate<K> predicate, Consumer<K> consumer);
 

@@ -7,9 +7,9 @@ import me.opkarol.opc.api.database.mysql.reflection.base.OpMySqlDatabaseImpl;
 import org.jetbrains.annotations.NotNull;
 
 public class DatabaseFactory<O, C> {
+    private static IDefaultDatabase<?, ?> database;
     private final MySqlDatabaseSettings mySqlSettings;
     private final FlatDatabaseSettings<O, C> flatSettings;
-    private static IDefaultDatabase database;
 
     public DatabaseFactory(@NotNull MySqlDatabaseSettings mysqlSettings) {
         this.mySqlSettings = mysqlSettings;
@@ -47,16 +47,16 @@ public class DatabaseFactory<O, C> {
         }
     }
 
+    public static <O, C> IDefaultDatabase<O, C> getDatabase() {
+        return (IDefaultDatabase<O, C>) database;
+    }
+
     public FlatDatabaseSettings<O, C> getFlatSettings() {
         return flatSettings;
     }
 
     public MySqlDatabaseSettings getMySqlSettings() {
         return mySqlSettings;
-    }
-
-    public static <O, C> IDefaultDatabase<O, C> getDatabase() {
-        return (IDefaultDatabase<O, C>) database;
     }
 
     public IDefaultDatabase<O, C> getLocalDatabase() {

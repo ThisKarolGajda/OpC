@@ -25,7 +25,7 @@ public class SchematicQueue {
                 }
 
                 Block block = optional.get();
-                
+
             }
         }));
     }

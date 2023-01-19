@@ -1,16 +1,17 @@
 package me.opkarol.opc.api.database.flat;
 
 import me.opkarol.opc.OpAPI;
-import me.opkarol.opc.api.tools.autostart.OpAutoDisable;
 import me.opkarol.opc.api.database.manager.IDefaultDatabase;
 import me.opkarol.opc.api.database.manager.settings.FlatDatabaseSettings;
 import me.opkarol.opc.api.map.OpMap;
+import me.opkarol.opc.api.tools.autostart.IDisable;
+import me.opkarol.opc.api.tools.autostart.OpAutoDisable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Predicate;
 
-public class DefaultFlatDatabase<O, C> extends FlatDatabase<OpMap<UUID, List<O>>> implements IDefaultDatabase<O, C> {
+public class DefaultFlatDatabase<O, C> extends FlatDatabase<OpMap<UUID, List<O>>> implements IDefaultDatabase<O, C>, IDisable {
     private final OpMap<UUID, List<O>> map;
     private final FlatDatabaseSettings<O, C> settings;
 
@@ -19,7 +20,7 @@ public class DefaultFlatDatabase<O, C> extends FlatDatabase<OpMap<UUID, List<O>>
         this.settings = settings;
         OpMap<UUID, List<O>> map = loadObject();
         this.map = Objects.requireNonNullElseGet(map, OpMap::new);
-        OpAutoDisable.register(plugin -> saveObject(this.map));
+        OpAutoDisable.add(this);
     }
 
     @Override
@@ -47,9 +48,9 @@ public class DefaultFlatDatabase<O, C> extends FlatDatabase<OpMap<UUID, List<O>>
 
     @Override
     public void add(UUID uuid, O object) {
-         List<O> list = map.getOrDefault(uuid, new ArrayList<>());
-         list.add(object);
-         map.set(uuid, list);
+        List<O> list = map.getOrDefault(uuid, new ArrayList<>());
+        list.add(object);
+        map.set(uuid, list);
     }
 
     @Override
@@ -59,5 +60,10 @@ public class DefaultFlatDatabase<O, C> extends FlatDatabase<OpMap<UUID, List<O>>
 
     public FlatDatabaseSettings<O, C> getSettings() {
         return settings;
+    }
+
+    @Override
+    public void onDisable() {
+        saveObject(this.map);
     }
 }

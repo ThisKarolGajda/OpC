@@ -1,9 +1,9 @@
 package me.opkarol.opc.api.tools.permission;
 
-import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.file.Configuration;
 import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.map.OpMap;
+import me.opkarol.opc.api.serialization.Serialize;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,9 +24,6 @@ public class PermissionManager<K> extends Serialize {
     @SafeVarargs
     public PermissionManager(PermissionGroup<K> @NotNull ... group) {
         super(null);
-        if (group.length == 0) {
-            return;
-        }
 
         for (PermissionGroup<K> group1 : group) {
             add(group1);
@@ -55,8 +52,8 @@ public class PermissionManager<K> extends Serialize {
     public Object getPlayerObject(Player player, @NotNull OBJECT_TYPE type) {
         List<PermissionGroup<K>> groups = list.stream().filter(group ->
                         player.hasPermission(group.group())
-                        || group.group().equalsIgnoreCase("default")
-                        || (group.group().equalsIgnoreCase("op") && player.isOp()))
+                                || group.group().equalsIgnoreCase("default")
+                                || (group.group().equalsIgnoreCase("op") && player.isOp()))
                 .toList();
         if (type.equals(OBJECT_TYPE.INTEGER)) {
             int lowest = Integer.MAX_VALUE;
@@ -87,14 +84,14 @@ public class PermissionManager<K> extends Serialize {
                 .setValue("list", list);
     }
 
-    public enum OBJECT_TYPE {
-        INTEGER
-    }
-
     @Override
     public String toString() {
         return "PermissionManager{" +
                 "list=" + list.toArrayString() +
                 '}';
+    }
+
+    public enum OBJECT_TYPE {
+        INTEGER
     }
 }

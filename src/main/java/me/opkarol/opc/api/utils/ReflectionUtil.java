@@ -17,7 +17,7 @@ public class ReflectionUtil {
         }
     }
 
-    public static <M> @NotNull Field getAccessibleField(@NotNull M main, String fieldName)  {
+    public static <M> @NotNull Field getAccessibleField(@NotNull M main, String fieldName) {
         Field field = getField(main, fieldName);
         field.setAccessible(true);
         return field;

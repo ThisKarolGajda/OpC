@@ -1,9 +1,9 @@
 package me.opkarol.opc.api.misc.opobjects;
 
-import me.opkarol.opc.api.serialization.SerializableName;
-import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.map.OpMapBuilder;
+import me.opkarol.opc.api.serialization.SerializableName;
+import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.tools.location.OpSerializableLocation;
 import me.opkarol.opc.api.utils.StringUtil;
 import org.bukkit.Bukkit;

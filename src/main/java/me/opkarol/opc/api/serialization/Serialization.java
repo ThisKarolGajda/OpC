@@ -23,6 +23,94 @@ public record Serialization(
     }
 
     @Nullable
+    public static Serializable deserializeObject(@NotNull OpMapBuilder<String, ?> args, @NotNull Class<? extends Serializable> clazz) {
+        return new Serialization(clazz).deserialize(args);
+    }
+
+    @Nullable
+    public static Serializable deserializeObject(@NotNull OpMapBuilder<String, ?> args) {
+        Class<? extends Serializable> clazz;
+
+        if (!args.containsKey(SERIALIZED_TYPE_KEY)) {
+            throw new IllegalArgumentException("Args doesn't contain type key ('" + SERIALIZED_TYPE_KEY + "')");
+        }
+
+        try {
+            String alias = (String) args.unsafeGet(SERIALIZED_TYPE_KEY);
+
+            if (alias == null) {
+                throw new IllegalArgumentException("Cannot have null alias");
+            }
+            clazz = getClassByAlias(alias);
+            if (clazz == null) {
+                throw new IllegalArgumentException("Specified class does not exist ('" + alias + "')");
+            }
+        } catch (ClassCastException ex) {
+            ex.fillInStackTrace();
+            throw ex;
+        }
+
+        return new Serialization(clazz).deserialize(args);
+    }
+
+    public static void registerClass(@NotNull Class<? extends Serializable> clazz) {
+        TransformSerialization transform = clazz.getAnnotation(TransformSerialization.class);
+
+        if (transform == null) {
+            registerClass(clazz, getAlias(clazz));
+            registerClass(clazz, clazz.getName());
+        }
+    }
+
+    public static void registerClass(@NotNull Class<? extends Serializable> clazz, @NotNull String alias) {
+        aliases.put(alias, clazz);
+    }
+
+    public static void unregisterClass(@NotNull String alias) {
+        aliases.remove(alias);
+    }
+
+    public static void unregisterClass(@NotNull Class<? extends Serializable> clazz) {
+        aliases.getValues().remove(clazz);
+    }
+
+    @Nullable
+    public static Class<? extends Serializable> getClassByAlias(@NotNull String alias) {
+        return aliases.unsafeGet(alias);
+    }
+
+    @NotNull
+    public static String getAlias(@NotNull Class<? extends Serializable> clazz) {
+        TransformSerialization delegate = clazz.getAnnotation(TransformSerialization.class);
+
+        if (delegate != null) {
+            if (delegate.value() != clazz) {
+                return getAlias(delegate.value());
+            }
+        }
+
+        SerializableName alias = clazz.getAnnotation(SerializableName.class);
+
+        if (alias != null) {
+            return alias.value();
+        }
+
+        return clazz.getName();
+    }
+
+    public static @Nullable String getAlias(String alias) {
+        try {
+            return getAlias((Class<? extends Serializable>) Class.forName(alias));
+        } catch (Throwable ex) {
+            Logger.getLogger(Serialization.class.getName()).log(
+                    Level.SEVERE,
+                    "Specified class does not exist ('" + alias + "')",
+                    ex);
+        }
+        return null;
+    }
+
+    @Nullable
     private Method getMethod(@NotNull String name) {
         try {
             Method method = clazz.getDeclaredMethod(name, OpMap.class);
@@ -117,93 +205,5 @@ public record Serialization(
 
 
         return result;
-    }
-
-    @Nullable
-    public static Serializable deserializeObject(@NotNull OpMapBuilder<String, ?> args, @NotNull Class<? extends Serializable> clazz) {
-        return new Serialization(clazz).deserialize(args);
-    }
-
-    @Nullable
-    public static Serializable deserializeObject(@NotNull OpMapBuilder<String, ?> args) {
-        Class<? extends Serializable> clazz;
-
-        if (!args.containsKey(SERIALIZED_TYPE_KEY)) {
-            throw new IllegalArgumentException("Args doesn't contain type key ('" + SERIALIZED_TYPE_KEY + "')");
-        }
-
-        try {
-            String alias = (String) args.unsafeGet(SERIALIZED_TYPE_KEY);
-
-            if (alias == null) {
-                throw new IllegalArgumentException("Cannot have null alias");
-            }
-            clazz = getClassByAlias(alias);
-            if (clazz == null) {
-                throw new IllegalArgumentException("Specified class does not exist ('" + alias + "')");
-            }
-        } catch (ClassCastException ex) {
-            ex.fillInStackTrace();
-            throw ex;
-        }
-
-        return new Serialization(clazz).deserialize(args);
-    }
-
-    public static void registerClass(@NotNull Class<? extends Serializable> clazz) {
-        TransformSerialization transform = clazz.getAnnotation(TransformSerialization.class);
-
-        if (transform == null) {
-            registerClass(clazz, getAlias(clazz));
-            registerClass(clazz, clazz.getName());
-        }
-    }
-
-    public static void registerClass(@NotNull Class<? extends Serializable> clazz, @NotNull String alias) {
-        aliases.put(alias, clazz);
-    }
-
-    public static void unregisterClass(@NotNull String alias) {
-        aliases.remove(alias);
-    }
-
-    public static void unregisterClass(@NotNull Class<? extends Serializable> clazz) {
-        aliases.getValues().remove(clazz);
-    }
-
-    @Nullable
-    public static Class<? extends Serializable> getClassByAlias(@NotNull String alias) {
-        return aliases.unsafeGet(alias);
-    }
-
-    @NotNull
-    public static String getAlias(@NotNull Class<? extends Serializable> clazz) {
-        TransformSerialization delegate = clazz.getAnnotation(TransformSerialization.class);
-
-        if (delegate != null) {
-            if (delegate.value() != clazz) {
-                return getAlias(delegate.value());
-            }
-        }
-
-        SerializableName alias = clazz.getAnnotation(SerializableName.class);
-
-        if (alias != null) {
-            return alias.value();
-        }
-
-        return clazz.getName();
-    }
-
-    public static @Nullable String getAlias(String alias) {
-        try {
-            return getAlias((Class<? extends Serializable>) Class.forName(alias));
-        } catch (Throwable ex) {
-            Logger.getLogger(Serialization.class.getName()).log(
-                    Level.SEVERE,
-                    "Specified class does not exist ('" + alias + "')",
-                    ex);
-        }
-        return null;
     }
 }

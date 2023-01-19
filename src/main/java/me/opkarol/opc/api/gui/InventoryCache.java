@@ -18,6 +18,10 @@ public class InventoryCache {
         new InventoryListener(this);
     }
 
+    public static InventoryCache getCache() {
+        return getOrDefault(cache, new InventoryCache());
+    }
+
     public void setActiveInventory(UUID uuid, ReplacementInventoryImpl inventory) {
         activeInventories.set(uuid, inventory);
         inventoriesOpened.add(uuid);
@@ -37,10 +41,6 @@ public class InventoryCache {
 
     public boolean hasSavedInventory(UUID uuid) {
         return inventoriesOpened.contains(uuid);
-    }
-
-    public static InventoryCache getCache() {
-        return getOrDefault(cache, new InventoryCache());
     }
 
     public String getInventoriesOpened() {

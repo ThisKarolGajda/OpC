@@ -5,7 +5,7 @@ import me.opkarol.opc.api.utils.StringUtil;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 
-public class MaterialArg <I extends IType> extends OpTypeArg<I> {
+public class MaterialArg<I extends IType> extends OpTypeArg<I> {
 
     public MaterialArg(I name) {
         super(name);

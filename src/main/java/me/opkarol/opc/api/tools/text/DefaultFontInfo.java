@@ -104,18 +104,22 @@ public enum DefaultFontInfo {
 
     private static final Map<Character, DefaultFontInfo> CHAR_MAP = new HashMap<>(values().length, 1.1f);
 
-    private final char character;
-    private final int length;
-
     static {
         for (DefaultFontInfo info : values()) {
             CHAR_MAP.put(info.character, info);
         }
     }
 
+    private final char character;
+    private final int length;
+
     DefaultFontInfo(char character, int length) {
         this.character = character;
         this.length = length;
+    }
+
+    public static DefaultFontInfo getDefaultFontInfo(char c) {
+        return CHAR_MAP.getOrDefault(c, DEFAULT);
     }
 
     public char getCharacter() {
@@ -131,9 +135,5 @@ public enum DefaultFontInfo {
             return this.getLength();
         }
         return this.length + 1;
-    }
-
-    public static DefaultFontInfo getDefaultFontInfo(char c) {
-        return CHAR_MAP.getOrDefault(c, DEFAULT);
     }
 }

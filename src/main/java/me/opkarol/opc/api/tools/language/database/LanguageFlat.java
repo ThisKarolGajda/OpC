@@ -2,8 +2,8 @@ package me.opkarol.opc.api.tools.language.database;
 
 import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.database.flat.FlatDatabase;
-import me.opkarol.opc.api.tools.language.LanguageType;
 import me.opkarol.opc.api.map.OpMap;
+import me.opkarol.opc.api.tools.language.LanguageType;
 
 import java.util.UUID;
 

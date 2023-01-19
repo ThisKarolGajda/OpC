@@ -73,9 +73,9 @@ public class HashCreator {
     }
 
     private static byte[] toBytes(final long number) {
-        return new byte[] { (byte) (number >>> 56), (byte) (number >>> 48), (byte) (number >>> 40),
+        return new byte[]{(byte) (number >>> 56), (byte) (number >>> 48), (byte) (number >>> 40),
                 (byte) (number >>> 32), (byte) (number >>> 24), (byte) (number >>> 16), (byte) (number >>> 8),
-                (byte) (number) };
+                (byte) (number)};
     }
 
     private static long toNumber(final byte[] bytes, final int start, final int length) {

@@ -44,7 +44,7 @@ public class OpTime extends GregorianCalendar {
     public String toString() {
         return String.valueOf(toUnix());
     }
-    
+
     public static class CALENDAR_MONTHS {
         public static final int JANUARY = 1;
 

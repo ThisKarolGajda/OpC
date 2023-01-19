@@ -58,7 +58,7 @@ public class ConfigurationMap {
     /**
      * Parameter objects in each of their table should have 2 objects.
      *
-     * @param path the path from which value will be taken
+     * @param path    the path from which value will be taken
      * @param objects table of strings, first parameter in each table is replacement and second is replacement
      * @return configured value
      */

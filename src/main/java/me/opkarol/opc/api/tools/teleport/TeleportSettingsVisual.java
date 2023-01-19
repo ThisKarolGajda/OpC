@@ -1,11 +1,11 @@
 package me.opkarol.opc.api.tools.teleport;
 
-import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.misc.opobjects.OpParticle;
 import me.opkarol.opc.api.misc.opobjects.OpSound;
 import me.opkarol.opc.api.misc.opobjects.OpText;
 import me.opkarol.opc.api.misc.opobjects.OpTitle;
+import me.opkarol.opc.api.serialization.Serialize;
 import org.jetbrains.annotations.NotNull;
 
 public final class TeleportSettingsVisual extends Serialize {
@@ -38,16 +38,32 @@ public final class TeleportSettingsVisual extends Serialize {
         return text;
     }
 
+    public void setText(OpText text) {
+        this.text = text;
+    }
+
     public OpParticle getParticle() {
         return particle;
+    }
+
+    public void setParticle(OpParticle particle) {
+        this.particle = particle;
     }
 
     public OpSound getSound() {
         return sound;
     }
 
+    public void setSound(OpSound sound) {
+        this.sound = sound;
+    }
+
     public OpTitle getTitle() {
         return title;
+    }
+
+    public void setTitle(OpTitle title) {
+        this.title = title;
     }
 
     @Override
@@ -67,21 +83,5 @@ public final class TeleportSettingsVisual extends Serialize {
                 .setValue("sound", sound)
                 .setValue("title", title)
                 .setValue("text", text);
-    }
-
-    public void setText(OpText text) {
-        this.text = text;
-    }
-
-    public void setParticle(OpParticle particle) {
-        this.particle = particle;
-    }
-
-    public void setTitle(OpTitle title) {
-        this.title = title;
-    }
-
-    public void setSound(OpSound sound) {
-        this.sound = sound;
     }
 }

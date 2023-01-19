@@ -1,9 +1,9 @@
 package me.opkarol.opc.api.misc.opobjects;
 
-import me.opkarol.opc.api.serialization.SerializableName;
-import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.map.OpMapBuilder;
+import me.opkarol.opc.api.serialization.SerializableName;
+import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.utils.FormatUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,14 +37,14 @@ public final class OpText extends Serialize {
         return text;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
     @Override
     public @NotNull OpMap<String, Object> serialize() {
         return getMapBuilder()
                 .setValue("text", text);
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 
     @Override

@@ -1,16 +1,12 @@
 package me.opkarol.opc.api.tools.teleport;
 
-import me.opkarol.opc.api.tools.location.OpSerializableLocation;
 import me.opkarol.opc.api.tools.SingletonHolder;
+import me.opkarol.opc.api.tools.location.OpSerializableLocation;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class TeleportTool extends SingletonHolder {
     private final OpTeleport teleport;
-
-    // public TeleportTool(String path) {
-    //     this.teleport = new OpTeleport(path).setRegistration(new TeleportRegistration());
-    // }
 
     public TeleportTool() {
         this.teleport = new OpTeleport().setRegistration(new TeleportRegistration());

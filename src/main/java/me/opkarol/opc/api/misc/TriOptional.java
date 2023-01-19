@@ -12,7 +12,7 @@ public class TriOptional<A, B, C> {
     private final Optional<B> second;
     private final Optional<C> third;
 
-    public TriOptional(Optional<A> first, Optional<B> second, Optional<C> third){
+    public TriOptional(Optional<A> first, Optional<B> second, Optional<C> third) {
         this.first = first;
         this.second = second;
         this.third = third;
@@ -22,6 +22,14 @@ public class TriOptional<A, B, C> {
         this.first = Optional.of(first);
         this.second = Optional.of(second);
         this.third = Optional.of(third);
+    }
+
+    public static <A, B, C> @NotNull TriOptional<A, B, C> empty() {
+        return of(null, null, null);
+    }
+
+    public static <A, B, C> @NotNull TriOptional<A, B, C> of(A a, B b, C c) {
+        return new TriOptional<>(Optional.ofNullable(a), Optional.ofNullable(b), Optional.ofNullable(c));
     }
 
     public Optional<A> getFirst() {
@@ -83,23 +91,15 @@ public class TriOptional<A, B, C> {
     }
 
     public TriOptional<A, B, C> ifAllPresent(TriConsumer<? super A, ? super B, ? super C> ifPresent) {
-        if(firstPresent() && secondPresent() && thirdPresent()){
+        if (firstPresent() && secondPresent() && thirdPresent()) {
             ifPresent.accept(getFirstObject(), getSecondObject(), getThirdObject());
         }
         return this;
     }
 
     public <T extends Throwable> void orElseThrow(Supplier<? extends T> exProvider) throws T {
-        if(first.isEmpty() && second.isEmpty() && third.isEmpty()){
+        if (first.isEmpty() && second.isEmpty() && third.isEmpty()) {
             throw exProvider.get();
         }
-    }
-
-    public static <A, B, C> @NotNull TriOptional<A, B, C> empty() {
-        return of(null, null, null);
-    }
-
-    public static <A, B, C> @NotNull TriOptional<A, B, C> of(A a, B b, C c) {
-        return new TriOptional<>(Optional.ofNullable(a), Optional.ofNullable(b), Optional.ofNullable(c));
     }
 }

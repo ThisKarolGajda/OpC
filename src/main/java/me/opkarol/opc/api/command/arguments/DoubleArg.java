@@ -4,7 +4,7 @@ import me.opkarol.opc.api.command.types.IType;
 import me.opkarol.opc.api.utils.StringUtil;
 import org.jetbrains.annotations.Nullable;
 
-public class DoubleArg <I extends IType> extends OpTypeArg<I> {
+public class DoubleArg<I extends IType> extends OpTypeArg<I> {
     public DoubleArg(I name) {
         super(name);
     }

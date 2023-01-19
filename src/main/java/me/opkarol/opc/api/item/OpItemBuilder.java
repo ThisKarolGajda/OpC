@@ -1,12 +1,12 @@
 package me.opkarol.opc.api.item;
 
 import me.opkarol.opc.OpAPI;
-import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.map.OpMapBuilder;
 import me.opkarol.opc.api.misc.Tuple;
 import me.opkarol.opc.api.misc.hash.HashCreator;
+import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.utils.PDCUtils;
 import me.opkarol.opc.api.utils.VariableUtil;
 import org.bukkit.Material;
@@ -24,6 +24,7 @@ import static me.opkarol.opc.api.utils.FormatUtils.formatList;
 import static me.opkarol.opc.api.utils.FormatUtils.formatMessage;
 
 public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
+    private final OpMap<String, String> tempReplacements = new OpMap<>();
     private String displayName;
     private int amount = 1;
     private Material material;
@@ -31,9 +32,6 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
     private OpMap<Enchantment, Integer> enchantments;
     private OpMap<String, String> pdc;
     private HashSet<ItemFlag> flags;
-
-    private String defaultDisplayName;
-    private List<String> defaultLore;
 
     public OpItemBuilder(ItemStack item) {
         super(null);
@@ -51,8 +49,6 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
         this.enchantments = getEnchants(meta.getEnchants());
         this.pdc = PDCUtils.getAllValues(item);
         this.flags = new HashSet<>(meta.getItemFlags());
-        this.defaultDisplayName = this.displayName;
-        this.defaultLore = this.lore;
     }
 
     public OpItemBuilder(Material material) {
@@ -70,11 +66,21 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
         return VariableUtil.getOrDefault(displayName, getUuid());
     }
 
+    public void setDisplayName(ItemMeta meta) {
+        if (displayName == null) {
+            return;
+        }
+
+        String tempName = displayName;
+        for (String replace : tempReplacements.keySet()) {
+            tempName = tempName.replace(replace, tempReplacements.unsafeGet(replace));
+        }
+        meta.setDisplayName(formatMessage(tempName));
+
+    }
+
     public K name(String displayName) {
         this.displayName = displayName;
-        if (defaultDisplayName == null) {
-            defaultDisplayName = displayName;
-        }
         return (K) this;
     }
 
@@ -91,11 +97,23 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
         return lore;
     }
 
+    public void setLore(ItemMeta meta) {
+        if (lore == null) {
+            return;
+        }
+
+        List<String> tempLore = new ArrayList<>();
+        for (String line : lore) {
+            for (String replace : tempReplacements.keySet()) {
+                line = line.replace(replace, tempReplacements.unsafeGet(replace));
+            }
+            tempLore.add(line);
+        }
+        meta.setLore(formatList(tempLore));
+    }
+
     public K lore(List<String> lore) {
         this.lore = lore;
-        if (defaultLore == null) {
-            defaultLore = lore;
-        }
         return (K) this;
     }
 
@@ -136,8 +154,8 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
         enchantItem(item);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(formatMessage(displayName));
-            meta.setLore(formatList(lore));
+            setDisplayName(meta);
+            setLore(meta);
             item.setItemMeta(meta);
             item = applyFlags(item);
         }
@@ -211,27 +229,19 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
         return HashCreator.getSha1Uuid(amount * material.hashCode() + getMaterial().toString()).toString();
     }
 
-    public OpItemBuilder<K> replaceItem(String replace, String replacement) {
-        if (defaultLore != null) {
-            List<String> tempLore = new ArrayList<>();
-            for (String s : defaultLore) {
-                tempLore.add(s.replace(replace, replacement));
-            }
-            lore(tempLore);
-        }
-        if (defaultDisplayName != null) {
-            name(defaultDisplayName.replace(replace, replacement));
-        }
+    public OpItemBuilder<K> addReplacement(String replace, String replacement) {
+        tempReplacements.set(replace, replacement);
         return this;
     }
 
-    public OpItemBuilder<K> replaceItemCurrent(String replace, String replacement) {
-        List<String> tempLore = new ArrayList<>();
-        for (String s : getLore()) {
-            tempLore.add(s.replace(replace, replacement));
-        }
-        lore(tempLore);
-        name(getDisplayName().replace(replace, replacement));
+    public OpItemBuilder<K> addReplacement(OpMap<String, String> map) {
+        tempReplacements.addAll(map);
+        return this;
+    }
+
+    @SafeVarargs
+    public final OpItemBuilder<K> addReplacement(Tuple<String, String>... map) {
+        tempReplacements.addAll(VariableUtil.getMapFromTuples(map));
         return this;
     }
 
@@ -241,5 +251,19 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
                 .setValue("amount", amount)
                 .setValue("material", material)
                 .setValue("lore", lore);
+    }
+
+    @Override
+    public String toString() {
+        return "OpItemBuilder{" +
+                "tempReplacements=" + tempReplacements +
+                ", displayName='" + displayName + '\'' +
+                ", amount=" + amount +
+                ", material=" + material +
+                ", lore=" + lore +
+                ", enchantments=" + enchantments +
+                ", pdc=" + pdc +
+                ", flags=" + flags +
+                '}';
     }
 }

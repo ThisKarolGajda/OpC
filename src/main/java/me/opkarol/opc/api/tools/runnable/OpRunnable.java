@@ -13,23 +13,23 @@ public class OpRunnable extends BukkitRunnable implements Serializable {
     private Consumer<OpRunnable> consumer;
     private BukkitTask task;
 
-    @Override
-    public void run() {
-        this.consumer.accept(this);
-    }
-
     public OpRunnable(Consumer<OpRunnable> consumer) {
         this.consumer = consumer;
-    }
-
-    public OpRunnable set(Consumer<OpRunnable> consumer) {
-        this.consumer = consumer;
-        return this;
     }
 
     @Contract("_ -> new")
     public static @NotNull OpRunnable get(Consumer<OpRunnable> consumer) {
         return new OpRunnable(consumer);
+    }
+
+    @Override
+    public void run() {
+        this.consumer.accept(this);
+    }
+
+    public OpRunnable set(Consumer<OpRunnable> consumer) {
+        this.consumer = consumer;
+        return this;
     }
 
     public boolean cancelTask() {

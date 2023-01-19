@@ -1,6 +1,5 @@
 package me.opkarol.opc.api.map;
 
-import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.misc.opobjects.OpObjectSerialized;
 import me.opkarol.opc.api.utils.StringUtil;
 
@@ -9,19 +8,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class OpMapBuilder<K, V> extends OpMap<K, V> {
-    static final class DefaultSwitchValues {
-        private static final OpMap<Class<?>, Object> map = new OpMap<>();
-
-        static {
-            map.set(int.class, -1);
-            map.set(Integer.class, -1);
-        }
-
-        public static Optional<Object> getDefaultValue(Class<?> clazz) {
-            return map.getByKey(clazz);
-        }
-    }
-
     public OpMapBuilder<K, V> setValue(K k, V v) {
         set(k, v);
         return this;
@@ -71,17 +57,15 @@ public class OpMapBuilder<K, V> extends OpMap<K, V> {
         getByKey(k).ifPresent((Consumer<? super V>) action);
     }
 
-    public <S extends Enum<S>>void ifPresentEnumThen(K k, Class<S> clazz, Consumer<? super S> action) {
+    public <S extends Enum<S>> void ifPresentEnumThen(K k, Class<S> clazz, Consumer<? super S> action) {
         getByKey(k).flatMap(object -> StringUtil.getEnumValue((String) object, clazz)).ifPresent(action);
     }
 
     public <W> void ifPresentObjectSerialized(K k, Consumer<? super W> action) {
         Optional<V> optional = getByKey(k);
-        OpAPI.logInfo(optional.isPresent() + " isPresent?");
         if (optional.isEmpty()) {
             return;
         }
-        OpAPI.logInfo(optional.get() + " get!");
 
         V value = optional.get();
         if (value instanceof OpObjectSerialized serialized) {
@@ -99,5 +83,18 @@ public class OpMapBuilder<K, V> extends OpMap<K, V> {
             return;
         }
         action.accept((S) value);
+    }
+
+    static final class DefaultSwitchValues {
+        private static final OpMap<Class<?>, Object> map = new OpMap<>();
+
+        static {
+            map.set(int.class, -1);
+            map.set(Integer.class, -1);
+        }
+
+        public static Optional<Object> getDefaultValue(Class<?> clazz) {
+            return map.getByKey(clazz);
+        }
     }
 }

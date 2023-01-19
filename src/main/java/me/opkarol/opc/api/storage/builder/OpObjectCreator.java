@@ -29,7 +29,8 @@ public class OpObjectCreator extends OpObject {
             try {
                 Class<?> clazz = Class.forName("me.opkarol.opc.storage.attributes.Op" + type.getString() + "Object");
                 classType = (OpObject) clazz.getDeclaredConstructor(String.class, Object.class).newInstance(name, value);
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException |
+                     InvocationTargetException e) {
                 e.printStackTrace();
             }
         }

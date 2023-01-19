@@ -8,14 +8,11 @@ import java.util.Optional;
 
 public class SingletonHolder {
 
-    public record ClassHolder<K>(K object) {
-    }
+    private static final OpMap<Class<?>, ClassHolder<?>> map = new OpMap<>();
 
     public SingletonHolder() {
         addInstance(this);
     }
-
-    private static final OpMap<Class<?>, ClassHolder<?>> map = new OpMap<>();
 
     public static <K> void addInstance(@NotNull K k) {
         map.set(k.getClass(), new ClassHolder<>(k));
@@ -31,7 +28,8 @@ public class SingletonHolder {
             K object = (K) Class.forName(kClass.getName()).getConstructor().newInstance();
             addInstance(object);
             return object;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException e) {
             e.printStackTrace();
         }
         return null;
@@ -39,5 +37,8 @@ public class SingletonHolder {
 
     public static <K> Optional<K> getOptionalInstance(Class<K> kClass) {
         return Optional.ofNullable(getInstance(kClass));
+    }
+
+    public record ClassHolder<K>(K object) {
     }
 }

@@ -1,10 +1,10 @@
 package me.opkarol.opc.api.tools.language;
 
 import me.opkarol.opc.OpAPI;
+import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.tools.language.database.ILanguageDatabase;
 import me.opkarol.opc.api.tools.language.database.LanguageFlat;
 import me.opkarol.opc.api.tools.language.database.LanguageMySql;
-import me.opkarol.opc.api.list.OpList;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.UUID;
@@ -12,8 +12,8 @@ import java.util.UUID;
 import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;
 
 public class LanguageDatabase {
-    private static LanguageDatabase languageDatabase;
     private static final OpList<OpPluginLanguage> languages = new OpList<>();
+    private static LanguageDatabase languageDatabase;
     private ILanguageDatabase languageTool;
 
     public LanguageDatabase() {

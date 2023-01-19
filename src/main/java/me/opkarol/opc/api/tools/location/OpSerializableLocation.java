@@ -1,7 +1,7 @@
 package me.opkarol.opc.api.tools.location;
 
-import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.map.OpMap;
+import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.utils.StringUtil;
 import me.opkarol.opc.api.utils.VariableUtil;
 import org.bukkit.Bukkit;
@@ -70,7 +70,7 @@ public class OpSerializableLocation extends Serialize {
     }
 
     public OpSerializableLocation(@NotNull OpLocation location) {
-         this(location.toString());
+        this(location.toString());
     }
 
     public OpSerializableLocation() {
@@ -91,6 +91,10 @@ public class OpSerializableLocation extends Serialize {
         return x;
     }
 
+    public void setX(double x) {
+        this.x = x;
+    }
+
     public String getStringX() {
         return String.valueOf(getX());
     }
@@ -101,6 +105,10 @@ public class OpSerializableLocation extends Serialize {
 
     public double getY() {
         return y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
     }
 
     public String getStringY() {
@@ -115,6 +123,10 @@ public class OpSerializableLocation extends Serialize {
         return z;
     }
 
+    public void setZ(double z) {
+        this.z = z;
+    }
+
     public String getStringZ() {
         return String.valueOf(getZ());
     }
@@ -127,12 +139,20 @@ public class OpSerializableLocation extends Serialize {
         return pitch;
     }
 
+    public void setPitch(float pitch) {
+        this.pitch = pitch;
+    }
+
     public String getStringPitch() {
         return String.valueOf(getPitch());
     }
 
     public float getYaw() {
         return yaw;
+    }
+
+    public void setYaw(float yaw) {
+        this.yaw = yaw;
     }
 
     public String getStringYaw() {
@@ -144,6 +164,10 @@ public class OpSerializableLocation extends Serialize {
             return Bukkit.getWorld(worldUUID);
         }
         return Bukkit.getWorld(world);
+    }
+
+    public void setWorld(String world) {
+        this.world = world;
     }
 
     public String getStringWorld() {
@@ -165,6 +189,10 @@ public class OpSerializableLocation extends Serialize {
 
     public OpSerializableLocation getLastLocation() {
         return VariableUtil.getOrDefault(lastLocation, setLastLocation());
+    }
+
+    public void setLastLocation(OpSerializableLocation lastLocation) {
+        this.lastLocation = lastLocation;
     }
 
     public OpSerializableLocation setLastLocation() {
@@ -201,35 +229,7 @@ public class OpSerializableLocation extends Serialize {
                 .setValue("world", world);
     }
 
-    public void setLastLocation(OpSerializableLocation lastLocation) {
-        this.lastLocation = lastLocation;
-    }
-
-    public void setPitch(float pitch) {
-        this.pitch = pitch;
-    }
-
-    public void setWorld(String world) {
-        this.world = world;
-    }
-
     public void setWorldUUID(UUID worldUUID) {
         this.worldUUID = worldUUID;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public void setYaw(float yaw) {
-        this.yaw = yaw;
-    }
-
-    public void setZ(double z) {
-        this.z = z;
     }
 }

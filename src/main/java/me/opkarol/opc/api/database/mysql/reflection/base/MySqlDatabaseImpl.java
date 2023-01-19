@@ -19,7 +19,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public abstract class MySqlDatabaseImpl<O, C> extends MySqlDatabase<O> {
-    private static MySqlDatabaseImpl object;
+    private static MySqlDatabaseImpl<?, ?> object;
     private final MySqlObject getIdentification;
     private final Method setIdentification;
     private final MySqlObject getUUID;
@@ -146,13 +146,12 @@ public abstract class MySqlDatabaseImpl<O, C> extends MySqlDatabase<O> {
         object = this;
     }
 
+    public static <O, C> MySqlDatabaseImpl<O, C> getInstance() {
+        return (MySqlDatabaseImpl<O, C>) object;
+    }
 
     public OpMap<Integer, O> getMap() {
         return map;
-    }
-
-    public static <O, C> MySqlDatabaseImpl<O, C> getInstance() {
-        return (MySqlDatabaseImpl<O, C>) object;
     }
 
     public void add(O object) {

@@ -1,6 +1,5 @@
 package me.opkarol.opc.api.gui;
 
-import me.opkarol.opc.api.gui.inventory.IInventoryObject;
 import me.opkarol.opc.api.gui.database.InventoryHolderFactory;
 import me.opkarol.opc.api.gui.events.OnInventoryClose;
 import me.opkarol.opc.api.gui.holder.inventory.InventoryEventExtender;
@@ -8,6 +7,7 @@ import me.opkarol.opc.api.gui.holder.inventory.InventoryEventHolder;
 import me.opkarol.opc.api.gui.holder.item.InventoryItemExtender;
 import me.opkarol.opc.api.gui.inventory.AbstractInventory;
 import me.opkarol.opc.api.gui.inventory.IInventoryIdentification;
+import me.opkarol.opc.api.gui.inventory.IInventoryObject;
 import me.opkarol.opc.api.gui.items.InventoryItem;
 import me.opkarol.opc.api.gui.replacement.ReplacementInventoryImpl;
 import org.jetbrains.annotations.NotNull;

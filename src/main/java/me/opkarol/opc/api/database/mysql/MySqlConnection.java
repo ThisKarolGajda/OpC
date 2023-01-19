@@ -24,7 +24,8 @@ public class MySqlConnection implements IMySqlDatabase {
         setup(configuration, path);
     }
 
-    public MySqlConnection() {}
+    public MySqlConnection() {
+    }
 
     public MySqlConnection(String jdbc, String user, String password) {
         setup(jdbc, user, password);
@@ -112,7 +113,7 @@ public class MySqlConnection implements IMySqlDatabase {
     @Override
     public void run(String statement) {
         try (Connection conn = source.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(statement)) {
+             PreparedStatement stmt = conn.prepareStatement(statement)) {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

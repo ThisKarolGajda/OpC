@@ -1,10 +1,8 @@
 package me.opkarol.opc.api.gui.replacement;
 
-import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.gui.database.InventoryHolderFactory;
 import me.opkarol.opc.api.gui.items.InventoryItem;
 import me.opkarol.opc.api.gui.pattern.InventoryPattern;
-import me.opkarol.opc.api.item.OpItemBuilder;
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.misc.Tuple;
 import me.opkarol.opc.api.utils.VariableUtil;
@@ -22,9 +20,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReplacementInventoryImpl extends ReplacementInventory {
-    private final InventoryHolderFactory inventoryHolder;
     private final static String REGEX = "%[A-Za_-z0-9_]+%";
-    private OpMap<String, Function<ReplacementInventoryImpl, Object>> defaultTranslations;
+    private final InventoryHolderFactory inventoryHolder;
+    private OpMap<String, Function<ReplacementInventoryImpl, Object>> defaultTranslations = new OpMap<>();
+
+    private boolean saveDefaultTranslations;
 
     public ReplacementInventoryImpl(InventoryHolderFactory inventoryHolder) {
         this.inventoryHolder = inventoryHolder;
@@ -79,11 +79,11 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
             for (int i : getReplacements().unsafeGet(page).unsafeGet(replace)) {
                 if (temp.containsKey(i)) {
                     InventoryItem item = temp.unsafeGet(i);
-                    item.replaceItemCurrent(replace, replacement);
+                    item.addReplacement(replace, replacement);
                     temp.set(i, item);
                 } else {
                     getInventoryHolder().getItem(page, i).ifPresent(item -> {
-                        item.replaceItemCurrent(replace, replacement);
+                        item.addReplacement(replace, replacement);
                         temp.set(i, item);
                     });
                 }
@@ -102,64 +102,62 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
             for (int i : getReplacements().unsafeGet(page).unsafeGet(replace)) {
                 getInventoryHolder().getItem(page, i).ifPresent(item ->
                         replacements.getByKey(replace)
-                                .ifPresent(replacement -> item.replaceItemCurrent(replace, String.valueOf(replacement.apply(this)))));
+                                .ifPresent(replacement -> item.addReplacement(replace, String.valueOf(replacement.apply(this)))));
             }
         }
     }
 
     public final Inventory replaceBuilt(int page, OpMap<String, String> replacements) {
         Inventory inventory = getInventoryHolder().getBuiltInventory(page);
-        OpMap<Integer, OpItemBuilder<?>> tempMap = new OpMap<>();
+
+        OpMap<Integer, InventoryItem> pageMap = getInventoryHolder().getDefaultHolder().getInventory().getMap();
+        OpMap<Integer, InventoryItem> tempItems = new OpMap<>();
 
         for (String replace : getReplacements().unsafeGet(page).keySet()) {
             List<Integer> integers = getReplacements().unsafeGet(page).unsafeGet(replace);
             for (int i : integers) {
-                OpItemBuilder<?> builder;
-                if (tempMap.containsKey(i)) {
-                    builder = tempMap.unsafeGet(i);
-                } else {
-                    builder = new OpItemBuilder<>(inventory.getItem(i));
-                }
+                InventoryItem item = tempItems.containsKey(i) ? tempItems.unsafeGet(i) : pageMap.unsafeGet(i);
+
                 replacements.getByKey(replace)
                         .ifPresent(replacement -> {
-                            builder.replaceItemCurrent(replace, replacement);
-                            tempMap.set(i, builder);
+                            item.addReplacement(replace, replacement);
+                            tempItems.set(i, item);
                         });
             }
         }
 
-        for (int i : tempMap.keySet()) {
-            OpItemBuilder<?> itemBuilder = tempMap.unsafeGet(i);
-            inventory.setItem(i, itemBuilder.generate());
+        for (int i : tempItems.keySet()) {
+            InventoryItem builder = tempItems.unsafeGet(i);
+            inventory.setItem(i, builder.generate());
         }
+
         return inventory;
     }
 
     public final Inventory replaceBuiltWithFunction(int page, OpMap<String, Function<ReplacementInventoryImpl, Object>> replacements) {
         Inventory inventory = getInventoryHolder().getBuiltInventory(page);
-        OpMap<Integer, OpItemBuilder<?>> tempMap = new OpMap<>();
+
+        OpMap<Integer, InventoryItem> pageMap = getInventoryHolder().getDefaultHolder().getInventory().getMap();
+        OpMap<Integer, InventoryItem> tempItems = new OpMap<>();
 
         for (String replace : getReplacements().unsafeGet(page).keySet()) {
             List<Integer> integers = getReplacements().unsafeGet(page).unsafeGet(replace);
             for (int i : integers) {
-                OpItemBuilder<?> builder;
-                if (tempMap.containsKey(i)) {
-                    builder = tempMap.unsafeGet(i);
-                } else {
-                    builder = new OpItemBuilder<>(inventory.getItem(i));
-                }
+                InventoryItem item = tempItems.containsKey(i) ? tempItems.unsafeGet(i) : pageMap.unsafeGet(i);
+
                 replacements.getByKey(replace)
                         .ifPresent(replacement -> {
-                            builder.replaceItemCurrent(replace, String.valueOf(replacement.apply(this)));
-                            tempMap.set(i, builder);
+                            item.addReplacement(replace, replacement.apply(this).toString());
+                            tempItems.set(i, item);
                         });
             }
         }
 
-        for (int i : tempMap.keySet()) {
-            OpItemBuilder<?> itemBuilder = tempMap.getMap().get(i);
-            inventory.setItem(i, itemBuilder.generate());
+        for (int i : tempItems.keySet()) {
+            InventoryItem builder = tempItems.unsafeGet(i);
+            inventory.setItem(i, builder.generate());
         }
+
         return inventory;
     }
 
@@ -310,8 +308,6 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
     }
 
     public void open(int page, Player player, OpMap<String, String> translations) {
-        OpAPI.logInfo(page + " --- " + player + " -- " + VariableUtil.stringValueOfMap(translations) + " --- " + getInventoryHolder().isBuilt(page));
-
         if (getInventoryHolder().isBuilt(page)) {
             replaceAndOpenBuiltInventory(page, player, translations);
         } else {
@@ -331,7 +327,9 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
     }
 
     public final void openWithFunction(int page, Player player, OpMap<String, Function<ReplacementInventoryImpl, Object>> translations) {
-        this.defaultTranslations = translations;
+        if (saveDefaultTranslations) {
+            this.defaultTranslations = translations;
+        }
         if (getInventoryHolder().isBuilt(page)) {
             replaceAndOpenBuiltInventoryWithFunction(page, player, translations);
         } else {
@@ -349,7 +347,7 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
     }
 
     public void openBestInventory(Player player) {
-        if (defaultTranslations != null) {
+        if (!defaultTranslations.keySet().isEmpty()) {
             openWithFunctionDefault(getCurrentPage(), player);
         } else {
             openInventory(getCurrentPage(), player);
@@ -442,5 +440,13 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
             }
         }
         return tempList;
+    }
+
+    public boolean isSaveDefaultTranslations() {
+        return saveDefaultTranslations;
+    }
+
+    public void setSaveDefaultTranslations(boolean saveDefaultTranslations) {
+        this.saveDefaultTranslations = saveDefaultTranslations;
     }
 }

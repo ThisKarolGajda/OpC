@@ -30,14 +30,14 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class OpCommand extends BukkitCommand {
-    private boolean isMain;
-    private OpList<Integer> argsNumber = OpList.asList(1);
     private final String name;
     private final OpList<OpCommand> list = new OpList<>();
     private final OpLinkedMap<IType, OpTypeArg<?>> args = new OpLinkedMap<>();
-    private BiConsumer<OpCommandSender, OpCommandArgument<?>> biConsumer;
     private final OpList<OpCommandSuggestion> suggestions = new OpList<>();
     private final OpList<OpSimpleSuggestion> simpleSuggestions = new OpList<>();
+    private boolean isMain;
+    private OpList<Integer> argsNumber = OpList.asList(1);
+    private BiConsumer<OpCommandSender, OpCommandArgument<?>> biConsumer;
     private boolean hasToBePlayer, removeDefaultCommandSuggestion;
     private OpCommandPermission seeTabComplete = new OpCommandPermission(null, null, OpCommandPermission.PERMISSION_TYPE.SEE_TAB_COMPLETE), useCommand = new OpCommandPermission(null, null, OpCommandPermission.PERMISSION_TYPE.USE_COMMAND);
     private OpTypeArg<?> globalCommandArg;
@@ -166,7 +166,8 @@ public class OpCommand extends BukkitCommand {
     public void executeFunction(@NotNull CommandSender sender, @NotNull String[] args) {
         try {
             biConsumer.accept(new OpCommandSender(sender), new OpCommandArgument(this.args, args, isMain ? -1 : 0));
-        } catch (NullPointerException ignore) {}
+        } catch (NullPointerException ignore) {
+        }
     }
 
     @NotNull
@@ -385,7 +386,7 @@ public class OpCommand extends BukkitCommand {
     public int getSimpleSuggestionsCount() {
         int count = 0;
         for (OpSimpleSuggestion suggestion : simpleSuggestions) {
-            count+=suggestion.getSuggestions().size();
+            count += suggestion.getSuggestions().size();
         }
         return count;
     }

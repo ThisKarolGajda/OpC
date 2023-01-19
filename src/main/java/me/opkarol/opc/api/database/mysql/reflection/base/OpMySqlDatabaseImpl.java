@@ -1,10 +1,11 @@
 package me.opkarol.opc.api.database.mysql.reflection.base;
 
-import me.opkarol.opc.api.tools.autostart.OpAutoDisable;
 import me.opkarol.opc.api.command.suggestions.OpCommandSuggestion;
 import me.opkarol.opc.api.database.manager.IDefaultDatabase;
 import me.opkarol.opc.api.database.manager.settings.MySqlDatabaseSettings;
 import me.opkarol.opc.api.file.Configuration;
+import me.opkarol.opc.api.tools.autostart.IDisable;
+import me.opkarol.opc.api.tools.autostart.OpAutoDisable;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -12,49 +13,48 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class OpMySqlDatabaseImpl<O, C> extends MySqlDatabaseImpl<O, C> implements IDefaultDatabase<O, C> {
-    private static OpMySqlDatabaseImpl database;
+public class OpMySqlDatabaseImpl<O, C> extends MySqlDatabaseImpl<O, C> implements IDefaultDatabase<O, C>, IDisable {
+    private static OpMySqlDatabaseImpl<?, ?> database;
 
     public OpMySqlDatabaseImpl() {
-        database = this;
-        registerDisablement();
+        initDatabase();
     }
 
     public OpMySqlDatabaseImpl(String mysql) {
         super(mysql);
-        database = this;
-        registerDisablement();
+        initDatabase();
     }
 
     public OpMySqlDatabaseImpl(MySqlDatabaseSettings mysql) {
         super(mysql);
-        database = this;
-        registerDisablement();
+        initDatabase();
     }
 
     public OpMySqlDatabaseImpl(MySqlDatabaseSettings mysql, Class<O> clazz) {
         super(clazz, mysql);
-        database = this;
-        registerDisablement();
+        initDatabase();
     }
 
     public OpMySqlDatabaseImpl(Configuration configuration, String mysql) {
         super(configuration, mysql);
-        database = this;
-        registerDisablement();
+        initDatabase();
     }
 
     public OpMySqlDatabaseImpl(Class<O> clazz, Configuration configuration, String mysql) {
         super(clazz, configuration, mysql);
-        database = this;
-        registerDisablement();
+        initDatabase();
     }
 
-    public OpMySqlDatabaseImpl<O, C> getLocalDatabase() {
-        return (OpMySqlDatabaseImpl<O, C>) database;
+    public void initDatabase() {
+        database = this;
+        OpAutoDisable.add(this);
     }
 
     public static <O, C> OpMySqlDatabaseImpl<O, C> getFixedInstance() {
+        return (OpMySqlDatabaseImpl<O, C>) database;
+    }
+
+    public OpMySqlDatabaseImpl<O, C> getLocalDatabase() {
         return (OpMySqlDatabaseImpl<O, C>) database;
     }
 
@@ -92,7 +92,7 @@ public class OpMySqlDatabaseImpl<O, C> extends MySqlDatabaseImpl<O, C> implement
         return new OpCommandSuggestion((sender, args) -> {
             if (sender.isPlayer()) {
                 UUID uuid = sender.getPlayer().getUniqueId();
-                return ((OpMySqlDatabaseImpl<O, C>)getFixedInstance())
+                return ((OpMySqlDatabaseImpl<O, C>) getFixedInstance())
                         .getList(uuid)
                         .stream().map(function)
                         .toList();
@@ -106,7 +106,8 @@ public class OpMySqlDatabaseImpl<O, C> extends MySqlDatabaseImpl<O, C> implement
         add(object);
     }
 
-    private void registerDisablement() {
-        OpAutoDisable.register((plugin) -> database.close());
+    @Override
+    public void onDisable() {
+        database.close();
     }
 }

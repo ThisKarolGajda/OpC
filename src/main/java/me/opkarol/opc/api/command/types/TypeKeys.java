@@ -4,11 +4,6 @@ import java.io.Serializable;
 
 public class TypeKeys {
 
-    public interface MetaDataKey<T extends Serializable> extends Serializable
-    {
-        T getValue();
-    }
-
     enum StringKeys implements MetaDataKey<Integer> {
         S1(0),
         S2(1),
@@ -21,10 +16,14 @@ public class TypeKeys {
 
         private final Integer value;
 
-        StringKeys(Integer value) { this.value = value; }
+        StringKeys(Integer value) {
+            this.value = value;
+        }
 
         @Override
-        public Integer getValue() { return value; }
+        public Integer getValue() {
+            return value;
+        }
     }
 
     enum IntegerKeys implements MetaDataKey<Integer> {
@@ -38,9 +37,17 @@ public class TypeKeys {
         I8(7);
         private final Integer value;
 
-        IntegerKeys (Integer value) { this.value = value; }
+        IntegerKeys(Integer value) {
+            this.value = value;
+        }
 
         @Override
-        public Integer getValue() { return value; }
+        public Integer getValue() {
+            return value;
+        }
+    }
+
+    public interface MetaDataKey<T extends Serializable> extends Serializable {
+        T getValue();
     }
 }

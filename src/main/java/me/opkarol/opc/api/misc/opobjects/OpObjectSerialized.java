@@ -1,8 +1,8 @@
 package me.opkarol.opc.api.misc.opobjects;
 
-import me.opkarol.opc.api.serialization.Serialize;
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.map.OpMapBuilder;
+import me.opkarol.opc.api.serialization.Serialize;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;

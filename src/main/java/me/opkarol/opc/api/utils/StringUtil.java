@@ -126,14 +126,14 @@ public class StringUtil {
     }
 
     @NotNull
-    public static List<String> copyPartialMatches(String token, @NotNull OpList<String> originals){
+    public static List<String> copyPartialMatches(String token, @NotNull OpList<String> originals) {
         return originals.stream()
                 .filter(s -> startsWithIgnoreCase(s, token))
                 .sorted().collect(Collectors.toList());
     }
 
     @NotNull
-    public static List<String> copyPartialMatches(String token, @NotNull List<String> originals){
+    public static List<String> copyPartialMatches(String token, @NotNull List<String> originals) {
         return originals.stream()
                 .filter(s -> startsWithIgnoreCase(s, token))
                 .sorted().collect(Collectors.toList());

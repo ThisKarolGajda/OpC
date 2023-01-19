@@ -20,13 +20,13 @@ public interface IMap<K, V> {
 
     void set(K k, V v);
 
-    void setMap(HashMap<K, V> map);
-
     boolean containsKey(K k);
 
     boolean containsValue(V v);
 
     Map<K, V> getMap();
+
+    void setMap(HashMap<K, V> map);
 
     Optional<V> getByKey(K k);
 

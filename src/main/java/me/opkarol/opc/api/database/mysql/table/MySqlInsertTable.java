@@ -21,6 +21,7 @@ public class MySqlInsertTable {
         valueMap.set(variable, value);
         return this;
     }
+
     public String getShortenValues() {
         StringBuilder builder = new StringBuilder();
         if (table.getMap().keySet().size() == 0) {

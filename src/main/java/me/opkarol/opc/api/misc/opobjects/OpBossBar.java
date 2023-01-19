@@ -14,8 +14,8 @@ import java.util.List;
 
 public class OpBossBar implements Serializable {
     private final BossBar bossBar;
-    private OpRunnable task;
     private final String originalTitle;
+    private OpRunnable task;
 
     public OpBossBar(String title, BarColor color) {
         this.bossBar = Bukkit.createBossBar(FormatUtils.formatMessage(title), color, BarStyle.SOLID);

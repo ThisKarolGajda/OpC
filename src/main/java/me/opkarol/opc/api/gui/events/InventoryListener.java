@@ -66,16 +66,17 @@ public class InventoryListener {
             ReplacementInventoryImpl inventory = optional.get();
 
             switch (inventory.getInventoryHolder().getType()) {
-                case DEFAULT -> inventory.getInventoryHolder().getDefaultHolder().getInventory().get(slot).ifPresent(item -> {
-                    OnItemClicked event = new OnItemClicked(inventory.getInventoryHolder(), e.getWhoClicked(), slot, item);
-                    InventoryItemEventHolder eventHolder = item.getItemEventHolder();
-                    if (eventHolder != null) {
-                        eventHolder.interact(event);
-                    }
-                    if (event.isCancelled()) {
-                        e.setCancelled(true);
-                    }
-                });
+                case DEFAULT ->
+                        inventory.getInventoryHolder().getDefaultHolder().getInventory().get(slot).ifPresent(item -> {
+                            OnItemClicked event = new OnItemClicked(inventory.getInventoryHolder(), e.getWhoClicked(), slot, item);
+                            InventoryItemEventHolder eventHolder = item.getItemEventHolder();
+                            if (eventHolder != null) {
+                                eventHolder.interact(event);
+                            }
+                            if (event.isCancelled()) {
+                                e.setCancelled(true);
+                            }
+                        });
                 case PAGED -> {
                     PagedInventoryHolder invHolder = inventory.getInventoryHolder().getPagedHolder();
                     int page = invHolder.getCurrentPage();
@@ -131,7 +132,7 @@ public class InventoryListener {
                         inventory.openInventory(player);
                     }
                 });
-            }).runTaskLater(1/20L);
+            }).runTaskLater(1 / 20L);
         });
     }
 
@@ -156,8 +157,7 @@ public class InventoryListener {
         }
         if (item.isPagedInventoryButtonNext()) {
             inventory.getInventoryHolder().getPagedHolder().nextPage();
-        }
-        else if (item.isPagedInventoryButtonPrevious()) {
+        } else if (item.isPagedInventoryButtonPrevious()) {
             inventory.getInventoryHolder().getPagedHolder().previousPage();
         }
         inventory.openBestInventory(e.getWhoClicked());

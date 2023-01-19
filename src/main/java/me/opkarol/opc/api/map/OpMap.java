@@ -10,11 +10,12 @@ package me.opkarol.opc.api.map;
 
 import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.utils.VariableUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.*;
 
-public class OpMap<K, V> implements IMap<K,V>, Serializable {
+public class OpMap<K, V> implements IMap<K, V>, Serializable {
     protected HashMap<K, V> map = new HashMap<>();
 
     @Override
@@ -48,11 +49,6 @@ public class OpMap<K, V> implements IMap<K,V>, Serializable {
     }
 
     @Override
-    public void setMap(HashMap<K, V> map) {
-        this.map = map;
-    }
-
-    @Override
     public boolean containsKey(K k) {
         if (this.isEmpty()) {
             return false;
@@ -71,6 +67,11 @@ public class OpMap<K, V> implements IMap<K,V>, Serializable {
     @Override
     public Map<K, V> getMap() {
         return this.map;
+    }
+
+    @Override
+    public void setMap(HashMap<K, V> map) {
+        this.map = map;
     }
 
     @Override
@@ -128,5 +129,21 @@ public class OpMap<K, V> implements IMap<K,V>, Serializable {
 
     public V unsafeGet(K k) {
         return getMap().get(k);
+    }
+
+    public void addAll(@NotNull OpMap<K, V> map) {
+        map.keySet()
+                .forEach(key -> set(key, map.unsafeGet(key)));
+    }
+
+    @Override
+    @Deprecated
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (K key : keySet()) {
+            V value = unsafeGet(key);
+            builder.append(key).append("=").append(value).append(" -");
+        }
+        return builder.toString();
     }
 }

@@ -26,7 +26,7 @@ public class OpObjects implements Serializable {
     }
 
     public OpObjects(OpObject... objects) {
-        if (objects == null || objects.length == 0) {
+        if (objects == null) {
             return;
         }
         for (OpObject object : objects) {
@@ -35,7 +35,7 @@ public class OpObjects implements Serializable {
     }
 
     public OpObjects(OpObjectCreator... objectCreators) {
-        if (objectCreators == null || objectCreators.length == 0) {
+        if (objectCreators == null) {
             return;
         }
         for (OpObjectCreator objectCreator : objectCreators) {
@@ -43,7 +43,12 @@ public class OpObjects implements Serializable {
         }
     }
 
-    public OpObjects() {}
+    public OpObjects() {
+    }
+
+    public static OpObjects get(String s) {
+        return new OpObjects().fromString(s);
+    }
 
     public OpObject getObject(String s) {
         Optional<OpObject> optional = map.getByKey(s);
@@ -74,7 +79,8 @@ public class OpObjects implements Serializable {
             OpObject object = getObject(s);
             try {
                 return (String) object.getValue();
-            } catch (ClassCastException ignored) {}
+            } catch (ClassCastException ignored) {
+            }
         }
         return defaultValue;
     }
@@ -84,7 +90,8 @@ public class OpObjects implements Serializable {
             OpObject object = getObject(s);
             try {
                 return (boolean) object.getValue();
-            } catch (ClassCastException ignored) {}
+            } catch (ClassCastException ignored) {
+            }
         }
         return defaultValue;
     }
@@ -94,7 +101,8 @@ public class OpObjects implements Serializable {
             OpObject object = getObject(s);
             try {
                 return (int) object.getValue();
-            } catch (ClassCastException ignored) {}
+            } catch (ClassCastException ignored) {
+            }
         }
         return defaultValue;
     }
@@ -104,7 +112,8 @@ public class OpObjects implements Serializable {
             OpObject object = getObject(s);
             try {
                 return (double) object.getValue();
-            } catch (ClassCastException ignored) {}
+            } catch (ClassCastException ignored) {
+            }
 
         }
         return defaultValue;
@@ -153,7 +162,7 @@ public class OpObjects implements Serializable {
     }
 
     public String toString() {
-         return getMap().getValues().stream().map(OpObject::toString).collect(Collectors.joining(";"));
+        return getMap().getValues().stream().map(OpObject::toString).collect(Collectors.joining(";"));
     }
 
     public OpObjects fromString(String s) {
@@ -182,9 +191,5 @@ public class OpObjects implements Serializable {
             }
         }
         return this;
-    }
-
-    public static OpObjects get(String s) {
-        return new OpObjects().fromString(s);
     }
 }

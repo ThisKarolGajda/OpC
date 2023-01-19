@@ -1,7 +1,7 @@
 package me.opkarol.opc.api.gui.database;
 
-import me.opkarol.opc.api.gui.events.InventoryActionManager;
 import me.opkarol.opc.api.gui.InventoryCache;
+import me.opkarol.opc.api.gui.events.InventoryActionManager;
 import me.opkarol.opc.api.gui.holder.IHolder;
 import me.opkarol.opc.api.gui.holder.inventory.InventoryEventHolder;
 import me.opkarol.opc.api.gui.inventory.AbstractInventory;
@@ -74,11 +74,6 @@ public class InventoryHolderFactory {
         return manager;
     }
 
-    public enum INVENTORY_HOLDER_TYPE {
-        PAGED,
-        DEFAULT
-    }
-
     public void set(int pageNumber, InventoryItem item, int... ints) {
         if (ints == null) {
             return;
@@ -149,7 +144,8 @@ public class InventoryHolderFactory {
 
     public List<Integer> getAllSlots(int page) {
         return switch (getType()) {
-            case PAGED -> getPagedHolder().getInventory().getMap().getMap().get(page).getMap().keySet().stream().toList();
+            case PAGED ->
+                    getPagedHolder().getInventory().getMap().getMap().get(page).getMap().keySet().stream().toList();
             case DEFAULT -> getDefaultHolder().getInventory().getMap().keySet().stream().toList();
         };
     }
@@ -164,5 +160,10 @@ public class InventoryHolderFactory {
             }
             default -> throw new IllegalStateException("Unexpected value: " + getType());
         }
+    }
+
+    public enum INVENTORY_HOLDER_TYPE {
+        PAGED,
+        DEFAULT
     }
 }
