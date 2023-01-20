@@ -26,9 +26,10 @@ public class StaticSuggestions {
         add(SUGGESTION_TYPE.SOUND, new SoundSuggestion());
         add(SUGGESTION_TYPE.SOUND_CATEGORY, new SoundCategorySuggestion());
         add(SUGGESTION_TYPE.MATERIAL, new MaterialSuggestion());
+        add(SUGGESTION_TYPE.BLOCK, new BlockSuggestion());
     }
 
     public enum SUGGESTION_TYPE {
-        ENCHANTS, ONLINE_PLAYERS, SOUND, SOUND_CATEGORY, MATERIAL
+        ENCHANTS, ONLINE_PLAYERS, SOUND, SOUND_CATEGORY, MATERIAL, BLOCK
     }
 }
