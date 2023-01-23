@@ -6,7 +6,7 @@ import me.opkarol.opc.api.file.SimpleTranslation;
 import me.opkarol.opc.api.file.TranslationObject;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class OpMessagesPlugin extends OpPlugin {
+public abstract class OpDatabaseMessagesPlugin<O, C> extends OpDatabasePlugin<O, C> {
     private static ConfigurationMap configurationMap;
 
     public static ConfigurationMap getMap() {
