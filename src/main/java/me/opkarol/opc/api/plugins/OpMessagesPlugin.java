@@ -4,6 +4,7 @@ import me.opkarol.opc.api.command.OpCommandSender;
 import me.opkarol.opc.api.file.ConfigurationMap;
 import me.opkarol.opc.api.file.SimpleTranslation;
 import me.opkarol.opc.api.file.TranslationObject;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class OpMessagesPlugin extends OpPlugin {
@@ -42,6 +43,18 @@ public abstract class OpMessagesPlugin extends OpPlugin {
     }
 
     public static void sendMappedMessage(@NotNull OpCommandSender sender, String path, SimpleTranslation translation) {
+        sender.sendMessage(getValue(path, translation));
+    }
+
+    public static void sendMappedMessage(@NotNull Player sender, String path, String[][] strings) {
+        sender.sendMessage(getValue(path, strings));
+    }
+
+    public static void sendMappedMessage(@NotNull Player sender, String path) {
+        sender.sendMessage(getValue(path));
+    }
+
+    public static void sendMappedMessage(@NotNull Player sender, String path, SimpleTranslation translation) {
         sender.sendMessage(getValue(path, translation));
     }
 
