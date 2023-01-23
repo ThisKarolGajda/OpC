@@ -208,10 +208,20 @@ public class OpList<K> implements IList<K>, Serializable {
         return list.size() > index;
     }
 
-    public void ifPresent(int index, Consumer<K> consumer) {
+    public boolean ifPresent(int index, Consumer<K> consumer) {
+        get(index).ifPresent(consumer);
+        return isPresent(index);
+    }
+
+    public boolean ifPresentSpecified(int index, K key, Consumer<K> consumer) {
         if (isPresent(index)) {
-            get(index).ifPresent(consumer);
+            Optional<K> key2 = get(index);
+            if (key2.isPresent() && key.equals(key2)) {
+                key2.ifPresent(consumer);
+            }
+            return true;
         }
+        return false;
     }
 
     public @NotNull String toArrayString() {
