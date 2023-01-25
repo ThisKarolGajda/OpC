@@ -52,6 +52,12 @@ public abstract class OpMessagesPlugin extends OpPlugin {
         sender.sendMessage(getFormattedValue(path));
     }
 
+    @SafeVarargs
+    public static void sendMappedMessage(@NotNull OpCommandSender sender, String path, Tuple<String, String>... tuples) {
+        sender.sendMessage(getFormattedValue(path, tuples));
+    }
+
+
     public static void sendMappedMessage(@NotNull OpCommandSender sender, String path, SimpleTranslation translation) {
         sender.sendMessage(getFormattedValue(path, translation.getStrings()));
     }
