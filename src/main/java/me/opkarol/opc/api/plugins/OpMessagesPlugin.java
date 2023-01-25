@@ -4,6 +4,7 @@ import me.opkarol.opc.api.command.OpCommandSender;
 import me.opkarol.opc.api.file.ConfigurationMap;
 import me.opkarol.opc.api.file.SimpleTranslation;
 import me.opkarol.opc.api.file.TranslationObject;
+import me.opkarol.opc.api.misc.Tuple;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,32 +31,41 @@ public abstract class OpMessagesPlugin extends OpPlugin {
         return getMap().getValue(path, translation.getStrings());
     }
 
+    public static String getFormattedValue(String path, String[][] strings) {
+        return getMap().getFormattedValue(path, strings);
+    }
+
+    @SafeVarargs
+    public static String getFormattedValue(String path, Tuple<String, String>... tuples) {
+        return getMap().getFormattedValue(path, tuples);
+    }
+
     public static String getValue(String path, String[][] objects) {
         return getMap().getValue(path, objects);
     }
 
     public static void sendMappedMessage(@NotNull OpCommandSender sender, String path, String[][] strings) {
-        sender.sendMessage(getValue(path, strings));
+        sender.sendMessage(getFormattedValue(path, strings));
     }
 
     public static void sendMappedMessage(@NotNull OpCommandSender sender, String path) {
-        sender.sendMessage(getValue(path));
+        sender.sendMessage(getFormattedValue(path));
     }
 
     public static void sendMappedMessage(@NotNull OpCommandSender sender, String path, SimpleTranslation translation) {
-        sender.sendMessage(getValue(path, translation));
+        sender.sendMessage(getFormattedValue(path, translation.getStrings()));
     }
 
     public static void sendMappedMessage(@NotNull Player sender, String path, String[][] strings) {
-        sender.sendMessage(getValue(path, strings));
+        sender.sendMessage(getFormattedValue(path, strings));
     }
 
     public static void sendMappedMessage(@NotNull Player sender, String path) {
-        sender.sendMessage(getValue(path));
+        sender.sendMessage(getFormattedValue(path));
     }
 
     public static void sendMappedMessage(@NotNull Player sender, String path, SimpleTranslation translation) {
-        sender.sendMessage(getValue(path, translation));
+        sender.sendMessage(getFormattedValue(path, translation.getStrings()));
     }
 
     public static @NotNull Runnable getMappedMessage(OpCommandSender sender, String path, String[][] strings) {

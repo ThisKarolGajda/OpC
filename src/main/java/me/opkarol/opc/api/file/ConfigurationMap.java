@@ -1,8 +1,11 @@
 package me.opkarol.opc.api.file;
 
 import me.opkarol.opc.api.map.OpMap;
+import me.opkarol.opc.api.misc.Tuple;
 import me.opkarol.opc.api.utils.VariableUtil;
 import org.bukkit.plugin.Plugin;
+
+import java.util.Optional;
 
 import static me.opkarol.opc.api.utils.FormatUtils.formatMessage;
 
@@ -74,7 +77,36 @@ public class ConfigurationMap {
         return string;
     }
 
+    public String getValue(String path, OpMap<String, String> objects) {
+        String string = getValue(path);
+        if (objects != null) {
+            for (String key : objects.keySet()) {
+                Optional<String> optional = objects.getByKey(key);
+                if (optional.isEmpty()) {
+                    continue;
+                }
+                String value = optional.get();
+                string = string.replace(key, value);
+            }
+        }
+        return string;
+    }
+
+    @SafeVarargs
+    public final String getValue(String path, Tuple<String, String>... tuples) {
+        return getValue(path, VariableUtil.getMapFromTuples(tuples));
+    }
+
     public String getFormattedValue(String path) {
         return formatMessage(getValue(path));
+    }
+
+    public String getFormattedValue(String path, String[][] objects) {
+        return formatMessage(getValue(path, objects));
+    }
+
+    @SafeVarargs
+    public final String getFormattedValue(String path, Tuple<String, String>... tuples) {
+        return formatMessage(getValue(path, tuples));
     }
 }

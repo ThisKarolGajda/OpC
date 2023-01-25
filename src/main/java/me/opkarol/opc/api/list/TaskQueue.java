@@ -1,6 +1,7 @@
 package me.opkarol.opc.api.list;
 
 import me.opkarol.opc.api.tools.runnable.OpRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +38,21 @@ public class TaskQueue<A> {
         return size() > 0;
     }
 
-    public void useWithDelay(long delay, Consumer<A> consumer) {
+    public void useWithDelay(long delay, @NotNull Consumer<A> onEachDelayConsumer, Runnable onEndRunnable) {
         new OpRunnable(r -> {
             if (!hasFirst()) {
+                if (onEndRunnable != null) {
+                    onEndRunnable.run();
+                }
                 r.cancel();
             } else {
-                consumer.accept(pop());
+                onEachDelayConsumer.accept(pop());
             }
         }).runTaskTimer(delay);
+    }
+
+    public void useWithDelay(long delay, Consumer<A> onEachDelayConsumer) {
+        useWithDelay(delay, onEachDelayConsumer, null);
     }
 
     public int size() {
