@@ -67,7 +67,7 @@ public final class OpInventory extends ReplacementInventoryImpl {
         setNextEmpty(item);
     }
 
-    public <K extends IInventoryObject> void setInventoryObjects(List<K> objects) {
+    public void setInventoryObjects(List<? extends IInventoryObject> objects) {
         if (objects == null || objects.size() == 0) {
             return;
         }

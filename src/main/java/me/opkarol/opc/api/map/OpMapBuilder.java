@@ -1,6 +1,6 @@
 package me.opkarol.opc.api.map;
 
-import me.opkarol.opc.api.misc.opobjects.OpObjectSerialized;
+import me.opkarol.opc.api.wrappers.OpObjectSerialized;
 import me.opkarol.opc.api.utils.StringUtil;
 
 import java.util.Optional;

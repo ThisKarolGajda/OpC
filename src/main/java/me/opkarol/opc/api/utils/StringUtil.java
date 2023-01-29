@@ -66,7 +66,7 @@ public class StringUtil {
         if (s != null) {
             Material material;
             try {
-                material = Material.valueOf(s);
+                material = Material.valueOf(s.toUpperCase());
             } catch (IllegalArgumentException ignore) {
                 return Material.STONE;
             }

@@ -1,4 +1,4 @@
-package me.opkarol.opc.api.misc.opobjects;
+package me.opkarol.opc.api.wrappers;
 
 import me.opkarol.opc.api.tools.runnable.OpRunnable;
 import me.opkarol.opc.api.utils.FormatUtils;

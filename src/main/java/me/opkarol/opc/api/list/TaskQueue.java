@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 public class TaskQueue<A> {
     private final List<A> queue = new ArrayList<>();
+    private OpRunnable runnable;
 
     public void addFirst(A a) {
         queue.add(0, a);
@@ -39,7 +40,7 @@ public class TaskQueue<A> {
     }
 
     public void useWithDelay(long delay, @NotNull Consumer<A> onEachDelayConsumer, Runnable onEndRunnable) {
-        new OpRunnable(r -> {
+        runnable = new OpRunnable(r -> {
             if (!hasFirst()) {
                 if (onEndRunnable != null) {
                     onEndRunnable.run();
@@ -61,5 +62,9 @@ public class TaskQueue<A> {
 
     public List<A> getQueue() {
         return queue;
+    }
+
+    public OpRunnable getRunnable() {
+        return runnable;
     }
 }

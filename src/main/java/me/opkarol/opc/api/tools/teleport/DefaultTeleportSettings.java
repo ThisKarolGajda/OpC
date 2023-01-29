@@ -1,7 +1,7 @@
 package me.opkarol.opc.api.tools.teleport;
 
-import me.opkarol.opc.api.misc.opobjects.OpSound;
-import me.opkarol.opc.api.misc.opobjects.OpTitle;
+import me.opkarol.opc.api.wrappers.OpSound;
+import me.opkarol.opc.api.wrappers.OpTitle;
 import org.bukkit.Sound;
 
 public class DefaultTeleportSettings extends TeleportSettings {

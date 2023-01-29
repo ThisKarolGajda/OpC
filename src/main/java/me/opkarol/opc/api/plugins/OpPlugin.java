@@ -2,10 +2,10 @@ package me.opkarol.opc.api.plugins;
 
 import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.file.Configuration;
-import me.opkarol.opc.api.misc.opobjects.*;
 import me.opkarol.opc.api.serialization.Serialization;
 import me.opkarol.opc.api.tools.autostart.OpAutoDisable;
 import me.opkarol.opc.api.tools.location.OpSerializableLocation;
+import me.opkarol.opc.api.wrappers.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
