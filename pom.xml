@@ -34,7 +34,19 @@
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <outputFile>E:\Servers\1.19.3\plugins\opc - ${project.version}.jar</outputFile>
-
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <includes>
+                                        <include>me/opkarol/opc/**</include>
+                                        <include>plugin.yml</include>
+                                        <include>config.yml</include>
+                                        <include>com/tchristofferson/configupdater/**</include>
+                                        <include>com/zaxxer/hikari/**</include>
+                                        <include>revxrsal/commands/**</include>
+                                    </includes>
+                                </filter>
+                            </filters>
                             <relocations>
                                 <relocation>
                                     <pattern>com.tchristofferson.configupdater</pattern>
