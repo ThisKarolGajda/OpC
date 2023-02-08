@@ -52,7 +52,7 @@ public abstract class OpPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        BukkitCommandHandler.create(this);
+        commandHandler = BukkitCommandHandler.create(this);
         commandHandler.getAutoCompleter().registerSuggestionFactory(0, SuggestionProviderFactory.forType(Player.class, SuggestionProvider.map(Bukkit::getOnlinePlayers, Player::getName)));
         enable();
         registerEvents();
