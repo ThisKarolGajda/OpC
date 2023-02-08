@@ -6,9 +6,14 @@ import me.opkarol.opc.api.serialization.Serialization;
 import me.opkarol.opc.api.tools.autostart.OpAutoDisable;
 import me.opkarol.opc.api.tools.location.OpSerializableLocation;
 import me.opkarol.opc.api.wrappers.*;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import revxrsal.commands.autocomplete.SuggestionProvider;
+import revxrsal.commands.autocomplete.SuggestionProviderFactory;
+import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -16,6 +21,7 @@ import java.util.logging.Logger;
 
 public abstract class OpPlugin extends JavaPlugin {
     private static OpPlugin plugin;
+    private BukkitCommandHandler commandHandler;
 
     static {
         Serialization.registerClass(OpObjectSerialized.class);
@@ -46,9 +52,14 @@ public abstract class OpPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        BukkitCommandHandler.create(this);
+        commandHandler.getAutoCompleter().registerSuggestionFactory(0, SuggestionProviderFactory.forType(Player.class, SuggestionProvider.map(Bukkit::getOnlinePlayers, Player::getName)));
         enable();
         registerEvents();
-        registerCommands();
+        if (registerCommandsWithBrigadier()) {
+            commandHandler.registerBrigadier();
+        }
+
     }
 
     public abstract void enable();
@@ -82,8 +93,8 @@ public abstract class OpPlugin extends JavaPlugin {
 
     }
 
-    public void registerCommands() {
-
+    public boolean registerCommandsWithBrigadier() {
+        return false;
     }
 
     protected void disablePlugin(String message) {

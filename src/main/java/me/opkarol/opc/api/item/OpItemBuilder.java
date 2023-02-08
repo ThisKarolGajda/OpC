@@ -117,6 +117,11 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
         return (K) this;
     }
 
+    public K lore(String... lore) {
+        this.lore = new ArrayList<>(List.of(lore));
+        return (K) this;
+    }
+
     public OpMap<Enchantment, Integer> getEnchantments() {
         return enchantments;
     }
