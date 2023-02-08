@@ -101,4 +101,8 @@ public abstract class OpPlugin extends JavaPlugin {
         getLog().log(Level.SEVERE, message);
         getServer().getPluginManager().disablePlugin(this);
     }
+
+    public BukkitCommandHandler getCommandHandler() {
+        return commandHandler;
+    }
 }
