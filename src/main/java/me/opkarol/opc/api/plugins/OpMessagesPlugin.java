@@ -8,7 +8,7 @@ import me.opkarol.opc.api.misc.Tuple;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class OpMessagesPlugin extends OpPlugin {
+public class OpMessagesPlugin extends OpPlugin {
     private static ConfigurationMap configurationMap;
 
     public static ConfigurationMap getMap() {

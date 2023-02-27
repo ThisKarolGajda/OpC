@@ -23,6 +23,11 @@ public class OpBossBar implements Serializable {
         setVisible(true);
     }
 
+    public OpBossBar() {
+        bossBar = null;
+        originalTitle = null;
+    }
+
     public boolean hasPlayer(Player player) {
         return bossBar.getPlayers().stream().anyMatch(player1 -> player1.getUniqueId().equals(player.getUniqueId()));
     }

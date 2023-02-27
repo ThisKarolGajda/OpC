@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class OpPlugin extends JavaPlugin {
+public class OpPlugin extends JavaPlugin {
     private static OpPlugin plugin;
     private BukkitCommandHandler commandHandler;
 
@@ -56,15 +56,23 @@ public abstract class OpPlugin extends JavaPlugin {
         commandHandler.getAutoCompleter().registerSuggestionFactory(0, SuggestionProviderFactory.forType(Player.class, SuggestionProvider.map(Bukkit::getOnlinePlayers, Player::getName)));
         enable();
         registerEvents();
-        if (registerCommandsWithBrigadier()) {
+
+        Object[] commands = registerCommands();
+        if (commands != null && commands.length > 0) {
+            commandHandler.register(commands);
             commandHandler.registerBrigadier();
         }
 
+
     }
 
-    public abstract void enable();
+    public void enable() {
 
-    public abstract void disable();
+    };
+
+    public void disable() {
+
+    };
 
     @Override
     public void onDisable() {
@@ -93,8 +101,8 @@ public abstract class OpPlugin extends JavaPlugin {
 
     }
 
-    public boolean registerCommandsWithBrigadier() {
-        return false;
+    public Object[] registerCommands() {
+        return new Object[0];
     }
 
     protected void disablePlugin(String message) {

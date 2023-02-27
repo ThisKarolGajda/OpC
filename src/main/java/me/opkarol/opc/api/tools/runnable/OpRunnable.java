@@ -17,6 +17,12 @@ public class OpRunnable extends BukkitRunnable implements Serializable {
         this.consumer = consumer;
     }
 
+    public OpRunnable(Runnable runnable) {
+        this.consumer = (r) -> {
+            runnable.run();
+        };
+    }
+
     @Contract("_ -> new")
     public static @NotNull OpRunnable get(Consumer<OpRunnable> consumer) {
         return new OpRunnable(consumer);
