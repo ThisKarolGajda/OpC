@@ -30,9 +30,6 @@ public abstract class MySqlDatabaseImpl<O, C> extends MySqlDatabase<O> {
     public MySqlDatabaseImpl() {
         create();
         this.getIdentification = getObjects().getIdentificationObject();
-        if (getIdentification == null) {
-            throw new RuntimeException("Provided getIdentification method is null.");
-        }
         this.setIdentification = getObjects().getIdentification();
         this.getUUID = getObjects().getUUIDObject();
         if (getUUID == null) {
@@ -50,9 +47,6 @@ public abstract class MySqlDatabaseImpl<O, C> extends MySqlDatabase<O> {
         super(mysql);
         create();
         this.getIdentification = getObjects().getIdentificationObject();
-        if (getIdentification == null) {
-            throw new RuntimeException("Provided getIdentification method is null.");
-        }
         this.setIdentification = getObjects().getIdentification();
         this.getUUID = getObjects().getUUIDObject();
         if (getUUID == null) {
@@ -70,9 +64,6 @@ public abstract class MySqlDatabaseImpl<O, C> extends MySqlDatabase<O> {
         super(mysql);
         create();
         this.getIdentification = getObjects().getIdentificationObject();
-        if (getIdentification == null) {
-            throw new RuntimeException("Provided getIdentification method is null.");
-        }
         this.setIdentification = getObjects().getIdentification();
         this.getUUID = getObjects().getUUIDObject();
         if (getUUID == null) {
@@ -90,9 +81,6 @@ public abstract class MySqlDatabaseImpl<O, C> extends MySqlDatabase<O> {
         super(clazz, mysql);
         create();
         this.getIdentification = getObjects().getIdentificationObject();
-        if (getIdentification == null) {
-            throw new RuntimeException("Provided getIdentification method is null.");
-        }
         this.setIdentification = getObjects().getIdentification();
         this.getUUID = getObjects().getUUIDObject();
         if (getUUID == null) {
@@ -110,9 +98,6 @@ public abstract class MySqlDatabaseImpl<O, C> extends MySqlDatabase<O> {
         super(configuration, mysql);
         create();
         this.getIdentification = getObjects().getIdentificationObject();
-        if (getIdentification == null) {
-            throw new RuntimeException("Provided getIdentification method is null.");
-        }
         this.setIdentification = getObjects().getIdentification();
         this.getUUID = getObjects().getUUIDObject();
         if (getUUID == null) {
@@ -130,9 +115,6 @@ public abstract class MySqlDatabaseImpl<O, C> extends MySqlDatabase<O> {
         super(clazz, configuration, mysql);
         create();
         this.getIdentification = getObjects().getIdentificationObject();
-        if (getIdentification == null) {
-            throw new RuntimeException("Provided getIdentification method is null.");
-        }
         this.setIdentification = getObjects().getIdentification();
         this.getUUID = getObjects().getUUIDObject();
         if (getUUID == null) {
@@ -215,7 +197,9 @@ public abstract class MySqlDatabaseImpl<O, C> extends MySqlDatabase<O> {
     }
 
     private void putObject(O object) {
-        getMap().put((Integer) getIdentification.getObject(object), object);
+        if (getIdentification != null) {
+            getMap().put((Integer) getIdentification.getObject(object), object);
+        }
         addObject(object, (UUID) getUUID.getObject(object));
     }
 
@@ -251,11 +235,14 @@ public abstract class MySqlDatabaseImpl<O, C> extends MySqlDatabase<O> {
     }
 
     public int getId(UUID uuid, Predicate<O> predicate) {
-        return (int) getList(uuid).stream()
-                .filter(predicate)
-                .findAny()
-                .map(getIdentification::getObject)
-                .orElse(-1);
+        if (getIdentification != null) {
+            return (int) getList(uuid).stream()
+                    .filter(predicate)
+                    .findAny()
+                    .map(getIdentification::getObject)
+                    .orElse(-1);
+        }
+        return 0;
     }
 
     public int getId(UUID uuid, C object) {
