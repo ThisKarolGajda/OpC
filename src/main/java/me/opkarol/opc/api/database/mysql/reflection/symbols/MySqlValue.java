@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Target(value = ElementType.FIELD)
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface MySqlValue {
-    MySqlObjectValues value() default MySqlObjectValues.EMPTY;
+    MySqlObjectValues[] value() default MySqlObjectValues.EMPTY;
 
     int parameter() default -1;
 }

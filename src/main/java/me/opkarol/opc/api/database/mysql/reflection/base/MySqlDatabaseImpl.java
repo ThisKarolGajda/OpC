@@ -198,7 +198,12 @@ public abstract class MySqlDatabaseImpl<O, C> extends MySqlDatabase<O> {
         if (getObjectFromSet == null) {
             return;
         }
+
         ResultSet set = get();
+        if (set == null) {
+            return;
+        }
+
         try {
             while (set.next()) {
                 O object = getObjectFromSet.apply(new MySqlResultSet(set));

@@ -1,17 +1,17 @@
 package me.opkarol.opc.api.database.mysql.reflection.objects;
 
 import me.opkarol.opc.api.database.mysql.reflection.symbols.MySqlValue;
+import me.opkarol.opc.api.database.mysql.reflection.types.MySqlObjectValues;
 import me.opkarol.opc.api.database.mysql.resultset.MySqlResultSet;
 import me.opkarol.opc.api.database.mysql.types.MySqlAttribute;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
+
+import static me.opkarol.opc.api.database.mysql.reflection.types.MySqlObjectValues.*;
 
 public class MySqlObjects {
     private final List<MySqlObject> objectList = new ArrayList<>();
@@ -36,21 +36,24 @@ public class MySqlObjects {
     public MySqlObjects add(@NotNull MySqlObject object) {
         object.addAttribute(MySqlAttribute.NOTNULL);
         MySqlValue value = object.getField().getAnnotation(MySqlValue.class);
-        switch (value.value()) {
-            case IDENTIFICATION_OBJECT -> {
-                object.addAttribute(MySqlAttribute.PRIMARY);
-                identificationObject = object;
-            }
-            case PRIMARY -> object.addAttribute(MySqlAttribute.PRIMARY);
-            case EMPTY -> object.addAttribute(MySqlAttribute.IGNORE_IN_SEARCH);
-            case UUID_OBJECT -> {
-                object.addAttribute(MySqlAttribute.IGNORE_IN_ALL_SEARCH);
-                uuidObject = object;
-            }
-            case COMPARABLE_OBJECT -> {
-                object.addAttribute(MySqlAttribute.IGNORE_IN_SEARCH);
-                comparableObject = object;
-            }
+        List<MySqlObjectValues> list = Arrays.stream(value.value()).toList();
+        if (list.contains(IDENTIFICATION_OBJECT)) {
+            object.addAttribute(MySqlAttribute.PRIMARY);
+            identificationObject = object;
+        }
+        if (list.contains(PRIMARY)) {
+            object.addAttribute(MySqlAttribute.PRIMARY);
+        }
+        if (list.contains(EMPTY)) {
+            object.addAttribute(MySqlAttribute.IGNORE_IN_SEARCH);
+        }
+        if (list.contains(UUID_OBJECT)) {
+            object.addAttribute(MySqlAttribute.IGNORE_IN_ALL_SEARCH);
+            uuidObject = object;
+        }
+        if (list.contains(COMPARABLE_OBJECT)) {
+            object.addAttribute(MySqlAttribute.IGNORE_IN_SEARCH);
+            comparableObject = object;
         }
         int constructorParameter = value.parameter();
         if (constructorParameter != -1) {
