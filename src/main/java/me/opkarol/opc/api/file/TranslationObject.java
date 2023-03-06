@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 /*
   Deprecated, due to SimpleTranslation better use and multi translations per class storage.
 
-  @see SimpleTranslation
+  @see SimpleTranslation.class
  */
 public record TranslationObject(String pattern, String replace) {
 

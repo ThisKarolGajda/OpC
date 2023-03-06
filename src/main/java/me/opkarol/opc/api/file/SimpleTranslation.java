@@ -10,13 +10,13 @@ public class SimpleTranslation {
         this.strings = strings;
     }
 
-    public SimpleTranslation(String r, String s) {
-        this.strings = new String[][]{{r, s}};
+    public SimpleTranslation(String replace, String with) {
+        this.strings = new String[][]{{replace, with}};
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    public static @NotNull SimpleTranslation of(String r, String s) {
-        return new SimpleTranslation(r, s);
+    public static @NotNull SimpleTranslation of(String replace, String with) {
+        return new SimpleTranslation(replace, with);
     }
 
     public String[][] getStrings() {

@@ -1,94 +1,9 @@
 package me.opkarol.opc.api.plugins;
 
-import me.opkarol.opc.api.command.OpCommandSender;
 import me.opkarol.opc.api.file.ConfigurationMap;
-import me.opkarol.opc.api.file.SimpleTranslation;
-import me.opkarol.opc.api.file.TranslationObject;
-import me.opkarol.opc.api.misc.Tuple;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-public class OpMessagesPlugin extends OpPlugin {
-    private static ConfigurationMap configurationMap;
-
-    public static ConfigurationMap getMap() {
-        return configurationMap;
-    }
-
-    public static String getValue(String path) {
-        return getMap().getValue(path);
-    }
-
-    public static String getFormattedValue(String path) {
-        return getMap().getFormattedValue(path);
-    }
-
-    public static String getValue(String path, TranslationObject... objects) {
-        return getMap().getValue(path, objects);
-    }
-
-    public static String getValue(String path, @NotNull SimpleTranslation translation) {
-        return getMap().getValue(path, translation.getStrings());
-    }
-
-    public static String getFormattedValue(String path, String[][] strings) {
-        return getMap().getFormattedValue(path, strings);
-    }
-
-    @SafeVarargs
-    public static String getFormattedValue(String path, Tuple<String, String>... tuples) {
-        return getMap().getFormattedValue(path, tuples);
-    }
-
-    public static String getValue(String path, String[][] objects) {
-        return getMap().getValue(path, objects);
-    }
-
-    public static void sendMappedMessage(@NotNull OpCommandSender sender, String path, String[][] strings) {
-        sender.sendMessage(getFormattedValue(path, strings));
-    }
-
-    public static void sendMappedMessage(@NotNull OpCommandSender sender, String path) {
-        sender.sendMessage(getFormattedValue(path));
-    }
-
-    @SafeVarargs
-    public static void sendMappedMessage(@NotNull OpCommandSender sender, String path, Tuple<String, String>... tuples) {
-        sender.sendMessage(getFormattedValue(path, tuples));
-    }
-
-    @SafeVarargs
-    public static void sendMappedMessage(@NotNull Player sender, String path, Tuple<String, String>... tuples) {
-        sender.sendMessage(getFormattedValue(path, tuples));
-    }
-
-    public static void sendMappedMessage(@NotNull OpCommandSender sender, String path, SimpleTranslation translation) {
-        sender.sendMessage(getFormattedValue(path, translation.getStrings()));
-    }
-
-    public static void sendMappedMessage(@NotNull Player sender, String path, String[][] strings) {
-        sender.sendMessage(getFormattedValue(path, strings));
-    }
-
-    public static void sendMappedMessage(@NotNull Player sender, String path) {
-        sender.sendMessage(getFormattedValue(path));
-    }
-
-    public static void sendMappedMessage(@NotNull Player sender, String path, SimpleTranslation translation) {
-        sender.sendMessage(getFormattedValue(path, translation.getStrings()));
-    }
-
-    public static @NotNull Runnable getMappedMessage(OpCommandSender sender, String path, String[][] strings) {
-        return () -> sender.sendMessage(getValue(path, strings));
-    }
-
-    public static @NotNull Runnable getMappedMessage(OpCommandSender sender, String path, SimpleTranslation translation) {
-        return () -> sender.sendMessage(getValue(path, translation));
-    }
-
-    public static @NotNull Runnable getMappedMessage(OpCommandSender sender, String path) {
-        return () -> sender.sendMessage(getValue(path));
-    }
+public class OpMessagesPlugin extends OpPlugin implements SendMessages {
+    private ConfigurationMap configurationMap;
 
     @Override
     public void onEnable() {
@@ -97,5 +12,10 @@ public class OpMessagesPlugin extends OpPlugin {
             disablePlugin("Messages file created. Restart the server now, in order to allow plugin load messages.");
         }
         super.onEnable();
+    }
+
+    @Override
+    public ConfigurationMap getConfigurationMap() {
+        return configurationMap;
     }
 }
