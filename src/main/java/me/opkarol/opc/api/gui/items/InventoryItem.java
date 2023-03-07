@@ -32,6 +32,11 @@ public class InventoryItem extends OpItemBuilder<InventoryItem> {
         this.itemEventHolder = new InventoryItemExtender(itemEventHolder);
     }
 
+    public InventoryItem(@NotNull ItemStack item, Consumer<OnItemClicked> itemEventHolder) {
+        super(item);
+        this.itemEventHolder = new InventoryItemExtender(itemEventHolder);
+    }
+
     public InventoryItem(@NotNull ItemStack item) {
         super(item);
         this.itemEventHolder = null;

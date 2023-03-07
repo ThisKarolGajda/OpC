@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static me.opkarol.opc.api.utils.FormatUtils.formatList;
@@ -32,6 +33,7 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
     private OpMap<Enchantment, Integer> enchantments;
     private OpMap<String, String> pdc;
     private HashSet<ItemFlag> flags;
+    private Consumer<ItemStack> buildActionModifier;
 
     public OpItemBuilder(ItemStack item) {
         super(null);
@@ -164,7 +166,9 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
             item.setItemMeta(meta);
             item = applyFlags(item);
         }
-        return applyPdc(item);
+        applyPdc(item);
+        buildActionModifier.accept(item);
+        return item;
     }
 
     public K enchantItem(ItemStack item) {
@@ -271,5 +275,13 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
                 ", pdc=" + pdc +
                 ", flags=" + flags +
                 '}';
+    }
+
+    public Consumer<ItemStack> getBuildActionModifier() {
+        return buildActionModifier;
+    }
+
+    public void setBuildActionModifier(Consumer<ItemStack> buildActionModifier) {
+        this.buildActionModifier = buildActionModifier;
     }
 }
