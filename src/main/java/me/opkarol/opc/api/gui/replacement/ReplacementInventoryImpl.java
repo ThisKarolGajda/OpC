@@ -234,6 +234,10 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
         }
     }
 
+    public void setAllUnused(InventoryItem item) {
+        setAllUnused(0, item);
+    }
+
     public void setAllExcept(int page, InventoryItem item, int... except) {
         if (except == null) {
             setAll(page, item);

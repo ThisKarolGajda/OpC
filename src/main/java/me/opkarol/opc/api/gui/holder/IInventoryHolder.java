@@ -13,4 +13,8 @@ public interface IInventoryHolder {
                 .name("&k")
                 .flags(ItemFlag.HIDE_ATTRIBUTES);
     }
+
+    default void registerToInventoriesHolder() {
+        InventoriesHolder.add(getClass().getSimpleName(), this);
+    }
 }
