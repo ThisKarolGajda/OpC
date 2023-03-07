@@ -167,7 +167,9 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
             item = applyFlags(item);
         }
         applyPdc(item);
-        buildActionModifier.accept(item);
+        if (buildActionModifier != null) {
+            buildActionModifier.accept(item);
+        }
         return item;
     }
 
