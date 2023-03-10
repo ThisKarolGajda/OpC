@@ -7,91 +7,122 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public class OpBossBar implements Serializable {
-    private final BossBar bossBar;
+    private BossBar bossBar;
     private final String originalTitle;
-    private OpRunnable task;
+    private String title;
+    private BarStyle barStyle;
+    private BarColor barColor;
+    private OpRunnable runnable;
 
-    public OpBossBar(String title, BarColor color) {
-        this.bossBar = Bukkit.createBossBar(FormatUtils.formatMessage(title), color, BarStyle.SOLID);
+    public OpBossBar(String title) {
         this.originalTitle = title;
-        setVisible(true);
+        this.title = title;
     }
 
     public OpBossBar() {
-        bossBar = null;
-        originalTitle = null;
+        this.originalTitle = null;
     }
 
-    public boolean hasPlayer(Player player) {
-        return bossBar.getPlayers().stream().anyMatch(player1 -> player1.getUniqueId().equals(player.getUniqueId()));
+    public String getOriginalTitle() {
+        return originalTitle;
     }
 
-    public void addPlayers(@NotNull List<Player> players) {
-        players.forEach(this::addPlayer);
+    public OpBossBar build() {
+        bossBar = Bukkit.createBossBar(getTitle(), getBarColor(), getBarStyle());
+        return this;
     }
 
-    public void addPlayer(Player player) {
-        if (getPlayers() != null && hasPlayer(player)) {
-            return;
+    public OpBossBar setTitle(String title) {
+        this.title = title;
+        return build();
+    }
+
+    public OpBossBar setBarColor(BarColor barColor) {
+        this.barColor = barColor;
+        return this;
+    }
+
+    public OpBossBar setBarStyle(BarStyle barStyle) {
+        this.barStyle = barStyle;
+        return this;
+    }
+
+    public OpBossBar setBossBar(BossBar bossBar) {
+        this.bossBar = bossBar;
+        return this;
+    }
+
+    public OpBossBar setVisible(boolean visible) {
+        if (bossBar != null) {
+            bossBar.setVisible(visible);
         }
+        return this;
+    }
+
+    public OpBossBar display(Player player) {
         bossBar.addPlayer(player);
+        setVisible(true);
+        return this;
     }
 
-    public void removePlayer(Player player) {
+    public OpBossBar removeDisplay(Player player) {
         bossBar.removePlayer(player);
+        return this;
     }
 
-    public void removePlayers() {
-        bossBar.removeAll();
-        setVisible(false);
+    public OpBossBar loopAndDisplay(int time, int speed, Consumer<OpBossBar> onEndConsumer) {
+        setVisible(true);
+        AtomicReference<Double> current = new AtomicReference<>((double) time);
+        setRunnable(new OpRunnable((r) -> {
+            current.set(current.get() - 1);
+            if (current.get() < 1) {
+                removeAllPlayers();
+                setVisible(false);
+                onEndConsumer.accept(this);
+                r.cancelTask();
+            }
+            setProgress(current.get() * speed / time);
+        }).runTaskTimerAsynchronously(0, 20/speed));
+        return this;
     }
 
-    public void setVisible(boolean b) {
-        bossBar.setVisible(b);
+    private OpBossBar setProgress(double v) {
+        bossBar.setProgress(v);
+        return this;
     }
 
-    public List<Player> getPlayers() {
-        return bossBar.getPlayers();
+    public BarColor getBarColor() {
+        return barColor == null ? BarColor.WHITE : barColor;
+    }
+
+    public BarStyle getBarStyle() {
+        return barStyle == null ? BarStyle.SOLID : barStyle;
     }
 
     public BossBar getBossBar() {
         return bossBar;
     }
 
-    public void call(int time, int speed) {
-        setVisible(true);
-        task = new OpRunnable(r -> {
-            double t = time;
-            t = t - 1d / speed;
-            if (t < 1) {
-                removePlayers();
-                r.cancel();
-            }
-            bossBar.setProgress(t / time);
-            setTitle(originalTitle.replace("%time%", String.valueOf((int) t)));
-        }).runTaskTimerAsynchronously(20L / speed);
+    public String getTitle() {
+        return FormatUtils.formatMessage(title);
     }
 
-    public synchronized void stop() {
-        task.cancel();
-        removePlayers();
+    public OpRunnable getRunnable() {
+        return runnable;
     }
 
-    public void setTitle(String s) {
-        bossBar.setTitle(FormatUtils.formatMessage(s));
+    public void setRunnable(OpRunnable runnable) {
+        this.runnable = runnable;
     }
 
-    public @NotNull OpRunnable getTask() {
-        return task;
-    }
-
-    public String getOriginalTitle() {
-        return originalTitle;
+    public OpBossBar removeAllPlayers() {
+        bossBar.getPlayers().forEach(this::removeDisplay);
+        return this;
     }
 }

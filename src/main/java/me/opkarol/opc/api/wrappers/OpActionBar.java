@@ -23,6 +23,10 @@ public class OpActionBar implements Serializable {
         this.text = text;
     }
 
+    public OpActionBar() {
+        this.text = null;
+    }
+
     public OpActionBar send() {
         receivers.forEach(this::send);
         return this;
