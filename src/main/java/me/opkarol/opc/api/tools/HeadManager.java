@@ -2,8 +2,6 @@ package me.opkarol.opc.api.tools;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import me.opkarol.opc.api.gui.OpInventory;
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.tools.runnable.OpRunnable;
@@ -12,14 +10,15 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerProfile;
+import org.bukkit.profile.PlayerTextures;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -172,20 +171,32 @@ public class HeadManager {
         }).runTaskAsynchronously();
     }
 
-    public static @NotNull ItemStack getHeadFromTexture(String texture) {
-        ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
-        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), null);
-        gameProfile.getProperties().put("textures", new Property("textures", texture));
+    /**
+     * @autor mfnalex
+     */
+    private static PlayerProfile getProfile(String url) {
+        PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID()); // Get a new player profile
+        PlayerTextures textures = profile.getTextures();
+        URL urlObject;
         try {
-            Method method = skullMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
-            method.setAccessible(true);
-            method.invoke(skullMeta, gameProfile);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-            ex.printStackTrace();
+            urlObject = new URL(url); // The URL to the skin, for example: https://textures.minecraft.net/texture/18813764b2abc94ec3c3bc67b9147c21be850cdf996679703157f4555997ea63a
+        } catch (MalformedURLException exception) {
+            throw new RuntimeException("Invalid URL", exception);
         }
+        textures.setSkin(urlObject); // Set the skin of the player profile to the URL
+        return profile;
+    }
 
-        itemStack.setItemMeta(skullMeta);
-        return itemStack;
+    public static ItemStack getHeadFromTexture(String texture) {
+        final String texturesMinecraftURL = "https://textures.minecraft.net/texture/";
+        PlayerProfile profile = getProfile(texture.startsWith(texturesMinecraftURL) ? texture : texturesMinecraftURL + texture);
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        if (meta == null) {
+            return null;
+        }
+        meta.setOwnerProfile(profile); // Set the owning player of the head to the player profile
+        head.setItemMeta(meta);
+        return head;
     }
 }
