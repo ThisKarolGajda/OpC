@@ -13,7 +13,7 @@ public class InventoryFactory extends AbstractInventory<Integer, InventoryItem> 
     }
 
     public InventoryFactory(String inventoryTitle) {
-        super(() -> inventoryTitle, inventoryTitle);
+        super(27, () -> inventoryTitle, inventoryTitle);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class InventoryFactory extends AbstractInventory<Integer, InventoryItem> 
         for (int i = 0; i < getInventorySlots(); i++) {
             Optional<InventoryItem> optional = get(i);
             if (optional.isPresent()) {
-                inventory.setItem(i, optional.get().generate());
+                inventory.setItem(i, optional.get());
             }
         }
 

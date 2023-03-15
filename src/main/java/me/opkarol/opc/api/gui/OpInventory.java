@@ -56,8 +56,8 @@ public final class OpInventory extends ReplacementInventoryImpl {
 
     public void setInventoryObject(@NotNull IInventoryObject object) {
         InventoryItem item = new InventoryItem(object.getMaterial());
-        item.name(object.getName());
-        item.lore(object.getLore());
+        item.setName(object.getName());
+        item.setLore(object.getLore());
         if (object.getAdditionalAction() != null) {
             object.getAdditionalAction().accept(item);
         }

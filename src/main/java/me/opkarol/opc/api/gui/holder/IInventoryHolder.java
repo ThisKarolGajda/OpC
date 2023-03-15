@@ -9,9 +9,10 @@ public interface IInventoryHolder {
     OpInventory getInventory();
 
     default InventoryItem getBlankItem() {
-        return new InventoryItem(Material.BLACK_STAINED_GLASS_PANE, e -> e.setCancelled(true))
-                .name("&k")
-                .flags(ItemFlag.HIDE_ATTRIBUTES);
+        InventoryItem item = new InventoryItem(Material.BLACK_STAINED_GLASS_PANE, e -> e.setCancelled(true));
+        item.setName("&k");
+        item.setFlags(ItemFlag.HIDE_ATTRIBUTES);
+        return item;
     }
 
     default void registerToInventoriesHolder() {

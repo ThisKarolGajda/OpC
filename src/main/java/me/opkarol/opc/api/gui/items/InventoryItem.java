@@ -3,7 +3,7 @@ package me.opkarol.opc.api.gui.items;
 import me.opkarol.opc.api.gui.events.OnItemClicked;
 import me.opkarol.opc.api.gui.holder.item.InventoryItemEventHolder;
 import me.opkarol.opc.api.gui.holder.item.InventoryItemExtender;
-import me.opkarol.opc.api.item.OpItemBuilder;
+import me.opkarol.opc.api.item.ItemBuilder;
 import me.opkarol.opc.api.utils.VariableUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class InventoryItem extends OpItemBuilder<InventoryItem> {
+public class InventoryItem extends ItemBuilder {
     private InventoryItemEventHolder itemEventHolder;
     private List<InventoryItemSpecialData> specialData = new ArrayList<>();
 

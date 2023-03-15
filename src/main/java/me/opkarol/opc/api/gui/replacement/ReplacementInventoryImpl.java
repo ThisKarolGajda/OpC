@@ -127,8 +127,7 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
         }
 
         for (int i : tempItems.keySet()) {
-            InventoryItem builder = tempItems.unsafeGet(i);
-            inventory.setItem(i, builder.generate());
+            inventory.setItem(i, tempItems.unsafeGet(i));
         }
 
         return inventory;
@@ -154,15 +153,14 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
         }
 
         for (int i : tempItems.keySet()) {
-            InventoryItem builder = tempItems.unsafeGet(i);
-            inventory.setItem(i, builder.generate());
+            inventory.setItem(i, tempItems.unsafeGet(i));
         }
 
         return inventory;
     }
 
     public void set(int page, @NotNull InventoryItem item, int slot) {
-        for (String replacement : addRegex(item.getDisplayName())) {
+        for (String replacement : addRegex(item.getName())) {
             addReplacement(page, replacement, slot);
         }
         for (String replacement : addRegex(item.getLore())) {
