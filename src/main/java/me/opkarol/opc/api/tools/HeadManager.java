@@ -24,7 +24,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class HeadManager {
@@ -142,37 +143,28 @@ public class HeadManager {
     }
 
     public static void updatePlayerHeadInInventory(@NotNull Player player, OpInventory inventory, int slot, Consumer<ItemStack> itemStackConsumer) {
-        new OpRunnable(() -> {
-            Future<String> future = CompletableFuture.supplyAsync(() -> getHeadValueAsData(player));
+        CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> getHeadValueAsData(player));
+        final String defaultValue = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjYyYzQ4NWIxODg2ZGJjZTZjMWNhZDE0MGMwZWY4NzYzNTU5ZDQzYTc4NTY0NDY2NGM2ZDVmMzZlMjc1NGVlOCJ9fX0";
+        future.completeOnTimeout(defaultValue, 15, TimeUnit.SECONDS)
+                .thenAcceptAsync(value -> {
+                    if (!inventory.getInventoryHolder().getBuiltInventory().getViewers().contains(player)) {
+                        return;
+                    }
+                    long hashBits = (value == null ? defaultValue : value).hashCode();
+                    UUID hashAsId = new UUID(hashBits, hashBits);
+                    ItemStack itemStack1 = player.getOpenInventory().getItem(slot);
+                    if (itemStack1 == null || !itemStack1.getType().equals(Material.PLAYER_HEAD)) {
+                        return;
+                    }
 
-            try {
-                String value = future.get(15L, TimeUnit.SECONDS);
-                if (inventory.getInventoryHolder().getIHolder() != player.getOpenInventory().getTopInventory().getHolder()) {
-                    return;
-                }
-
-                if (value == null) {
-                    value = "";
-                }
-                UUID hashAsId = new UUID(value.hashCode(), value.hashCode());
-                ItemStack itemStack1 = player.getOpenInventory().getItem(slot);
-                if (itemStack1 == null || !itemStack1.getType().equals(Material.PLAYER_HEAD)) {
-                    return;
-                }
-                Bukkit.getUnsafe().modifyItemStack(itemStack1,
-                        "{SkullOwner:{Id:\"" + hashAsId + "\",Properties:{textures:[{Value:\"" + value + "\"}]}}}");
-                itemStackConsumer.accept(itemStack1);
-            } catch (InterruptedException | ExecutionException ignore) {} catch (TimeoutException e) {
-                new OpRunnable(() -> {
-                    player.closeInventory();
-                    player.sendMessage("Nie można uzyskać profilu, skontaktuj się z administratorem!");
-                }).runTask();
-            }
-        }).runTaskAsynchronously();
+                    Bukkit.getUnsafe().modifyItemStack(itemStack1,
+                            "{SkullOwner:{Id:\"" + hashAsId + "\",Properties:{textures:[{Value:\"" + value + "\"}]}}}");
+                    itemStackConsumer.accept(itemStack1);
+                });
     }
 
     /**
-     * @autor mfnalex
+     * @author mfnalex
      */
     private static PlayerProfile getProfile(String url) {
         PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID()); // Get a new player profile
@@ -187,7 +179,7 @@ public class HeadManager {
         return profile;
     }
 
-    public static ItemStack getHeadFromTexture(String texture) {
+    public static @Nullable ItemStack getHeadFromMinecraftValueUrl(@NotNull String texture) {
         final String texturesMinecraftURL = "https://textures.minecraft.net/texture/";
         PlayerProfile profile = getProfile(texture.startsWith(texturesMinecraftURL) ? texture : texturesMinecraftURL + texture);
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
@@ -198,5 +190,25 @@ public class HeadManager {
         meta.setOwnerProfile(profile); // Set the owning player of the head to the player profile
         head.setItemMeta(meta);
         return head;
+    }
+
+    private static @NotNull String getMinecraftValueUrlFromBase64(String base64) {
+        byte[] decodedData = Base64.getDecoder().decode(base64);
+        String minecraftUrlTexture = new String(decodedData);
+
+        String urlPrefix = "\"url\":\"";
+        int startIndex = minecraftUrlTexture.indexOf(urlPrefix);
+        if (startIndex != -1) {
+            startIndex += urlPrefix.length();
+            int endIndex = minecraftUrlTexture.indexOf("\"", startIndex);
+            if (endIndex != -1) {
+                return minecraftUrlTexture.substring(startIndex, endIndex);
+            }
+        }
+        return base64;
+    }
+
+    public static ItemStack getHeadFromBase64(String base64) {
+        return getHeadFromMinecraftValueUrl(getMinecraftValueUrlFromBase64(base64));
     }
 }

@@ -18,6 +18,18 @@ import java.util.*;
 public class OpMap<K, V> implements IMap<K, V>, Serializable {
     protected HashMap<K, V> map = new HashMap<>();
 
+    public OpMap(HashMap<K, V> map) {
+        this.map = map;
+    }
+
+    public OpMap(OpMap<K, V> map) {
+        this.map = map.map;
+    }
+
+    public OpMap() {
+
+    }
+
     @Override
     public void remove(K k) {
         if (this.isEmpty()) {
@@ -145,5 +157,9 @@ public class OpMap<K, V> implements IMap<K, V>, Serializable {
             builder.append(key).append("=").append(value).append(" -");
         }
         return builder.toString();
+    }
+
+    public void putAll(@NotNull OpMap<K, V> tempReplacements) {
+        tempReplacements.getMap().forEach(this::set);
     }
 }

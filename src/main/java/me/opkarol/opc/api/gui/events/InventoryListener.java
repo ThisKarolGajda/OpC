@@ -25,59 +25,54 @@ import java.util.UUID;
 public class InventoryListener {
 
     public InventoryListener(InventoryCache cache) {
-        // Disables minecraft`s glitch where you use and consume item while having open inventory
+        // Disables minecraft`s glitch (maybe it's on purpose) where you use and consume item while having open inventory
         EventRegister.registerEvent(PlayerItemConsumeEvent.class, e -> e.setCancelled(e.getPlayer().getOpenInventory().getTopInventory().getHolder() instanceof IHolder));
 
         // Disables inventory bypass where you can collect items which are the same (bypassing normal inventory click event)
         EventRegister.registerEvent(InventoryClickEvent.class, e -> e.setCancelled(e.getAction().equals(InventoryAction.COLLECT_TO_CURSOR) && e.getInventory().getHolder() instanceof IHolder));
 
-        /*
-          The first thing this code does is checking if the inventory that was clicked on is not a "holder" using the isNotHolder method.
-          If it is not a holder, the code immediately returns and does nothing else.
-
-          Otherwise, the code gets the unique ID of the player who clicked (e.getWhoClicked().getUniqueId()) and the slot of the item that was clicked (e.getSlot()).
-          It then looks up the active inventory for that player in a cache using the unique ID, and if it finds one, it stores it in the inventory variable.
-
-          Next, the code checks the type of the inventory holder for the inventory using inventory.getInventoryHolder().getType().
-          Depending on the type, it will do different things.
-
-          If the type is DEFAULT, it gets the item in the clicked slot from the default holder's inventory using inventory.getInventoryHolder().getDefaultHolder().getInventory().get(slot),
-          and if it is present, it creates an OnItemClicked event and passes it to the interact method of the item's InventoryItemEventHolder.
-          If the event is cancelled, it sets the cancellation of the original event (e) to true as well.
-
-          If the type is PAGED, it gets the current page of the paged holder using invHolder.getCurrentPage(),
-          and then gets the item in the clicked slot from the current page's inventory using invHolder.getInventory().get(page).flatMap(inventoryPage -> inventoryPage.get(slot)).
-          If the item is present, it creates an OnItemClicked event and passes it to the interact method of the item's InventoryItemEventHolder, and sets the cancellation of the original event (e) to true if the event is cancelled.
-          It then checks if the item has any data, and if it is a "next" or "previous" button for a paged inventory. If it is a "next" button, it advances to the next page in the paged holder.
-          If it is a "previous" button, it goes back to the previous page. In either case, it reopens the inventory for the player using inventory.openInventory(e.getWhoClicked()).
-         */
+        // Registers a click event for both PAGED and NOT_PAGED (DEFAULT) inventory type
         EventRegister.registerEvent(InventoryClickEvent.class, e -> {
+            // Checks if the clicked inventory is not a "holder", if it is not, it returns and does nothing
             if (isNotHolder(e.getClickedInventory())) {
                 return;
             }
 
             UUID uuid = e.getWhoClicked().getUniqueId();
             int slot = e.getSlot();
+
+            // Gets the active inventory for the player from a cache using the UUID
             Optional<ReplacementInventoryImpl> optional = cache.getActiveInventory(uuid);
             if (optional.isEmpty()) {
                 return;
             }
 
             ReplacementInventoryImpl inventory = optional.get();
-
+            // Switches on the type of inventory holder for the clicked inventory
             switch (inventory.getInventoryHolder().getType()) {
-                case DEFAULT ->
-                        inventory.getInventoryHolder().getDefaultHolder().getInventory().get(slot).ifPresent(item -> {
-                            OnItemClicked event = new OnItemClicked(inventory.getInventoryHolder(), e.getWhoClicked(), slot, item);
-                            InventoryItemEventHolder eventHolder = item.getItemEventHolder();
-                            if (eventHolder != null) {
-                                eventHolder.interact(event);
-                            }
-                            if (event.isCancelled()) {
-                                e.setCancelled(true);
-                            }
-                        });
+                case DEFAULT -> {
+                    // If the inventory holder is a DEFAULT type, gets the item in the clicked slot from the default holder's inventory
+                    // and if it is present, creates an OnItemClicked event and passes it to the interact method of the item's InventoryItemEventHolder.
+                    // If the event is cancelled, sets the cancellation of the original event (e) to true as well.
+                    inventory.getInventoryHolder().getDefaultHolder().getInventory().get(slot).ifPresent(item -> {
+                        OnItemClicked event = new OnItemClicked(inventory.getInventoryHolder(), e.getWhoClicked(), slot, item);
+                        InventoryItemEventHolder eventHolder = item.getItemEventHolder();
+                        if (eventHolder != null) {
+                            eventHolder.interact(event);
+                        }
+                        if (event.isCancelled()) {
+                            e.setCancelled(true);
+                        }
+                    });
+                }
                 case PAGED -> {
+                    // If the inventory holder is a PAGED type, gets the current page of the paged holder
+                    // and then gets the item in the clicked slot from the current page's inventory.
+                    // If the item is present, it creates an OnItemClicked event and passes it to the interact method of the item's InventoryItemEventHolder,
+                    // and sets the cancellation of the original event (e) to true if the event is cancelled.
+                    // It then checks if the item has any data, and if it is a "next" or "previous" button for a paged inventory.
+                    // If it is a "next" button, it advances to the next page in the paged holder.
+                    // If it is a "previous" button, it goes back to the previous page. In either case, it reopens the inventory for the player.
                     PagedInventoryHolder invHolder = inventory.getInventoryHolder().getPagedHolder();
                     int page = invHolder.getCurrentPage();
                     invHolder.getInventory().get(page)
@@ -97,7 +92,6 @@ public class InventoryListener {
                     return;
                 }
 
-                // Get the player's UUID
                 UUID uuid = player.getUniqueId();
 
                 // Check if there is an active inventory for the player in the cache
@@ -119,7 +113,6 @@ public class InventoryListener {
                     // Get the action to be taken when the inventory is closed
                     InventoryEventHolder eventHolder = inventory.getInventoryHolder().getActionManager().getCloseAction();
                     if (eventHolder != null) {
-                        // Perform the action
                         eventHolder.close(event);
                     }
 
@@ -136,6 +129,12 @@ public class InventoryListener {
         });
     }
 
+    /**
+     * Checks if the clicked inventory is a "holder" inventory, meaning that it was created by the inventory framework
+     *
+     * @param inventory the clicked inventory
+     * @return true if the inventory is a "holder" inventory, false otherwise
+     */
     private boolean isNotHolder(Inventory inventory) {
         if (inventory == null) {
             return false;
@@ -143,14 +142,22 @@ public class InventoryListener {
         return !(inventory.getHolder() instanceof IHolder);
     }
 
-    private void handlePagedItemClick(@NotNull ReplacementInventoryImpl inventory, @NotNull InventoryClickEvent e, int slot, @NotNull InventoryItem item) {
-        OnItemClicked event = new OnItemClicked(inventory.getInventoryHolder(), e.getWhoClicked(), slot, item);
+    /**
+     * Handles the behavior when an item in a paged inventory is clicked
+     *
+     * @param inventory the ReplacementInventoryImpl instance for the active inventory
+     * @param event the InventoryClickEvent that triggered this method
+     * @param slot the slot index of the clicked item
+     * @param item the ItemStack of the clicked item
+     */
+    private void handlePagedItemClick(@NotNull ReplacementInventoryImpl inventory, @NotNull InventoryClickEvent event, int slot, @NotNull InventoryItem item) {
+        OnItemClicked onItemClicked = new OnItemClicked(inventory.getInventoryHolder(), event.getWhoClicked(), slot, item);
         InventoryItemEventHolder eventHolder = item.getItemEventHolder();
         if (eventHolder != null) {
-            eventHolder.interact(event);
+            eventHolder.interact(onItemClicked);
         }
-        if (event.isCancelled()) {
-            e.setCancelled(true);
+        if (onItemClicked.isCancelled()) {
+            event.setCancelled(true);
         }
         if (!item.hasAnyData()) {
             return;
@@ -160,6 +167,6 @@ public class InventoryListener {
         } else if (item.isPagedInventoryButtonPrevious()) {
             inventory.getInventoryHolder().getPagedHolder().previousPage();
         }
-        inventory.openBestInventory(e.getWhoClicked());
+        inventory.openBestInventory(event.getWhoClicked());
     }
 }

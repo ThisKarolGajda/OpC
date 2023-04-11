@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.ParameterizedType;
 import java.sql.ResultSet;
+import java.util.Objects;
 
 public abstract class MySqlDatabase<O> {
     private final String tableName;
@@ -31,7 +32,7 @@ public abstract class MySqlDatabase<O> {
         this.database = new MySqlConnection(OpAPI.getConfig(), "mysql");
         this.objects = reflection.getObjects();
         MySqlTable table = new MySqlTable(tableName);
-        objects.getObjectList().forEach(o -> table.addMySqlVariable(o.getVariable(), o.getAttributes()));
+        addVariables(table);
         this.table = table;
         this.counter = new MySqlIdCount(this.database, this.tableName);
     }
@@ -45,7 +46,7 @@ public abstract class MySqlDatabase<O> {
         this.database = new MySqlConnection(configuration, "mysql");
         this.objects = reflection.getObjects();
         MySqlTable table = new MySqlTable(tableName);
-        objects.getObjectList().forEach(o -> table.addMySqlVariable(o.getVariable(), o.getAttributes()));
+        addVariables(table);
         this.table = table;
         this.counter = new MySqlIdCount(this.database, this.tableName);
     }
@@ -59,7 +60,7 @@ public abstract class MySqlDatabase<O> {
         this.database = new MySqlConnection(OpAPI.getConfig(), mysql);
         this.objects = reflection.getObjects();
         MySqlTable table = new MySqlTable(tableName);
-        objects.getObjectList().forEach(o -> table.addMySqlVariable(o.getVariable(), o.getAttributes()));
+        addVariables(table);
         this.table = table;
         this.counter = new MySqlIdCount(this.database, this.tableName);
     }
@@ -73,7 +74,7 @@ public abstract class MySqlDatabase<O> {
         this.database = new MySqlConnection(mysql.getJdbc(), mysql.getUser(), mysql.getPassword());
         this.objects = reflection.getObjects();
         MySqlTable table = new MySqlTable(tableName);
-        objects.getObjectList().forEach(o -> table.addMySqlVariable(o.getVariable(), o.getAttributes()));
+        addVariables(table);
         this.table = table;
         this.counter = new MySqlIdCount(this.database, this.tableName);
     }
@@ -85,9 +86,15 @@ public abstract class MySqlDatabase<O> {
         this.database = new MySqlConnection(mysql.getJdbc(), mysql.getUser(), mysql.getPassword());
         this.objects = reflection.getObjects();
         MySqlTable table = new MySqlTable(tableName);
-        objects.getObjectList().forEach(o -> table.addMySqlVariable(o.getVariable(), o.getAttributes()));
+        addVariables(table);
         this.table = table;
         this.counter = new MySqlIdCount(this.database, this.tableName);
+    }
+
+    public void addVariables(MySqlTable table) {
+        objects.getObjectList().stream()
+                .filter(Objects::nonNull)
+                .forEach(o -> table.addMySqlVariable(o.getVariable(), o.getAttributes()));
     }
 
     @SuppressWarnings("unchecked")
@@ -99,7 +106,7 @@ public abstract class MySqlDatabase<O> {
         this.database = new MySqlConnection(configuration, mysql);
         this.objects = reflection.getObjects();
         MySqlTable table = new MySqlTable(tableName);
-        objects.getObjectList().forEach(o -> table.addMySqlVariable(o.getVariable(), o.getAttributes()));
+        addVariables(table);
         this.table = table;
         this.counter = new MySqlIdCount(this.database, this.tableName);
     }
@@ -112,7 +119,7 @@ public abstract class MySqlDatabase<O> {
         this.database = new MySqlConnection(configuration, mysql);
         this.objects = reflection.getObjects();
         MySqlTable table = new MySqlTable(tableName);
-        objects.getObjectList().forEach(o -> table.addMySqlVariable(o.getVariable(), o.getAttributes()));
+        addVariables(table);
         this.table = table;
         this.counter = new MySqlIdCount(this.database, this.tableName);
     }
@@ -126,7 +133,7 @@ public abstract class MySqlDatabase<O> {
         this.database = new MySqlConnection(OpAPI.getConfig(), "mysql");
         this.objects = reflection.getObjects();
         MySqlTable table = new MySqlTable(tableName);
-        objects.getObjectList().forEach(o -> table.addMySqlVariable(o.getVariable(), o.getAttributes()));
+        addVariables(table);
         this.table = table;
         this.counter = new MySqlIdCount(this.database, this.tableName);
     }

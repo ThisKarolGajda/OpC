@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class InventoryItem extends ItemBuilder {
+public class InventoryItem extends ItemBuilder implements Cloneable {
     private InventoryItemEventHolder itemEventHolder;
     private List<InventoryItemSpecialData> specialData = new ArrayList<>();
 
@@ -73,5 +73,13 @@ public class InventoryItem extends ItemBuilder {
 
     public boolean hasAnyData() {
         return specialData != null && specialData.size() > 0;
+    }
+
+    @Override
+    public @NotNull InventoryItem clone() {
+        InventoryItem clone = (InventoryItem) super.clone();
+        clone.itemEventHolder = this.itemEventHolder != null ? this.itemEventHolder.clone() : null;
+        clone.specialData = new ArrayList<>(this.specialData);
+        return clone;
     }
 }

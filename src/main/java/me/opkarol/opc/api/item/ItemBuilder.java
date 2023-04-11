@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("all")
-public class ItemBuilder extends ItemStack implements Serializable {
-    private OpMap<String, String> persistentDataContainer;
+public class ItemBuilder extends ItemStack implements Serializable, Cloneable {
     private final OpMap<String, String> tempReplacements = new OpMap<>();
 
     public ItemBuilder() {
@@ -85,6 +84,10 @@ public class ItemBuilder extends ItemStack implements Serializable {
         return this;
     }
 
+    public ItemBuilder setLore(String... lore) {
+        return setLore(List.of(lore));
+    }
+
     public ItemBuilder setName(String name) {
         useItemMeta(meta -> {
             String tempName = name;
@@ -96,17 +99,9 @@ public class ItemBuilder extends ItemStack implements Serializable {
         return this;
     }
 
-    private void applyPersistentDataContainer() {
-        checkItemMeta();
-        if (persistentDataContainer != null) {
-            for (String s : persistentDataContainer.keySet()) {
-                PDCUtils.addNBT(this, new NamespacedKey(OpAPI.getInstance(), s.split(":")[1]), persistentDataContainer.getOrDefault(s, null));
-            }
-        }
-    }
+    public void applyPDC(String key, String value) {
+        PDCUtils.addNBT(this, new NamespacedKey(OpAPI.getInstance(), key), value);
 
-    public OpMap<String, String> getPersistentDataContainer() {
-        return persistentDataContainer;
     }
 
     public ItemBuilder setEnchants(@NotNull OpMap<Enchantment, Integer> enchantments) {
@@ -134,6 +129,12 @@ public class ItemBuilder extends ItemStack implements Serializable {
         setItemMeta(meta);
     }
 
+    public void updateLoreView() {
+        if (getLore() != null) {
+            setLore(getLore());
+        }
+    }
+
     /**
      * Replacements
     /*/
@@ -143,15 +144,16 @@ public class ItemBuilder extends ItemStack implements Serializable {
         return this;
     }
 
-    public ItemBuilder addReplacement(OpMap<String, String> map) {
-        tempReplacements.addAll(map);
+    public ItemBuilder addReplacement(@NotNull OpMap<String, String> map) {
+        map.getMap().forEach((replace, replacement) -> {
+            addReplacement(replace, replacement);
+        });
         return this;
     }
 
     @SafeVarargs
     public final ItemBuilder addReplacement(Tuple<String, String>... map) {
-        tempReplacements.addAll(VariableUtil.getMapFromTuples(map));
-        return this;
+        return addReplacement(VariableUtil.getMapFromTuples(map));
     }
 
     /**
@@ -166,5 +168,26 @@ public class ItemBuilder extends ItemStack implements Serializable {
     public List<String> getLore() {
         checkItemMeta();
         return getItemMeta().getLore();
+    }
+
+    public OpMap<String, String> getTempReplacements() {
+        return tempReplacements;
+    }
+
+    public ItemStack generate() {
+        ItemBuilder copy = (ItemBuilder) super.clone();
+        if (copy.getLore() != null && tempReplacements.keySet().size() != 0) {
+            ItemMeta meta = copy.getItemMeta();
+            List<String> tempLore = new ArrayList<>();
+            for (String line : copy.getLore()) {
+                for (String replace : tempReplacements.keySet()) {
+                    line = line.replace(replace, tempReplacements.unsafeGet(replace));
+                }
+                tempLore.add(line);
+            }
+            meta.setLore(FormatUtils.formatList(tempLore));
+            copy.setItemMeta(meta);
+        }
+        return copy;
     }
 }

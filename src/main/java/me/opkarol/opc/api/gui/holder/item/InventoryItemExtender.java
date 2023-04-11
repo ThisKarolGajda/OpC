@@ -15,4 +15,9 @@ public class InventoryItemExtender extends InventoryItemEventHolder {
     public void interact(OnItemClicked event) {
         action.accept(event);
     }
+
+    @Override
+    public InventoryItemEventHolder clone() {
+        return new InventoryItemExtender(action);
+    }
 }

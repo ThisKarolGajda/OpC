@@ -23,7 +23,7 @@ public class InventoryFactory extends AbstractInventory<Integer, InventoryItem> 
         for (int i = 0; i < getInventorySlots(); i++) {
             Optional<InventoryItem> optional = get(i);
             if (optional.isPresent()) {
-                inventory.setItem(i, optional.get());
+                inventory.setItem(i, optional.get().generate());
             }
         }
 

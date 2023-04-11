@@ -46,6 +46,16 @@ public class PlaceholderAPI {
                 public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
                     return biFunction.apply(player, params);
                 }
+
+                @Override
+                public boolean persist() {
+                    return true;
+                }
+
+                @Override
+                public boolean canRegister() {
+                    return true;
+                }
             }.register();
         }
         return placeholderAPI;

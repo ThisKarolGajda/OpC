@@ -10,18 +10,25 @@ import org.bukkit.plugin.Plugin;
 import java.util.function.Consumer;
 
 public class EventRegister {
-    private static final Plugin opC = OpAPI.getInstance();
+    private static final Plugin opc = OpAPI.getInstance();
 
     public static <E extends Event> void registerEvent(Class<E> clazz, Consumer<E> consumer) {
         registerEvent(clazz, EventPriority.NORMAL, consumer);
     }
 
     public static <E extends Event> void registerEvent(Class<E> clazz, EventPriority priority, Consumer<E> consumer) {
-        if (canRegister()) {
-            opC.getServer().getPluginManager()
-                    .registerEvent(clazz, new Listener() {
-                            }, priority,
-                            (l, e) -> consumer.accept((E) e), opC, true);
+        try {
+            if (canRegister()) {
+                opc.getServer().getPluginManager().registerEvent(clazz, new Listener() {
+                        },
+                        priority, (l, e) -> {
+                            if (e.getClass().equals(clazz)) {
+                                consumer.accept((E) e);
+                            }
+                        }, opc, true);
+            }
+        } catch (ClassCastException exception) {
+            exception.printStackTrace();
         }
     }
 

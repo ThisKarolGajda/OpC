@@ -1,6 +1,5 @@
 package me.opkarol.opc.api.gui.replacement;
 
-import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.gui.database.InventoryHolderFactory;
 import me.opkarol.opc.api.gui.items.InventoryItem;
 import me.opkarol.opc.api.gui.pattern.InventoryPattern;
@@ -69,7 +68,6 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
 
     public final void replaceNotBuilt(int page, OpMap<String, String> replacements) {
         assureMapExistence(page);
-        OpAPI.logInfo("PAGE: " + page + " REPLACE: " + Arrays.toString(getReplacements().unsafeGet(page).keySet().toArray()));
 
         OpMap<Integer, InventoryItem> temp = new OpMap<>();
         for (String replace : getReplacements().unsafeGet(page).keySet()) {
@@ -94,8 +92,6 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
 
         for (int i : temp.keySet()) {
             InventoryItem item = temp.unsafeGet(i);
-            OpAPI.logInfo(i + " - " + item.getLore());
-
             set(i, item);
         }
     }
@@ -314,7 +310,6 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
     }
 
     public void open(int page, Player player, OpMap<String, String> translations) {
-        OpAPI.logInfo("IS BUILT? PAGE: " + page + " --> " + getInventoryHolder().isBuilt(page));
         if (getInventoryHolder().isBuilt(page)) {
             replaceAndOpenBuiltInventory(page, player, translations);
         } else {
