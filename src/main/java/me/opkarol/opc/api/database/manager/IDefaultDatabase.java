@@ -1,32 +1,31 @@
 package me.opkarol.opc.api.database.manager;
 
-import me.opkarol.opc.api.command.suggestions.OpCommandSuggestion;
+import me.opkarol.opc.api.map.OpMap;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public interface IDefaultDatabase<O, C> {
 
     Predicate<O> getPredicate(C object);
 
-    boolean delete(UUID uuid, C object);
+    boolean delete(C uuid);
 
-    boolean contains(UUID uuid, C object);
+    boolean contains(C uuid);
 
-    Optional<O> get(UUID uuid, C object);
+    Optional<O> get(C uuid);
 
-    void add(UUID uuid, O object);
+    void add(C uuid, O object);
 
-    List<O> getList(UUID uuid);
+    List<O> getList(C uuid);
 
-    default void checkAndUse(UUID uuid, C object, Runnable noObject, Consumer<O> objectFound) {
-        if (contains(uuid, object)) {
-            Optional<O> optional = get(uuid, object);
+    OpMap<C, List<O>> getObjectsMap();
+
+    default void checkAndUse(C object, Runnable noObject, Consumer<O> objectFound) {
+        if (contains(object)) {
+            Optional<O> optional = get(object);
             if (optional.isEmpty()) {
                 noObject.run();
             } else {
@@ -37,9 +36,9 @@ public interface IDefaultDatabase<O, C> {
         }
     }
 
-    default void checkAndUse(UUID uuid, C object, Runnable noObject, Runnable objectFound) {
-        if (contains(uuid, object)) {
-            Optional<O> optional = get(uuid, object);
+    default void checkAndUse(C object, Runnable noObject, Runnable objectFound) {
+        if (contains(object)) {
+            Optional<O> optional = get(object);
             if (optional.isEmpty()) {
                 noObject.run();
             } else {
@@ -50,41 +49,29 @@ public interface IDefaultDatabase<O, C> {
         }
     }
 
-    default void deleteAndUse(UUID uuid, C object, Runnable noObject, Runnable objectFound) {
-        if (delete(uuid, object)) {
+    default void deleteAndUse(C object, Runnable noObject, Runnable objectFound) {
+        if (delete(object)) {
             objectFound.run();
         } else {
             noObject.run();
         }
     }
 
-    default void addAndUse(UUID uuid, C object, O obj, Runnable noObject, Consumer<O> objectFound) {
-        if (contains(uuid, object)) {
+    default void addAndUse(C object, O obj, Runnable noObject, Consumer<O> objectFound) {
+        if (contains(object)) {
             noObject.run();
         } else {
-            add(uuid, obj);
+            add(object, obj);
             objectFound.accept(obj);
         }
     }
 
-    default void addAndUse(UUID uuid, C object, O obj, Runnable noObject, Runnable objectFound) {
-        if (contains(uuid, object)) {
+    default void addAndUse(C object, O obj, Runnable noObject, Runnable objectFound) {
+        if (contains(object)) {
             noObject.run();
         } else {
-            add(uuid, obj);
+            add(object, obj);
             objectFound.run();
         }
-    }
-
-    default OpCommandSuggestion getSuggestions(Function<O, String> function) {
-        return new OpCommandSuggestion((sender, args) -> {
-            if (sender.isPlayer()) {
-                UUID uuid = sender.getPlayer().getUniqueId();
-                return getList(uuid)
-                        .stream().map(function)
-                        .toList();
-            }
-            return Collections.singletonList("");
-        });
     }
 }

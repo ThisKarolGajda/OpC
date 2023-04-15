@@ -1,36 +1,36 @@
 package me.opkarol.opc.api.database.mysql.reflection.types;
 
-import me.opkarol.opc.api.database.mysql.types.MySqlVariableType;
+import me.opkarol.opc.api.database.mysql.types.SqlVariableType;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 
-public final class MySqlReflectionType {
+public final class SqlReflectionType {
 
-    public static MySqlVariableType switchMySqlType(@NotNull Class<?> clazz) {
+    public static SqlVariableType switchMySqlType(@NotNull Class<?> clazz) {
         switch (clazz.getSimpleName()) {
             case "Integer", "int" -> {
-                return MySqlVariableType.INT;
+                return SqlVariableType.INT;
             }
             case "String", "UUID" -> {
-                return MySqlVariableType.TEXT;
+                return SqlVariableType.TEXT;
             }
             case "Float", "float" -> {
-                return MySqlVariableType.FLOAT;
+                return SqlVariableType.FLOAT;
             }
             case "Double", "double" -> {
-                return MySqlVariableType.DOUBLE;
+                return SqlVariableType.DOUBLE;
             }
             case "boolean", "Boolean" -> {
-                return MySqlVariableType.BOOLEAN;
+                return SqlVariableType.BOOLEAN;
             }
             default -> {
-                return MySqlVariableType.JSON;
+                return SqlVariableType.JSON;
             }
         }
     }
 
-    public static MySqlVariableType switchMySqlType(@NotNull Field field) {
+    public static SqlVariableType switchMySqlType(@NotNull Field field) {
         return switchMySqlType(field.getType());
     }
 

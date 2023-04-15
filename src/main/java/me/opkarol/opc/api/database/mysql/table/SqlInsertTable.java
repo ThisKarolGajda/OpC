@@ -1,23 +1,23 @@
 package me.opkarol.opc.api.database.mysql.table;
 
-import me.opkarol.opc.api.database.mysql.types.MySqlAttribute;
-import me.opkarol.opc.api.database.mysql.types.MySqlVariable;
+import me.opkarol.opc.api.database.mysql.types.SqlAttribute;
+import me.opkarol.opc.api.database.mysql.types.SqlVariable;
 import me.opkarol.opc.api.map.OpMap;
 import org.jetbrains.annotations.NotNull;
 
-public class MySqlInsertTable {
-    private final MySqlTable table;
+public class SqlInsertTable {
+    private final SqlTable table;
     private final OpMap<String, Object> valueMap = new OpMap<>();
 
-    public MySqlInsertTable(MySqlTable table) {
+    public SqlInsertTable(SqlTable table) {
         this.table = table;
     }
 
-    public MySqlInsertTable addValue(@NotNull MySqlVariable variable, Object value) {
+    public SqlInsertTable addValue(@NotNull SqlVariable variable, Object value) {
         return addValue(variable.name(), value);
     }
 
-    public MySqlInsertTable addValue(String variable, Object value) {
+    public SqlInsertTable addValue(String variable, Object value) {
         valueMap.set(variable, value);
         return this;
     }
@@ -28,7 +28,7 @@ public class MySqlInsertTable {
             return "";
         }
 
-        for (MySqlVariable variable : table.getMap().keySet()) {
+        for (SqlVariable variable : table.getMap().keySet()) {
             builder.append("`").append(variable.name()).append("`, ");
         }
 
@@ -45,7 +45,7 @@ public class MySqlInsertTable {
             return "";
         }
 
-        for (MySqlVariable variable : table.getMap().keySet()) {
+        for (SqlVariable variable : table.getMap().keySet()) {
             Object value = valueMap.getOrDefault(variable.name(), null);
             if (value == null) {
                 continue;
@@ -67,9 +67,9 @@ public class MySqlInsertTable {
             return "";
         }
 
-        for (MySqlVariable variable : table.getMap().keySet()) {
+        for (SqlVariable variable : table.getMap().keySet()) {
             Object value = valueMap.getOrDefault(variable.name(), null);
-            if (value == null || table.getAttributes(variable).contains(MySqlAttribute.PRIMARY) || table.getAttributes(variable).contains(MySqlAttribute.IGNORE_IN_ALL_SEARCH)) {
+            if (value == null || table.getAttributes(variable).contains(SqlAttribute.PRIMARY) || table.getAttributes(variable).contains(SqlAttribute.IGNORE_IN_ALL_SEARCH)) {
                 continue;
             }
 

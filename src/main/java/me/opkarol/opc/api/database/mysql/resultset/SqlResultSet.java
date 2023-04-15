@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public record MySqlResultSet(ResultSet set) {
+public record SqlResultSet(ResultSet set) {
 
     public String getText(String column) {
         try {

@@ -1,8 +1,8 @@
 package me.opkarol.opc.api.database.mysql.table;
 
-import me.opkarol.opc.api.database.mysql.types.MySqlAttribute;
-import me.opkarol.opc.api.database.mysql.types.MySqlVariable;
-import me.opkarol.opc.api.database.mysql.types.MySqlVariableType;
+import me.opkarol.opc.api.database.mysql.types.SqlAttribute;
+import me.opkarol.opc.api.database.mysql.types.SqlVariable;
+import me.opkarol.opc.api.database.mysql.types.SqlVariableType;
 import me.opkarol.opc.api.map.OpLinkedMap;
 
 import java.util.Arrays;
@@ -10,28 +10,28 @@ import java.util.List;
 
 import static me.opkarol.opc.api.utils.VariableUtil.getOrDefault;
 
-public class MySqlTable {
-    private final OpLinkedMap<MySqlVariable, MySqlAttribute[]> map = new OpLinkedMap<>();
+public class SqlTable {
+    private final OpLinkedMap<SqlVariable, SqlAttribute[]> map = new OpLinkedMap<>();
     private String tableName;
 
     private String finalString;
 
-    public MySqlTable(String tableName) {
+    public SqlTable(String tableName) {
         this.tableName = tableName;
     }
 
-    public MySqlTable fromString(String s) {
+    public SqlTable fromString(String s) {
         this.finalString = s;
         return this;
     }
 
-    public MySqlTable addMySqlVariable(MySqlVariable variableName, MySqlAttribute... attributes) {
+    public SqlTable addMySqlVariable(SqlVariable variableName, SqlAttribute... attributes) {
         map.set(variableName, attributes);
         return this;
     }
 
-    public MySqlTable addMySqlVariable(String name, MySqlVariableType type, MySqlAttribute... attributes) {
-        return addMySqlVariable(new MySqlVariable(name, type), attributes);
+    public SqlTable addMySqlVariable(String name, SqlVariableType type, SqlAttribute... attributes) {
+        return addMySqlVariable(new SqlVariable(name, type), attributes);
     }
 
     public String toCreateTableString() {
@@ -44,18 +44,18 @@ public class MySqlTable {
         }
 
         StringBuilder builder = new StringBuilder();
-        MySqlVariable primary = null;
-        for (MySqlVariable variable : map.keySet()) {
+        SqlVariable primary = null;
+        for (SqlVariable variable : map.keySet()) {
             builder.append(variable.name()).append(" ").append(variable.variableName());
-            MySqlAttribute[] attributes = map.getOrDefault(variable, null);
+            SqlAttribute[] attributes = map.getOrDefault(variable, null);
             if (attributes != null && attributes.length != 0) {
                 boolean alreadySet = false;
-                for (MySqlAttribute attribute : attributes) {
-                    if (attribute.equals(MySqlAttribute.PRIMARY)) {
+                for (SqlAttribute attribute : attributes) {
+                    if (attribute.equals(SqlAttribute.PRIMARY)) {
                         primary = variable;
                     } else {
-                        if (!alreadySet && variable.variableName().equals(MySqlVariableType.TEXT)) {
-                            builder.append(MySqlAttribute.CHARACTER_SET.getText());
+                        if (!alreadySet && variable.variableName().equals(SqlVariableType.TEXT)) {
+                            builder.append(SqlAttribute.CHARACTER_SET.getText());
                             alreadySet = true;
                         }
                         builder.append(attribute.getText());
@@ -65,7 +65,7 @@ public class MySqlTable {
             builder.append(", ");
         }
         if (primary != null) {
-            builder.append(String.format(MySqlAttribute.PRIMARY.getText(), primary.name())).append(", ");
+            builder.append(String.format(SqlAttribute.PRIMARY.getText(), primary.name())).append(", ");
         }
 
         return builder.substring(0, builder.length() - 2);
@@ -79,11 +79,11 @@ public class MySqlTable {
         this.tableName = tableName;
     }
 
-    public OpLinkedMap<MySqlVariable, MySqlAttribute[]> getMap() {
+    public OpLinkedMap<SqlVariable, SqlAttribute[]> getMap() {
         return map;
     }
 
-    public List<MySqlAttribute> getAttributes(MySqlVariable variable) {
+    public List<SqlAttribute> getAttributes(SqlVariable variable) {
         return Arrays.asList(getMap().getMap().get(variable));
     }
 }

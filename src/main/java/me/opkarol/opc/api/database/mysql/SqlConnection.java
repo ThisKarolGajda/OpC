@@ -1,34 +1,36 @@
 package me.opkarol.opc.api.database.mysql;
 
 import com.zaxxer.hikari.HikariDataSource;
-import me.opkarol.opc.api.database.IMySqlDatabase;
-import me.opkarol.opc.api.database.mysql.table.MySqlDeleteTable;
-import me.opkarol.opc.api.database.mysql.table.MySqlInsertTable;
-import me.opkarol.opc.api.database.mysql.table.MySqlTable;
+import me.opkarol.opc.api.database.ISqlConnection;
+import me.opkarol.opc.api.database.manager.settings.SqlDatabaseSettings;
+import me.opkarol.opc.api.database.mysql.table.SqlDeleteTable;
+import me.opkarol.opc.api.database.mysql.table.SqlInsertTable;
+import me.opkarol.opc.api.database.mysql.table.SqlTable;
 import me.opkarol.opc.api.file.Configuration;
 import me.opkarol.opc.api.utils.VariableUtil;
 import org.jetbrains.annotations.NotNull;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class MySqlConnection implements IMySqlDatabase {
+public class SqlConnection implements ISqlConnection {
+    private HikariDataSource source;
 
-    private HikariDataSource hikariDataSource;
-    private DataSource source;
-
-    public MySqlConnection(@NotNull Configuration configuration, String path) {
+    public SqlConnection(@NotNull Configuration configuration, String path) {
         setup(configuration, path);
     }
 
-    public MySqlConnection() {
+    public SqlConnection() {
     }
 
-    public MySqlConnection(String jdbc, String user, String password) {
+    public SqlConnection(String jdbc, String user, String password) {
         setup(jdbc, user, password);
+    }
+
+    public SqlConnection(@NotNull SqlDatabaseSettings mysql) {
+        this(mysql.getJdbc(), mysql.getUser(), mysql.getPassword());
     }
 
     @Override
@@ -56,21 +58,19 @@ public class MySqlConnection implements IMySqlDatabase {
         ds.addDataSourceProperty("cacheServerConfiguration", "true");
         ds.addDataSourceProperty("elideSetAutoCommits", "true");
         ds.addDataSourceProperty("maintainTimeStats", "false");
-        source = ds;
-        hikariDataSource = new HikariDataSource(ds);
+        source = new HikariDataSource(ds);
     }
 
     @Override
     public void close() {
-        if (hikariDataSource != null && !hikariDataSource.isClosed()) {
-            hikariDataSource.close();
-            hikariDataSource = null;
+        if (source != null && !source.isClosed()) {
+            source.close();
             source = null;
         }
     }
 
     @Override
-    public void create(@NotNull MySqlTable table) {
+    public void create(@NotNull SqlTable table) {
         try (Connection conn = source.getConnection();
              PreparedStatement stmt = conn.prepareStatement(table.toCreateTableString())) {
             stmt.execute();
@@ -80,7 +80,7 @@ public class MySqlConnection implements IMySqlDatabase {
     }
 
     @Override
-    public void insert(@NotNull MySqlInsertTable table) {
+    public void insert(@NotNull SqlInsertTable table) {
         try (Connection conn = source.getConnection();
              PreparedStatement stmt = conn.prepareStatement(table.toInsertIntoString())) {
             stmt.executeUpdate();
@@ -90,7 +90,7 @@ public class MySqlConnection implements IMySqlDatabase {
     }
 
     @Override
-    public void delete(@NotNull MySqlDeleteTable table) {
+    public void delete(@NotNull SqlDeleteTable table) {
         try (Connection conn = source.getConnection();
              PreparedStatement stmt = conn.prepareStatement(table.toDeleteString())) {
             stmt.executeUpdate();
@@ -100,7 +100,7 @@ public class MySqlConnection implements IMySqlDatabase {
     }
 
     @Override
-    public ResultSet get(MySqlTable table) {
+    public ResultSet get(SqlTable table) {
         try (Connection conn = source.getConnection();
              PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM %s;", table.getTableName()))) {
             return stmt.executeQuery();

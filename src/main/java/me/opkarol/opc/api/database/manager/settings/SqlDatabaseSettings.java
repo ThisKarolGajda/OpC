@@ -5,20 +5,20 @@ import me.opkarol.opc.api.file.Configuration;
 import me.opkarol.opc.api.utils.VariableUtil;
 import org.jetbrains.annotations.NotNull;
 
-public final class MySqlDatabaseSettings {
+public final class SqlDatabaseSettings {
     private final boolean enabled;
     private final String jdbc;
     private final String user;
     private final String password;
 
-    public MySqlDatabaseSettings(boolean enabled, String jdbc, String user, String password) {
+    public SqlDatabaseSettings(boolean enabled, String jdbc, String user, String password) {
         this.enabled = enabled;
         this.jdbc = jdbc;
         this.user = user;
         this.password = password;
     }
 
-    public MySqlDatabaseSettings(@NotNull Configuration configuration, String path) {
+    public SqlDatabaseSettings(@NotNull Configuration configuration, String path) {
         path = VariableUtil.ifNotEndsWithAdd(path, ".");
         this.enabled = configuration.getBoolean(path + "enabled");
         this.jdbc = configuration.getString(path + "jdbc");
@@ -26,11 +26,11 @@ public final class MySqlDatabaseSettings {
         this.password = configuration.getString(path + "password");
     }
 
-    public MySqlDatabaseSettings(String path) {
+    public SqlDatabaseSettings(String path) {
         this(OpAPI.getConfig(), path);
     }
 
-    public MySqlDatabaseSettings() {
+    public SqlDatabaseSettings() {
         this(OpAPI.getConfig(), "mysql");
     }
 

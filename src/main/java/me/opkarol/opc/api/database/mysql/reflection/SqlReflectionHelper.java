@@ -1,6 +1,6 @@
 package me.opkarol.opc.api.database.mysql.reflection;
 
-import me.opkarol.opc.api.database.mysql.reflection.objects.MySqlObject;
+import me.opkarol.opc.api.database.mysql.reflection.objects.SqlObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class MySqlReflectionUtils {
+public class SqlReflectionHelper {
 
     public static @NotNull List<Annotation> getFieldAnnotations(@NotNull Class<?> classObject) {
         List<Annotation> list = new ArrayList<>();
@@ -58,7 +58,7 @@ public class MySqlReflectionUtils {
         return object;
     }
 
-    public static <O> @Nullable O invokeMethod(@NotNull Method method, O object, MySqlObject... args) {
+    public static <O> @Nullable O invokeMethod(@NotNull Method method, O object, SqlObject... args) {
         try {
             method.invoke(object, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
@@ -95,17 +95,19 @@ public class MySqlReflectionUtils {
 
     private static @Nullable Constructor<?> getConstructor(Class<?> classObject, java.lang.Object... args) {
         if (args == null || args.length == 0) {
-            return MySqlReflectionUtils.getConstructor(classObject);
+            return SqlReflectionHelper.getConstructor(classObject);
         }
+
         Class<?>[] argTypes = new Class<?>[args.length];
         for (int i = 0; i < args.length; ++i) {
             if (args[i] == null) {
-                argTypes[i] = MySqlObject.class;
+                argTypes[i] = SqlObject.class;
             } else {
                 argTypes[i] = args[i].getClass();
             }
         }
-        return MySqlReflectionUtils.getConstructor(classObject, argTypes);
+
+        return SqlReflectionHelper.getConstructor(classObject, argTypes);
     }
 
     public static <T> @Nullable T invokeSafeConstructor(Class<?> clazz, java.lang.Object... objects) {

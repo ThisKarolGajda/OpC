@@ -1,23 +1,23 @@
 package me.opkarol.opc.api.database.mysql.table;
 
-import me.opkarol.opc.api.database.mysql.types.MySqlVariable;
+import me.opkarol.opc.api.database.mysql.types.SqlVariable;
 import me.opkarol.opc.api.map.OpMap;
 import org.jetbrains.annotations.NotNull;
 
-public class MySqlDeleteTable {
-    private final MySqlTable table;
+public class SqlDeleteTable {
+    private final SqlTable table;
     private final OpMap<String, Object> valueMap = new OpMap<>();
 
-    public MySqlDeleteTable(MySqlTable table) {
+    public SqlDeleteTable(SqlTable table) {
         this.table = table;
     }
 
-    public MySqlDeleteTable addDeletion(String variable, Object object) {
+    public SqlDeleteTable addDeletion(String variable, Object object) {
         valueMap.set(variable, object);
         return this;
     }
 
-    public MySqlDeleteTable addDeletion(@NotNull MySqlVariable variable, Object object) {
+    public SqlDeleteTable addDeletion(@NotNull SqlVariable variable, Object object) {
         return addDeletion(variable.toString(), object);
     }
 

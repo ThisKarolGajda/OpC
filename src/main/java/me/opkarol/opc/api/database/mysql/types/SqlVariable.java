@@ -1,7 +1,7 @@
 package me.opkarol.opc.api.database.mysql.types;
 
-public record MySqlVariable(String name,
-                            MySqlVariableType variableName) {
+public record SqlVariable(String name,
+                          SqlVariableType variableName) {
 
     @Override
     public String toString() {

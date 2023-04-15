@@ -1,6 +1,6 @@
 package me.opkarol.opc.api.database.mysql.types;
 
-public enum MySqlVariableType {
+public enum SqlVariableType {
     INT,
     TINYINT,
     CHAR,

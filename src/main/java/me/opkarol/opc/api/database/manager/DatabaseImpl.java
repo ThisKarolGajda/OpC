@@ -1,12 +1,10 @@
 package me.opkarol.opc.api.database.manager;
 
-import me.opkarol.opc.api.database.manager.settings.FlatDatabaseSettings;
-import me.opkarol.opc.api.database.manager.settings.MySqlDatabaseSettings;
-import me.opkarol.opc.api.utils.VariableUtil;
+import me.opkarol.opc.api.database.manager.settings.FlatDatabaseSettingsFactory;
+import me.opkarol.opc.api.database.manager.settings.SqlDatabaseSettings;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 @SuppressWarnings("all")
 public class DatabaseImpl<O, C> {
@@ -19,16 +17,16 @@ public class DatabaseImpl<O, C> {
     }
 
     public DatabaseImpl(@NotNull Class<? extends O> clazz, String fileName, Function<O, C> getObject) {
-        this.databaseInterface = setDatabasePluginWithMySql(fileName, getObject, clazz);
+        this.databaseInterface = setDatabasePluginWithSql(fileName, getObject, clazz);
     }
 
-    public DatabaseImpl(Class<O> clazz, MySqlDatabaseSettings mySqlDatabaseSettings, String fileName, Function<O, C> getObject) {
-        databaseInterface = setDatabasePluginWithMySql(mySqlDatabaseSettings, fileName, getObject, clazz);
+    public DatabaseImpl(Class<O> clazz, SqlDatabaseSettings sqlDatabaseSettings, String fileName, Function<O, C> getObject) {
+        databaseInterface = setDatabasePluginWithSql(sqlDatabaseSettings, fileName, getObject, clazz);
     }
 
     public DatabaseImpl(@NotNull Class<O> clazz, String fileName, Function<O, C> getObject, boolean mysqlEnabled) {
         if (mysqlEnabled) {
-            databaseInterface = setDatabasePluginWithMySql(fileName, getObject, clazz);
+            databaseInterface = setDatabasePluginWithSql(fileName, getObject, clazz);
         } else {
             databaseInterface = setDatabasePlugin(fileName, getObject);
         }
@@ -46,33 +44,24 @@ public class DatabaseImpl<O, C> {
         return (IDefaultDatabase<O, C>) databasePlugin.getLocalDatabase();
     }
 
-    public DatabaseFactory<O, C> setDatabasePluginWithMySql(String fileName, Function<O, C> getObject, Class<? extends O> clazz) {
-        DatabaseImpl.databasePlugin = new DatabaseFactory<O, C>(new MySqlDatabaseSettings(), new FlatDatabaseSettings<>(fileName) {
-            @Override
-            public Predicate<O> getPredicate(C object) {
-                return o -> getObject.apply(o).equals(object);
-            }
-        }, VariableUtil.getOrDefault(clazz, null));
+    public DatabaseFactory<O, C> setDatabasePluginWithSql(String fileName, Function<O, C> getObject, Class<? extends O> clazz) {
+        DatabaseImpl.databasePlugin = new DatabaseFactory(new SqlDatabaseSettings(), new FlatDatabaseSettingsFactory(fileName, (o, o2) -> {
+            return getObject.apply((O) o).equals(o2);
+        }), clazz);
         return (DatabaseFactory<O, C>) DatabaseImpl.databasePlugin;
     }
 
-    public DatabaseFactory<O, C> setDatabasePluginWithMySql(MySqlDatabaseSettings mySqlDatabaseSettings, String fileName, Function<O, C> getObject, Class<O> clazz) {
-        DatabaseImpl.databasePlugin = new DatabaseFactory<>(mySqlDatabaseSettings, new FlatDatabaseSettings<O, C>(fileName) {
-            @Override
-            public Predicate<O> getPredicate(C object) {
-                return o -> getObject.apply(o).equals(object);
-            }
-        }, VariableUtil.getOrDefault(clazz, null));
+    public DatabaseFactory<O, C> setDatabasePluginWithSql(SqlDatabaseSettings sqlDatabaseSettings, String fileName, Function<O, C> getObject, Class<O> clazz) {
+        DatabaseImpl.databasePlugin = new DatabaseFactory(sqlDatabaseSettings, new FlatDatabaseSettingsFactory(fileName, (o, o2) -> {
+            return getObject.apply((O) o).equals(o2);
+        }), clazz);
         return (DatabaseFactory<O, C>) DatabaseImpl.databasePlugin;
     }
 
     public DatabaseFactory<O, C> setDatabasePlugin(String fileName, Function<O, C> getObject) {
-        DatabaseImpl.databasePlugin = new DatabaseFactory<>(new FlatDatabaseSettings<O, C>(fileName) {
-            @Override
-            public Predicate<O> getPredicate(C object) {
-                return o -> getObject.apply(o).equals(object);
-            }
-        });
+        DatabaseImpl.databasePlugin = new DatabaseFactory(new FlatDatabaseSettingsFactory(fileName, (o, o2) -> {
+            return getObject.apply((O) o).equals(o2);
+        }));
         return (DatabaseFactory<O, C>) DatabaseImpl.databasePlugin;
     }
 

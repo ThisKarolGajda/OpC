@@ -1,22 +1,22 @@
 package me.opkarol.opc.api.database.mysql.types;
 
-import me.opkarol.opc.api.database.mysql.MySqlConnection;
+import me.opkarol.opc.api.database.mysql.SqlConnection;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class MySqlIdCount {
+public class SqlIdCounter {
     private final String tableName;
     private int id = -1;
 
-    public MySqlIdCount(MySqlConnection connection, String tableName) {
+    public SqlIdCounter(SqlConnection connection, String tableName) {
         this.tableName = tableName;
         loadLastId(connection);
     }
 
     public int getNextId() {
-        id += 1;
+        id++;
         return id;
     }
 
@@ -25,7 +25,7 @@ public class MySqlIdCount {
         return id;
     }
 
-    public void loadLastId(@NotNull MySqlConnection connection) {
+    public void loadLastId(@NotNull SqlConnection connection) {
         ResultSet set;
         try {
             set = connection.query(String.format("SELECT MAX(`id`) FROM `%s`;", tableName));

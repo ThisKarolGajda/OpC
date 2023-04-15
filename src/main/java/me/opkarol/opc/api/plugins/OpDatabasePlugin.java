@@ -13,10 +13,6 @@ public abstract class OpDatabasePlugin<O, C> extends OpPlugin {
     private static DatabaseFactory<?, ?> databaseInterface;
     private final OpMap<Class<?>, Object> savedInstances = new OpMap<>();
 
-    public static <O, C> IDefaultDatabase<O, C> getDatabaseInterface() {
-        return (IDefaultDatabase<O, C>) databaseInterface.getLocalDatabase();
-    }
-
     public static <O, C> void setDatabaseInterface(DatabaseFactory<O, C> databaseInterface) {
         OpDatabasePlugin.databaseInterface = databaseInterface;
     }

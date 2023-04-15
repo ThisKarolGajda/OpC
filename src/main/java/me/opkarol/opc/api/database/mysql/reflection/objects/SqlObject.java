@@ -1,9 +1,10 @@
 package me.opkarol.opc.api.database.mysql.reflection.objects;
 
-import me.opkarol.opc.api.database.mysql.reflection.MySqlReflectionUtils;
-import me.opkarol.opc.api.database.mysql.types.MySqlAttribute;
-import me.opkarol.opc.api.database.mysql.types.MySqlVariable;
-import me.opkarol.opc.api.database.mysql.types.MySqlVariableType;
+import me.opkarol.opc.api.database.mysql.reflection.SqlReflectionHelper;
+import me.opkarol.opc.api.database.mysql.reflection.types.SqlReflectionType;
+import me.opkarol.opc.api.database.mysql.types.SqlAttribute;
+import me.opkarol.opc.api.database.mysql.types.SqlVariable;
+import me.opkarol.opc.api.database.mysql.types.SqlVariableType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,20 +13,24 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySqlObject {
+public class SqlObject {
     private final String name;
     private final Field object;
-    private final MySqlVariableType type;
-    private final List<MySqlAttribute> attributes;
+    private final SqlVariableType type;
+    private final List<SqlAttribute> attributes;
     private int constructorParameter;
 
-    public MySqlObject(String name, Field object,
-                       MySqlVariableType type,
-                       MySqlAttribute... attributes) {
+    public SqlObject(String name, Field object,
+                     SqlVariableType type,
+                     SqlAttribute... attributes) {
         this.name = name;
         this.object = object;
         this.type = type;
         this.attributes = new ArrayList<>(List.of(attributes));
+    }
+
+    public SqlObject(Field field) {
+        this(field.getName(), field, SqlReflectionType.switchMySqlType(field));
     }
 
     public String toName() {
@@ -33,24 +38,24 @@ public class MySqlObject {
     }
 
     @Contract(" -> new")
-    public @NotNull MySqlVariable getVariable() {
-        return new MySqlVariable(name, type);
+    public @NotNull SqlVariable getVariable() {
+        return new SqlVariable(name, type);
     }
 
-    public List<MySqlAttribute> getTypes() {
+    public List<SqlAttribute> getTypes() {
         return attributes;
     }
 
     public boolean isPrimary() {
-        return getTypes().contains(MySqlAttribute.PRIMARY);
+        return getTypes().contains(SqlAttribute.PRIMARY);
     }
 
     public boolean isNotNull() {
-        return getTypes().contains(MySqlAttribute.NOTNULL);
+        return getTypes().contains(SqlAttribute.NOTNULL);
     }
 
     public boolean isNotIgnoredInSearch() {
-        return !getTypes().contains(MySqlAttribute.IGNORE_IN_SEARCH) && !getTypes().contains(MySqlAttribute.IGNORE_IN_ALL_SEARCH);
+        return !getTypes().contains(SqlAttribute.IGNORE_IN_INSERT_SEARCH) && !getTypes().contains(SqlAttribute.IGNORE_IN_ALL_SEARCH);
     }
 
     public String getName() {
@@ -61,19 +66,19 @@ public class MySqlObject {
         return object;
     }
 
-    public MySqlVariableType getType() {
+    public SqlVariableType getType() {
         return type;
     }
 
-    public MySqlAttribute[] getAttributes() {
-        return attributes.toArray(new MySqlAttribute[0]);
+    public SqlAttribute[] getAttributes() {
+        return attributes.toArray(new SqlAttribute[0]);
     }
 
     public <O> java.lang.Object getObject(O main) {
-        return MySqlReflectionUtils.get(object, main);
+        return SqlReflectionHelper.get(object, main);
     }
 
-    public void addAttribute(MySqlAttribute attribute) {
+    public void addAttribute(SqlAttribute attribute) {
         attributes.add(attribute);
     }
 

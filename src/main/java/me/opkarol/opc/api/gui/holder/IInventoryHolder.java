@@ -4,11 +4,12 @@ import me.opkarol.opc.api.gui.OpInventory;
 import me.opkarol.opc.api.gui.items.InventoryItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
+import org.jetbrains.annotations.NotNull;
 
 public interface IInventoryHolder {
     OpInventory getInventory();
 
-    default InventoryItem getBlankItem() {
+    static @NotNull InventoryItem getBlankItem() {
         InventoryItem item = new InventoryItem(Material.BLACK_STAINED_GLASS_PANE, e -> e.setCancelled(true));
         item.setName("&k");
         item.setFlags(ItemFlag.HIDE_ATTRIBUTES);
