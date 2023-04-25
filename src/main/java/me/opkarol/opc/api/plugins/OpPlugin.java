@@ -14,6 +14,9 @@ import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.autocomplete.SuggestionProviderFactory;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
+import revxrsal.commands.bukkit.exception.BukkitExceptionAdapter;
+import revxrsal.commands.bukkit.exception.EnglishBukkitExceptionAdapter;
+import revxrsal.commands.bukkit.exception.PolishBukkitExceptionAdapter;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -61,18 +64,17 @@ public class OpPlugin extends JavaPlugin {
         if (commands != null && commands.length > 0) {
             commandHandler.register(commands);
             commandHandler.registerBrigadier();
+
         }
-
-
     }
 
     public void enable() {
 
-    };
+    }
 
     public void disable() {
 
-    };
+    }
 
     @Override
     public void onDisable() {
@@ -112,5 +114,17 @@ public class OpPlugin extends JavaPlugin {
 
     public BukkitCommandHandler getCommandHandler() {
         return commandHandler;
+    }
+
+    public void setCommandHandlerExceptionHandler(CommandHandlerExceptionLanguage exception) {
+        switch (exception) {
+            case POLISH -> setCommandHandlerExceptionHandler(new PolishBukkitExceptionAdapter());
+            case ENGLISH -> setCommandHandlerExceptionHandler(new EnglishBukkitExceptionAdapter());
+            default -> throw new IllegalStateException("Unexpected value: " + exception);
+        }
+    }
+
+    public <E extends BukkitExceptionAdapter> void setCommandHandlerExceptionHandler(E exceptionHandler) {
+        getCommandHandler().setExceptionHandler(exceptionHandler);
     }
 }
