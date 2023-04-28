@@ -74,7 +74,7 @@
     <properties>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <lamp.version>0b5348f776</lamp.version>
+        <lamp.version>ae8be3bd0e</lamp.version>
     </properties>
 
     <repositories>
