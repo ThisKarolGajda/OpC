@@ -10,6 +10,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,8 +37,9 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
 
     public int getMaxPages() {
         return switch (getInventoryHolder().getType()) {
-            case PAGED -> getInventoryHolder().getPagedHolder().DEFAULT_PAGES_MAX_LIMIT;
-            case DEFAULT -> 0;
+            // Add 1 because the code is trash, and it only works this way
+            case PAGED -> getInventoryHolder().getPagedHolder().DEFAULT_PAGES_MAX_LIMIT + 1;
+            case DEFAULT -> 1;
         };
     }
 
@@ -159,7 +161,7 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
         return inventory;
     }
 
-    public void set(int page, @NotNull InventoryItem item, int slot) {
+    public void set(int page, @NotNull InventoryItem item, @Range(from = 0, to = 53) int slot) {
         for (String replacement : addRegex(item.getName())) {
             addReplacement(page, replacement, slot);
         }
@@ -169,13 +171,13 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
         getInventoryHolder().set(page, item, slot);
     }
 
-    public void setInPagesRange(int range, InventoryItem item, int slot) {
+    public void setInPagesRange(int range, InventoryItem item, @Range(from = 0, to = 53) int slot) {
         for (int i = 0; i < range; i++) {
             set(i, item, slot);
         }
     }
 
-    public void set(@NotNull InventoryItem item, int slot) {
+    public void set(@NotNull InventoryItem item, @Range(from = 0, to = 53) int slot) {
         set(0, item, slot);
     }
 
@@ -190,13 +192,13 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
         }
     }
 
-    public void safeSet(int page, InventoryItem item, int slot) {
+    public void safeSet(int page, InventoryItem item, @Range(from = 0, to = 53) int slot) {
         if (isSlotEmpty(page, slot)) {
             set(page, item, slot);
         }
     }
 
-    public boolean isSlotEmpty(int page, int slot) {
+    public boolean isSlotEmpty(int page, @Range(from = 0, to = 53) int slot) {
         return getInventoryHolder().getItem(page, slot).isEmpty();
     }
 
@@ -450,5 +452,9 @@ public class ReplacementInventoryImpl extends ReplacementInventory {
 
     public void setSaveDefaultTranslations(boolean saveDefaultTranslations) {
         this.saveDefaultTranslations = saveDefaultTranslations;
+    }
+
+    public OpMap<String, Function<ReplacementInventoryImpl, Object>> getDefaultTranslations() {
+        return defaultTranslations;
     }
 }

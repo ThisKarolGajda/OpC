@@ -14,6 +14,7 @@ import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -142,7 +143,7 @@ public class HeadManager {
         }).runTaskAsynchronously();
     }
 
-    public static void updatePlayerHeadInInventory(@NotNull Player player, OpInventory inventory, int slot, Consumer<ItemStack> itemStackConsumer) {
+    public static void updatePlayerHeadInInventory(@NotNull Player player, OpInventory inventory, @Range(from = 0, to = 53) int slot, Consumer<ItemStack> itemStackConsumer) {
         CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> getHeadValueAsData(player));
         final String defaultValue = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjYyYzQ4NWIxODg2ZGJjZTZjMWNhZDE0MGMwZWY4NzYzNTU5ZDQzYTc4NTY0NDY2NGM2ZDVmMzZlMjc1NGVlOCJ9fX0";
         future.completeOnTimeout(defaultValue, 15, TimeUnit.SECONDS)

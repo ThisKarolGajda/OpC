@@ -48,49 +48,49 @@ public class OpRunnable extends BukkitRunnable implements Serializable {
 
     @NotNull
     public synchronized OpRunnable runTaskLaterAsynchronously(long delay) throws IllegalArgumentException, IllegalStateException {
-        this.task = super.runTaskLaterAsynchronously(OpAPI.getInstance(), delay);
+        this.task = super.runTaskLaterAsynchronously(OpAPI.getPlugin(), delay);
         return this;
     }
 
     @NotNull
     public synchronized OpRunnable runTask() throws IllegalArgumentException, IllegalStateException {
-        this.task = super.runTask(OpAPI.getInstance());
+        this.task = super.runTask(OpAPI.getPlugin());
         return this;
     }
 
     @NotNull
     public synchronized OpRunnable runTaskLater(long delay) throws IllegalArgumentException, IllegalStateException {
-        this.task = super.runTaskLater(OpAPI.getInstance(), delay);
+        this.task = super.runTaskLater(OpAPI.getPlugin(), delay);
         return this;
     }
 
     @NotNull
     public synchronized OpRunnable runTaskTimerAsynchronously(long delay, long period) throws IllegalArgumentException, IllegalStateException {
-        this.task = super.runTaskTimerAsynchronously(OpAPI.getInstance(), delay, period);
+        this.task = super.runTaskTimerAsynchronously(OpAPI.getPlugin(), delay, period);
         return this;
     }
 
     @NotNull
     public synchronized OpRunnable runTaskTimerAsynchronously(long delay) throws IllegalArgumentException, IllegalStateException {
-        this.task = super.runTaskTimerAsynchronously(OpAPI.getInstance(), delay, delay);
+        this.task = super.runTaskTimerAsynchronously(OpAPI.getPlugin(), delay, delay);
         return this;
     }
 
     @NotNull
     public synchronized OpRunnable runTaskTimer(long delay, long period) throws IllegalArgumentException, IllegalStateException {
-        this.task = super.runTaskTimer(OpAPI.getInstance(), delay, period);
+        this.task = super.runTaskTimer(OpAPI.getPlugin(), delay, period);
         return this;
     }
 
     @NotNull
     public synchronized OpRunnable runTaskTimer(long delay) throws IllegalArgumentException, IllegalStateException {
-        this.task = super.runTaskTimer(OpAPI.getInstance(), delay, delay);
+        this.task = super.runTaskTimer(OpAPI.getPlugin(), delay, delay);
         return this;
     }
 
     @NotNull
     public synchronized OpRunnable runTaskAsynchronously() throws IllegalArgumentException, IllegalStateException {
-        this.task = super.runTaskAsynchronously(OpAPI.getInstance());
+        this.task = super.runTaskAsynchronously(OpAPI.getPlugin());
         return this;
     }
 }

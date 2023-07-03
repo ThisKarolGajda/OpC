@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -33,6 +34,7 @@ public class InventoryListener {
 
         // Registers a click event for both PAGED and NOT_PAGED (DEFAULT) inventory type
         EventRegister.registerEvent(InventoryClickEvent.class, e -> {
+
             // Checks if the clicked inventory is not a "holder", if it is not, it returns and does nothing
             if (isNotHolder(e.getClickedInventory())) {
                 return;
@@ -55,7 +57,7 @@ public class InventoryListener {
                     // and if it is present, creates an OnItemClicked event and passes it to the interact method of the item's InventoryItemEventHolder.
                     // If the event is cancelled, sets the cancellation of the original event (e) to true as well.
                     inventory.getInventoryHolder().getDefaultHolder().getInventory().get(slot).ifPresent(item -> {
-                        OnItemClicked event = new OnItemClicked(inventory.getInventoryHolder(), e.getWhoClicked(), slot, item);
+                        OnItemClicked event = new OnItemClicked(inventory.getInventoryHolder(), e.getWhoClicked(), slot, item, e);
                         InventoryItemEventHolder eventHolder = item.getItemEventHolder();
                         if (eventHolder != null) {
                             eventHolder.interact(event);
@@ -66,25 +68,19 @@ public class InventoryListener {
                     });
                 }
                 case PAGED -> {
-                    // If the inventory holder is a PAGED type, gets the current page of the paged holder
-                    // and then gets the item in the clicked slot from the current page's inventory.
-                    // If the item is present, it creates an OnItemClicked event and passes it to the interact method of the item's InventoryItemEventHolder,
-                    // and sets the cancellation of the original event (e) to true if the event is cancelled.
-                    // It then checks if the item has any data, and if it is a "next" or "previous" button for a paged inventory.
-                    // If it is a "next" button, it advances to the next page in the paged holder.
-                    // If it is a "previous" button, it goes back to the previous page. In either case, it reopens the inventory for the player.
                     PagedInventoryHolder invHolder = inventory.getInventoryHolder().getPagedHolder();
                     int page = invHolder.getCurrentPage();
                     invHolder.getInventory().get(page)
                             .flatMap(inventoryPage -> inventoryPage.get(slot))
                             .ifPresent(item -> handlePagedItemClick(inventory, e, slot, item));
+
                 }
             }
         });
 
         EventRegister.registerEvent(InventoryCloseEvent.class, e -> {
             // Delay inventory close, so if there is a new one that will be opened, they won't be bugged out together
-            new OpRunnable((opRunnable) -> {
+            new OpRunnable(() -> {
                 HumanEntity player = e.getPlayer();
 
                 // Avoid spam when player is dead
@@ -144,14 +140,21 @@ public class InventoryListener {
 
     /**
      * Handles the behavior when an item in a paged inventory is clicked
+     * If the inventory holder is a PAGED type, gets the current page of the paged holder
+     * and then gets the item in the clicked slot from the current page's inventory.
+     * If the item is present, it creates an OnItemClicked event and passes it to the interact method of the item's InventoryItemEventHolder,
+     * and sets the cancellation of the original event (e) to true if the event is cancelled.
+     * It then checks if the item has any data, and if it is a "next" or "previous" button for a paged inventory.
+     * If it is a "next" button, it advances to the next page in the paged holder.
+     * If it is a "previous" button, it goes back to the previous page. In either case, it reopens the inventory for the player.
      *
      * @param inventory the ReplacementInventoryImpl instance for the active inventory
      * @param event the InventoryClickEvent that triggered this method
      * @param slot the slot index of the clicked item
      * @param item the ItemStack of the clicked item
      */
-    private void handlePagedItemClick(@NotNull ReplacementInventoryImpl inventory, @NotNull InventoryClickEvent event, int slot, @NotNull InventoryItem item) {
-        OnItemClicked onItemClicked = new OnItemClicked(inventory.getInventoryHolder(), event.getWhoClicked(), slot, item);
+    private void handlePagedItemClick(@NotNull ReplacementInventoryImpl inventory, @NotNull InventoryClickEvent event, @Range(from = 0, to = 53) int slot, @NotNull InventoryItem item) {
+        OnItemClicked onItemClicked = new OnItemClicked(inventory.getInventoryHolder(), event.getWhoClicked(), slot, item, event);
         InventoryItemEventHolder eventHolder = item.getItemEventHolder();
         if (eventHolder != null) {
             eventHolder.interact(onItemClicked);

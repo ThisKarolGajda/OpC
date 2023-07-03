@@ -3,6 +3,9 @@ package me.opkarol.opc.api.utils;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Random;
 
 public class MathUtils {
 

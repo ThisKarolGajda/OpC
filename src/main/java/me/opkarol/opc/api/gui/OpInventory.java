@@ -11,6 +11,7 @@ import me.opkarol.opc.api.gui.inventory.IInventoryObject;
 import me.opkarol.opc.api.gui.items.InventoryItem;
 import me.opkarol.opc.api.gui.replacement.ReplacementInventoryImpl;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -28,15 +29,15 @@ public final class OpInventory extends ReplacementInventoryImpl {
         super(new InventoryHolderFactory(factory.getType(), factory, null));
     }
 
-    public void setGlobalItem(InventoryItem item, int slot) {
+    public void setGlobalItem(InventoryItem item, @Range(from = 0, to = 53) int slot) {
         setInPagesRange(getMaxPages(), item, slot);
     }
 
-    public void setGlobalItem(int globalRange, InventoryItem item, int slot) {
+    public void setGlobalItem(int globalRange, InventoryItem item, @Range(from = 0, to = 53) int slot) {
         setInPagesRange(globalRange, item, slot);
     }
 
-    public void setGlobalItems(int globalRange, InventoryItem item, int... slots) {
+    public void setGlobalItems(int globalRange, InventoryItem item, @Range(from = 0, to = 53) int... slots) {
         if (slots == null) {
             return;
         }
@@ -46,7 +47,7 @@ public final class OpInventory extends ReplacementInventoryImpl {
         }
     }
 
-    public void setGlobalItems(InventoryItem item, int... slots) {
+    public void setGlobalItems(InventoryItem item, @Range(from = 0, to = 53) int... slots) {
         setGlobalItems(getMaxPages(), item, slots);
     }
 
@@ -61,9 +62,8 @@ public final class OpInventory extends ReplacementInventoryImpl {
         if (object.getAdditionalAction() != null) {
             object.getAdditionalAction().accept(item);
         }
-        if (object.getAction() != null) {
-            item.setItemEventHolder(new InventoryItemExtender(object.getAction()));
-        }
+        item.setItemEventHolder(new InventoryItemExtender(object.getAction()));
+
         setNextEmpty(item);
     }
 
@@ -73,5 +73,12 @@ public final class OpInventory extends ReplacementInventoryImpl {
         }
 
         objects.forEach(this::setInventoryObject);
+    }
+
+    public void clear() {
+        getDefaultTranslations().clear();
+        getInventoryHolder().getBuiltInventory().clear();
+        getInventoryHolder().getIHolder().getInventory().clear();
+        getInventoryHolder().getHolder().getInventory().getMap().clear();
     }
 }

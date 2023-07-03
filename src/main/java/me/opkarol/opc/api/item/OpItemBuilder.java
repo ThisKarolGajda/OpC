@@ -188,7 +188,7 @@ public class OpItemBuilder<K extends OpItemBuilder<?>> extends Serialize {
         if (pdc != null) {
             for (String s : pdc.keySet()) {
                 // Splits minecraft:test into test
-                PDCUtils.addNBT(item, new NamespacedKey(OpAPI.getInstance(), s.split(":")[1]), pdc.getOrDefault(s, null));
+                PDCUtils.addNBT(item, new NamespacedKey(OpAPI.getPlugin(), s.split(":")[1]), pdc.getOrDefault(s, null));
             }
         }
         return item;

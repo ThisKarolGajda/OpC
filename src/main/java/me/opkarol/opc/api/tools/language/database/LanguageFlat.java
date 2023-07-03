@@ -8,7 +8,7 @@ import me.opkarol.opc.api.tools.language.LanguageType;
 import java.util.UUID;
 
 public class LanguageFlat implements ILanguageDatabase {
-    private final FlatDatabase<OpMap<UUID, LanguageType>> database = new FlatDatabase<>(OpAPI.getInstance(), "lang-save");
+    private final FlatDatabase<OpMap<UUID, LanguageType>> database = new FlatDatabase<>(OpAPI.getPlugin(), "lang-save");
     private final OpMap<UUID, LanguageType> map;
 
     public LanguageFlat() {

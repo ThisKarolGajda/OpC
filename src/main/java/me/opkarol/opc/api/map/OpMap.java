@@ -154,12 +154,18 @@ public class OpMap<K, V> implements IMap<K, V>, Serializable {
         StringBuilder builder = new StringBuilder();
         for (K key : keySet()) {
             V value = unsafeGet(key);
-            builder.append(key).append("=").append(value).append(" -");
+            builder.append(key).append("=").append(value).append("->");
         }
-        return builder.toString();
+        return builder.length() > 1 ? builder.substring(0, builder.length() - 2) : builder.toString();
     }
 
     public void putAll(@NotNull OpMap<K, V> tempReplacements) {
         tempReplacements.getMap().forEach(this::set);
+    }
+
+    public void clear() {
+        for (K key : keySet()) {
+            remove(key);
+        }
     }
 }

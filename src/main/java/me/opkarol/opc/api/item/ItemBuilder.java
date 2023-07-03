@@ -100,7 +100,7 @@ public class ItemBuilder extends ItemStack implements Serializable, Cloneable {
     }
 
     public void applyPDC(String key, String value) {
-        PDCUtils.addNBT(this, new NamespacedKey(OpAPI.getInstance(), key), value);
+        PDCUtils.addNBT(this, new NamespacedKey(OpAPI.getPlugin(), key), value);
 
     }
 

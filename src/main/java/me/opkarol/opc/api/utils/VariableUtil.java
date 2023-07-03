@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class VariableUtil {
 
@@ -61,11 +62,22 @@ public class VariableUtil {
         return range;
     }
 
-    public static <K, V> String stringValueOfMap(OpMap<K, V> map) {
+    public static <K, V> @NotNull String stringValueOfMap(@NotNull OpMap<K, V> map) {
         StringBuilder builder = new StringBuilder();
 
         for (K key : map.keySet()) {
             V value = map.unsafeGet(key);
+
+            builder.append(key).append("-").append(value).append(", ");
+        }
+        return builder.toString();
+    }
+
+    public static <K, V> @NotNull String stringValueOfMap(@NotNull Map<K, V> map) {
+        StringBuilder builder = new StringBuilder();
+
+        for (K key : map.keySet()) {
+            V value = map.get(key);
 
             builder.append(key).append("-").append(value).append(", ");
         }

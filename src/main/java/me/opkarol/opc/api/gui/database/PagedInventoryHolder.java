@@ -7,8 +7,7 @@ import me.opkarol.opc.api.gui.items.InventoryItem;
 import java.util.Optional;
 
 public class PagedInventoryHolder extends InventoryHolder<InventoryPage<Integer, InventoryItem>> {
-    public final int DEFAULT_PAGES_MAX_LIMIT = 100;
-    public final int DEFAULT_PAGES_MIN_LIMIT = 0;
+    public final int DEFAULT_PAGES_MAX_LIMIT = 999;
     private int currentPage;
 
     public PagedInventoryHolder(AbstractInventory<Integer, InventoryPage<Integer, InventoryItem>> inventory) {
@@ -30,7 +29,7 @@ public class PagedInventoryHolder extends InventoryHolder<InventoryPage<Integer,
     }
 
     public void previousPage() {
-        if (this.currentPage > DEFAULT_PAGES_MIN_LIMIT) {
+        if (this.currentPage > 0) {
             this.currentPage--;
         }
     }

@@ -22,4 +22,11 @@ public class InventoryPage<K, V> {
     public Optional<V> get(K slot) {
         return map.getByKey(slot);
     }
+
+    @Override
+    public String toString() {
+        return "InventoryPage{" +
+                "map=" + map +
+                '}';
+    }
 }

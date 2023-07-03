@@ -82,4 +82,13 @@ public class InventoryItem extends ItemBuilder implements Cloneable {
         clone.specialData = new ArrayList<>(this.specialData);
         return clone;
     }
+
+    @Override
+    public String toString() {
+        return "InventoryItem{" +
+                "itemEventHolder=" + itemEventHolder +
+                ", specialData=" + specialData +
+                ", item=" + super.toString() +
+                '}';
+    }
 }

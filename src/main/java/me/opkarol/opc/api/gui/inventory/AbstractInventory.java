@@ -1,40 +1,32 @@
 package me.opkarol.opc.api.gui.inventory;
 
+import me.opkarol.opc.OpAPI;
 import me.opkarol.opc.api.gui.InventoryCache;
 import me.opkarol.opc.api.gui.holder.IHolder;
-import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.utils.FormatUtils;
 import org.bukkit.inventory.Inventory;
 
 import java.util.Optional;
 
 public abstract class AbstractInventory<K, V> extends InventoryPage<K, V> {
-    private final InventoryCache cache = InventoryCache.getCache();
+    private final InventoryCache cache;
     private final IHolder inventoryHolder;
     private final String inventoryTitle;
-    private int inventorySlots;
+    private final int inventorySlots;
 
     protected AbstractInventory(int inventorySlots, IHolder inventoryHolder, String inventoryTitle) {
         this.inventorySlots = inventorySlots;
         this.inventoryHolder = inventoryHolder;
         this.inventoryTitle = inventoryTitle;
+        this.cache = OpAPI.getInstance().getInventoryCache();
     }
 
     protected AbstractInventory(IHolder inventoryHolder, String inventoryTitle) {
-        this.inventoryHolder = inventoryHolder;
-        this.inventoryTitle = inventoryTitle;
-    }
-
-    public OpMap<K, V> getMap() {
-        return super.getMap();
+        this(27, inventoryHolder, inventoryTitle);
     }
 
     public Optional<V> get(K k) {
         return super.getMap().getByKey(k);
-    }
-
-    public void set(K k, V v) {
-        super.set(k, v);
     }
 
     public boolean contains(K k) {

@@ -17,7 +17,7 @@ public class LanguageDatabase {
     private ILanguageDatabase languageTool;
 
     public LanguageDatabase() {
-        FileConfiguration configuration = OpAPI.getInstance().getConfig();
+        FileConfiguration configuration = OpAPI.getPlugin().getConfig();
         if (!configuration.getBoolean("language.enabled")) {
             return;
         }

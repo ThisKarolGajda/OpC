@@ -29,12 +29,11 @@ public class PagedInventoryFactory extends AbstractInventory<Integer, InventoryP
             set(page, inventoryPage);
         }
 
-        for (int slot = 0; slot < getInventorySlots(); slot++) {
-            Optional<InventoryItem> optional1 = inventoryPage.get(slot);
+        for (int i = 0; i < getInventorySlots(); i++) {
+            Optional<InventoryItem> optional1 = inventoryPage.get(i);
             if (optional1.isPresent()) {
-                inventory.setItem(slot, optional1.get());
+                inventory.setItem(i, optional1.get().generate());
             }
-
         }
 
         return inventory;

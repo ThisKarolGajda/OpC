@@ -9,6 +9,7 @@ import me.opkarol.opc.api.gui.inventory.InventoryPage;
 import me.opkarol.opc.api.gui.items.InventoryItem;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 import java.util.List;
 import java.util.Optional;
@@ -150,7 +151,7 @@ public class InventoryHolderFactory {
         };
     }
 
-    public Optional<InventoryItem> getItem(int page, int slot) {
+    public Optional<InventoryItem> getItem(int page, @Range(from = 0, to = 53) int slot) {
         switch (getType()) {
             case PAGED -> {
                 return getPagedHolder().getInventory().get(page).orElse(new InventoryPage<>()).get(slot);

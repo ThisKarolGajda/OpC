@@ -16,7 +16,7 @@ public class DefaultFlatDatabase<O, C> extends FlatDatabase<OpMap<C, List<O>>> i
     private final FlatDatabaseSettings<O, C> settings;
 
     public DefaultFlatDatabase(@NotNull FlatDatabaseSettings<O, C> settings) {
-        super(OpAPI.getInstance(), settings.getFileName());
+        super(OpAPI.getPlugin(), settings.getFileName());
         this.settings = settings;
         OpMap<C, List<O>> map = loadObject();
         this.map = Objects.requireNonNullElseGet(map, OpMap::new);

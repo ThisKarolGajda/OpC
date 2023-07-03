@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.function.Consumer;
 
 public class EventRegister {
-    private static final Plugin opc = OpAPI.getInstance();
+    private static final Plugin opc = OpAPI.getPlugin();
 
     public static <E extends Event> void registerEvent(Class<E> clazz, Consumer<E> consumer) {
         registerEvent(clazz, EventPriority.NORMAL, consumer);
@@ -33,6 +33,6 @@ public class EventRegister {
     }
 
     public static boolean canRegister() {
-        return Bukkit.getServer().getPluginManager().isPluginEnabled(OpAPI.getInstance());
+        return Bukkit.getServer().getPluginManager().isPluginEnabled(OpAPI.getPlugin());
     }
 }

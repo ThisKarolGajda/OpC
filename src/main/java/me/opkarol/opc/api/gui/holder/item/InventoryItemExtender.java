@@ -13,7 +13,9 @@ public class InventoryItemExtender extends InventoryItemEventHolder {
 
     @Override
     public void interact(OnItemClicked event) {
-        action.accept(event);
+        if (action != null) {
+            action.accept(event);
+        }
     }
 
     @Override

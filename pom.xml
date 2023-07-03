@@ -94,6 +94,11 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>minecraft-libraries</id>
+            <name>Minecraft Libraries</name>
+            <url>https://libraries.minecraft.net</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -139,17 +144,22 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.ThisKarolGajda.Lamp</groupId>
+            <groupId>com.github.Revxrsal.Lamp</groupId>
             <artifactId>common</artifactId>
-            <version>${lamp.version}</version>
-            <scope>compile</scope>
+            <version>3.1.5</version>
+        </dependency>
+
+        <!-- Add your specific platform module here -->
+        <dependency>
+            <groupId>com.github.Revxrsal.Lamp</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>3.1.5</version>
         </dependency>
 
         <dependency>
-            <groupId>com.github.ThisKarolGajda.Lamp</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>${lamp.version}</version>
-            <scope>compile</scope>
+            <groupId>com.github.Revxrsal.Lamp</groupId>
+            <artifactId>brigadier</artifactId>
+            <version>3.1.5</version>
         </dependency>
     </dependencies>
 </project>
