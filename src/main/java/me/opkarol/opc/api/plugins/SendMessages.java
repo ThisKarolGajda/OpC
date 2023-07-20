@@ -1,6 +1,5 @@
 package me.opkarol.opc.api.plugins;
 
-import me.opkarol.opc.api.command.OpCommandSender;
 import me.opkarol.opc.api.file.ConfigurationMap;
 import me.opkarol.opc.api.file.SimpleTranslation;
 import me.opkarol.opc.api.file.TranslationObject;
@@ -40,26 +39,6 @@ interface SendMessages {
         return getConfigurationMap().getValue(path, objects);
     }
 
-    default void sendMappedMessage(@NotNull OpCommandSender sender, String path, String[][] strings) {
-        sender.sendMessage(getFormattedValue(path, strings));
-    }
-
-    default void sendMappedMessage(@NotNull OpCommandSender sender, String path) {
-        sender.sendMessage(getFormattedValue(path));
-    }
-
-    default void sendMappedMessage(@NotNull OpCommandSender sender, String path, Tuple<String, String>... tuples) {
-        sender.sendMessage(getFormattedValue(path, tuples));
-    }
-
-    default void sendMappedMessage(@NotNull Player sender, String path, Tuple<String, String>... tuples) {
-        sender.sendMessage(getFormattedValue(path, tuples));
-    }
-
-    default void sendMappedMessage(@NotNull OpCommandSender sender, String path, @NotNull SimpleTranslation translation) {
-        sender.sendMessage(getFormattedValue(path, translation.getStrings()));
-    }
-
     default void sendMappedMessage(@NotNull Player sender, String path, String[][] strings) {
         sender.sendMessage(getFormattedValue(path, strings));
     }
@@ -70,17 +49,5 @@ interface SendMessages {
 
     default void sendMappedMessage(@NotNull Player sender, String path, @NotNull SimpleTranslation translation) {
         sender.sendMessage(getFormattedValue(path, translation.getStrings()));
-    }
-
-    default @NotNull Runnable getMappedMessage(OpCommandSender sender, String path, String[][] strings) {
-        return () -> sender.sendMessage(getValue(path, strings));
-    }
-
-    default @NotNull Runnable getMappedMessage(OpCommandSender sender, String path, SimpleTranslation translation) {
-        return () -> sender.sendMessage(getValue(path, translation));
-    }
-
-    default @NotNull Runnable getMappedMessage(OpCommandSender sender, String path) {
-        return () -> sender.sendMessage(getValue(path));
     }
 }

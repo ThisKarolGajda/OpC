@@ -2,13 +2,13 @@ package me.opkarol.opc.api.utils;
 
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.misc.Tuple;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class VariableUtil {
 
@@ -82,5 +82,26 @@ public class VariableUtil {
             builder.append(key).append("-").append(value).append(", ");
         }
         return builder.toString();
+    }
+
+    public static Material getRandomSolidMaterial(String input) {
+        if (input == null) {
+            return Material.STONE;
+        }
+
+        long seed = input.hashCode();
+        Random random = new Random(seed);
+
+        Material[] materials = Material.values();
+
+        Material[] selectiveMaterials = Arrays.stream(materials)
+                .filter(Material::isSolid)
+                .filter(Material::isItem)
+                // Remove "Disabled Items" that are pre-1.20
+                .filter(material -> material.isEnabledByFeature(Bukkit.getWorlds().get(0)))
+                .toArray(Material[]::new);
+
+        int randomIndex = random.nextInt(selectiveMaterials.length);
+        return selectiveMaterials[randomIndex];
     }
 }

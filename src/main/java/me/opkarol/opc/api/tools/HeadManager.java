@@ -2,7 +2,6 @@ package me.opkarol.opc.api.tools;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import me.opkarol.opc.api.gui.OpInventory;
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.tools.runnable.OpRunnable;
 import org.bukkit.Bukkit;
@@ -14,7 +13,6 @@ import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,9 +23,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 public class HeadManager {
     private static final OpMap<UUID, String> HEAD_CACHE = new OpMap<>();
@@ -141,27 +136,6 @@ public class HeadManager {
             String value = getHeadValueFromRequest(player.getName());
             HEAD_CACHE.set(uuid, value);
         }).runTaskAsynchronously();
-    }
-
-    public static void updatePlayerHeadInInventory(@NotNull Player player, OpInventory inventory, @Range(from = 0, to = 53) int slot, Consumer<ItemStack> itemStackConsumer) {
-        CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> getHeadValueAsData(player));
-        final String defaultValue = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjYyYzQ4NWIxODg2ZGJjZTZjMWNhZDE0MGMwZWY4NzYzNTU5ZDQzYTc4NTY0NDY2NGM2ZDVmMzZlMjc1NGVlOCJ9fX0";
-        future.completeOnTimeout(defaultValue, 15, TimeUnit.SECONDS)
-                .thenAcceptAsync(value -> {
-                    if (!inventory.getInventoryHolder().getBuiltInventory().getViewers().contains(player)) {
-                        return;
-                    }
-                    long hashBits = (value == null ? defaultValue : value).hashCode();
-                    UUID hashAsId = new UUID(hashBits, hashBits);
-                    ItemStack itemStack1 = player.getOpenInventory().getItem(slot);
-                    if (itemStack1 == null || !itemStack1.getType().equals(Material.PLAYER_HEAD)) {
-                        return;
-                    }
-
-                    Bukkit.getUnsafe().modifyItemStack(itemStack1,
-                            "{SkullOwner:{Id:\"" + hashAsId + "\",Properties:{textures:[{Value:\"" + value + "\"}]}}}");
-                    itemStackConsumer.accept(itemStack1);
-                });
     }
 
     /**

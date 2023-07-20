@@ -1,6 +1,5 @@
 package me.opkarol.opc.api.tools.teleport;
 
-import me.opkarol.opc.api.command.OpCommandSender;
 import me.opkarol.opc.api.list.OpList;
 import me.opkarol.opc.api.map.OpMap;
 import me.opkarol.opc.api.map.OpMapBuilder;
@@ -257,20 +256,6 @@ public class OpTeleport extends Serialize {
 
     public OpTeleport teleportCopied(Player player) {
         return copy().teleport(player, location, permissionGroup, settings);
-    }
-
-    public OpTeleport teleport(@NotNull OpCommandSender sender) {
-        if (sender.isPlayer()) {
-            return teleport(sender.getPlayer());
-        }
-        return this;
-    }
-
-    public OpTeleport teleportCopied(@NotNull OpCommandSender sender) {
-        if (sender.isPlayer()) {
-            return copy().teleport(sender.getPlayer());
-        }
-        return this;
     }
 
     public OpTeleport teleport(@NotNull OpList<Player> list, OpSerializableLocation location, @NotNull PermissionManager<Integer> group, @NotNull TeleportSettings settings) {
