@@ -76,7 +76,6 @@ public class OpPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         OpAutoDisable.registerDisable();
-        OpAPI.unregisterCommands();
         plugin = null;
     }
 
