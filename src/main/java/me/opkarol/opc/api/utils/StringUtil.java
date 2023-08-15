@@ -103,7 +103,6 @@ public class StringUtil {
         return false;
     }
 
-
     public static double getDouble(Object object) {
         if (object == null) {
             return getDoubleFromString(null);

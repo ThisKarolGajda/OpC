@@ -191,7 +191,7 @@ public class OpParticle extends Serialize {
         final int[] i = {0};
         animatedTask = new OpRunnable(r -> {
             if (i[0] >= amount) {
-                r.cancel();
+                r.cancelTask();
             }
 
             display();
@@ -214,7 +214,7 @@ public class OpParticle extends Serialize {
     }
 
     public void cancelAnimatedTask() {
-        animatedTask.cancel();
+        animatedTask.cancelTask();
     }
 
     @Override

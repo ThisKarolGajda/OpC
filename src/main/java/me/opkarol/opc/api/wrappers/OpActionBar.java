@@ -81,7 +81,7 @@ public class OpActionBar implements Serializable {
         runnable = new OpRunnable(r -> {
             if (i[0] < 1) {
                 sendEmpty();
-                r.cancel();
+                r.cancelTask();
             } else {
                 build(text.replace("%time%", String.valueOf(i[0]))).send();
             }
@@ -96,7 +96,7 @@ public class OpActionBar implements Serializable {
     }
 
     public void cancel() {
-        runnable.cancel();
+        runnable.cancelTask();
     }
 
     public String getText() {

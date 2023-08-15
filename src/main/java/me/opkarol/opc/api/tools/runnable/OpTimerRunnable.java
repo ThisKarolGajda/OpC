@@ -10,7 +10,7 @@ public class OpTimerRunnable {
         new OpRunnable(r -> {
             if (i[0] < 1) {
                 onEndConsumer.accept(r);
-                r.cancel();
+                r.cancelTask();
             }
             onEachConsumer.accept(r, i[0]);
             i[0]--;
@@ -22,7 +22,7 @@ public class OpTimerRunnable {
         new OpRunnable(r -> {
             if (i[0] >= times) {
                 onEndConsumer.accept(r);
-                r.cancel();
+                r.cancelTask();
             }
             onEachConsumer.accept(r, i[0]);
             i[0]++;
@@ -34,7 +34,7 @@ public class OpTimerRunnable {
         return new OpRunnable(r -> {
             if (i[0] < 1) {
                 onEndConsumer.accept(r);
-                r.cancel();
+                r.cancelTask();
             }
             onEachConsumer.accept(r, i[0]);
             i[0]--;
@@ -45,7 +45,7 @@ public class OpTimerRunnable {
         final int[] i = {times};
         return new OpRunnable(r -> {
             if (i[0] < 1) {
-                r.cancel();
+                r.cancelTask();
             }
             onEachConsumer.accept(r, i[0]);
             i[0]--;
@@ -57,7 +57,7 @@ public class OpTimerRunnable {
         new OpRunnable(r -> {
             if (i[0] > times) {
                 onEndConsumer.accept(r);
-                r.cancel();
+                r.cancelTask();
             }
             onEachConsumer.accept(r, i[0]);
             i[0]++;
@@ -68,7 +68,7 @@ public class OpTimerRunnable {
         final int[] i = {1};
         new OpRunnable(r -> {
             if (i[0] > times) {
-                r.cancel();
+                r.cancelTask();
             }
             onEachConsumer.accept(r, i[0]);
             i[0]++;
