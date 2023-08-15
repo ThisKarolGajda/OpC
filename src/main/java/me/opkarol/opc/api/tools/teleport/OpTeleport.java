@@ -273,11 +273,10 @@ public class OpTeleport extends Serialize {
 
     public void cancel(String message, OpList<Player> players) {
         if (getTask() != null) {
-            if (task.cancelTask()) {
-                if (players != null) {
-                    final String finalMessage = FormatUtils.formatMessage(message);
-                    players.forEach(player -> player.sendMessage(finalMessage));
-                }
+            task.cancelTask();
+            if (players != null) {
+                final String finalMessage = FormatUtils.formatMessage(message);
+                players.forEach(player -> player.sendMessage(finalMessage));
             }
         }
     }

@@ -1,8 +1,8 @@
 package me.opkarol.opc.api.tools.runnable;
 
 import me.opkarol.opc.OpAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,8 +10,9 @@ import java.io.Serializable;
 import java.util.function.Consumer;
 
 public class OpRunnable implements Serializable {
-    private BukkitTask task;
+    private int taskId;
     private final BukkitRunnable bukkitRunnable;
+
 
     public OpRunnable(Consumer<OpRunnable> consumer) {
         OpRunnable runnable = this;
@@ -33,63 +34,55 @@ public class OpRunnable implements Serializable {
         return new OpRunnable(consumer);
     }
 
-    public OpRunnable set(Consumer<OpRunnable> consumer) {
-        return this;
-    }
-
-    public boolean cancelTask() {
-        if (this.task != null && !this.task.isCancelled()) {
-            this.task.cancel();
-            return true;
-        }
-        return false;
+    public void cancelTask() {
+        Bukkit.getScheduler().cancelTask(taskId);
     }
 
     @NotNull
     public synchronized OpRunnable runTaskLaterAsynchronously(long delay) throws IllegalArgumentException, IllegalStateException {
-        this.task = bukkitRunnable.runTaskLaterAsynchronously(OpAPI.getPlugin(), delay);
+        this.taskId = bukkitRunnable.runTaskLaterAsynchronously(OpAPI.getPlugin(), delay).getTaskId();
         return this;
     }
 
     @NotNull
     public synchronized OpRunnable runTask() throws IllegalArgumentException, IllegalStateException {
-        this.task = bukkitRunnable.runTask(OpAPI.getPlugin());
+        this.taskId = bukkitRunnable.runTask(OpAPI.getPlugin()).getTaskId();
         return this;
     }
 
     @NotNull
     public synchronized OpRunnable runTaskLater(long delay) throws IllegalArgumentException, IllegalStateException {
-        this.task = bukkitRunnable.runTaskLater(OpAPI.getPlugin(), delay);
+        this.taskId = bukkitRunnable.runTaskLater(OpAPI.getPlugin(), delay).getTaskId();
         return this;
     }
 
     @NotNull
     public synchronized OpRunnable runTaskTimerAsynchronously(long delay, long period) throws IllegalArgumentException, IllegalStateException {
-        this.task = bukkitRunnable.runTaskTimerAsynchronously(OpAPI.getPlugin(), delay, period);
+        this.taskId = bukkitRunnable.runTaskTimerAsynchronously(OpAPI.getPlugin(), delay, period).getTaskId();
         return this;
     }
 
     @NotNull
     public synchronized OpRunnable runTaskTimerAsynchronously(long delay) throws IllegalArgumentException, IllegalStateException {
-        this.task = bukkitRunnable.runTaskTimerAsynchronously(OpAPI.getPlugin(), delay, delay);
+        this.taskId = bukkitRunnable.runTaskTimerAsynchronously(OpAPI.getPlugin(), delay, delay).getTaskId();
         return this;
     }
 
     @NotNull
     public synchronized OpRunnable runTaskTimer(long delay, long period) throws IllegalArgumentException, IllegalStateException {
-        this.task = bukkitRunnable.runTaskTimer(OpAPI.getPlugin(), delay, period);
+        this.taskId = bukkitRunnable.runTaskTimer(OpAPI.getPlugin(), delay, period).getTaskId();
         return this;
     }
 
     @NotNull
     public synchronized OpRunnable runTaskTimer(long delay) throws IllegalArgumentException, IllegalStateException {
-        this.task = bukkitRunnable.runTaskTimer(OpAPI.getPlugin(), delay, delay);
+        this.taskId = bukkitRunnable.runTaskTimer(OpAPI.getPlugin(), delay, delay).getTaskId();
         return this;
     }
 
     @NotNull
     public synchronized OpRunnable runTaskAsynchronously() throws IllegalArgumentException, IllegalStateException {
-        this.task = bukkitRunnable.runTaskAsynchronously(OpAPI.getPlugin());
+        this.taskId = bukkitRunnable.runTaskAsynchronously(OpAPI.getPlugin()).getTaskId();
         return this;
     }
 }
