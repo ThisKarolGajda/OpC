@@ -6,7 +6,7 @@
 
     <groupId>me.opkarol</groupId>
     <artifactId>opc</artifactId>
-    <version>1.1.0</version>
+    <version>1.8.2</version>
     <build>
         <plugins>
             <plugin>
@@ -141,34 +141,6 @@
             <artifactId>placeholderapi</artifactId>
             <version>2.11.1</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.Revxrsal.Lamp</groupId>
-            <artifactId>common</artifactId>
-            <version>3.1.5</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.Revxrsal.Lamp</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>3.1.5</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.Revxrsal.Lamp</groupId>
-            <artifactId>brigadier</artifactId>
-            <version>3.1.5</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.10.2</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>

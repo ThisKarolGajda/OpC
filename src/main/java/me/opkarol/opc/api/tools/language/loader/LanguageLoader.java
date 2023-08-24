@@ -6,10 +6,6 @@ import me.opkarol.opc.api.tools.language.types.LanguageValue;
 import me.opkarol.opc.api.tools.language.types.LanguageVariable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.reflections.Reflections;
-import org.reflections.scanners.FieldAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -23,12 +19,12 @@ public class LanguageLoader implements Serializable {
     }
 
     public @NotNull OpMap<String, Object> loadConfig(String directory) {
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-                .setScanners(new FieldAnnotationsScanner())
-                .setUrls(ClasspathHelper.forPackage(directory)));
-
-        Set<Field> fields = reflections.getFieldsAnnotatedWith(LanguageValue.class);
-
+        //Reflections reflections = new Reflections(new ConfigurationBuilder()
+        //        .setScanners(new FieldAnnotationsScanner())
+        //        .setUrls(ClasspathHelper.forPackage(directory)));
+//
+        //Set<Field> fields = reflections.getFieldsAnnotatedWith(LanguageValue.class);
+        Set<Field> fields = null;
         OpMap<String, Object> configValues = new OpMap<>();
 
         for (Field field : fields) {
